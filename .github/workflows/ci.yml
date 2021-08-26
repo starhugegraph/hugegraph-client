@@ -6,11 +6,13 @@ on:
       - master
       - /^release-.*$/
       - /^test-.*$/
+      - gh-master
   pull_request:
     branches:
       - master
       - /^release-.*$/
       - /^test-.*$/
+      - gh-master
 
 jobs:
   build:
