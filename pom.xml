@@ -5,11 +5,11 @@
 
     <groupId>com.baidu.hugegraph</groupId>
     <artifactId>hugegraph-client</artifactId>
-    <version>1.9.6</version>
+    <version>1.9.7</version>
     <packaging>jar</packaging>
 
     <name>hugegraph-client</name>
-    <url>https://github.com/hugegraph/hugegraph-client</url>
+    <url>https://github.com/starhugegraph/hugegraph-client</url>
     <description>
         hugegraph-client is a Java-written client of HugeGraph, providing
         operations of graph, schema, gremlin, variables and traversals etc.
