@@ -25,11 +25,11 @@ import com.baidu.hugegraph.structure.auth.AuthElement;
 
 public abstract class AuthAPI extends API {
 
-    private static final String PATH = "graphs/%s/auth/%s";
+    private static final String PATH = "graphs/auth/%s";
 
     public AuthAPI(RestClient client, String graph) {
         super(client);
-        this.path(PATH, graph, this.type());
+        this.path(PATH, this.type());
     }
 
     public static String formatEntityId(Object id) {
