@@ -20,6 +20,7 @@ jobs:
     env:
       TRAVIS_DIR: assembly/travis
       COMMIT_ID: 0dc7b271835e53136ee92691b07fa4abe925e16e
+      BRANCH_ID: gh-master
     steps:
       - name: Install JDK 8
         uses: actions/setup-java@v2
@@ -45,7 +46,7 @@ jobs:
 
       - name: Prepare env and service
         run: |
-          $TRAVIS_DIR/install-hugegraph-from-source.sh $COMMIT_ID | grep -v "Downloading\|Downloaded"
+          $TRAVIS_DIR/install-hugegraph-from-source.sh $BRANCH_ID | grep -v "Downloading\|Downloaded"
 
       - name: Run test
         run: |
