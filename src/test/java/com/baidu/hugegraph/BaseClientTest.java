@@ -34,7 +34,7 @@ public class BaseClientTest {
     protected static final String BASE_URL = "http://127.0.0.1:8080";
     protected static final String GRAPH = "hugegraph";
     protected static final String USERNAME = "admin";
-    protected static final String PASSWORD = "pa";
+    protected static final String PASSWORD = "admin";
     protected static final int TIMEOUT = 10;
 
     private static HugeClient client;

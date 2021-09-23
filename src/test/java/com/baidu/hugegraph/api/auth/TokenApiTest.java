@@ -64,12 +64,12 @@ public class TokenApiTest extends AuthApiTest {
     public void testVerify() {
         User user1 = new User();
         user1.name("user1");
-        user1.password("p1");
+        user1.password("password1");
         User user = userAPI.create(user1);
 
         Login login = new Login();
         login.name("user1");
-        login.password("p1");
+        login.password("password1");
         LoginResult result = loginAPI.login(login);
         Assert.assertNotNull(result);
         Assert.assertNotNull(result.token());

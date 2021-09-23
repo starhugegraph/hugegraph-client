@@ -62,14 +62,14 @@ public class UserApiTest extends AuthApiTest {
     public void testCreate() {
         User user1 = new User();
         user1.name("user1");
-        user1.password("p1");
+        user1.password("password1");
         user1.email("user1@hugegraph.com");
         user1.phone("123456789");
         user1.avatar("image1.jpg");
 
         User user2 = new User();
         user2.name("user2");
-        user2.password("p2");
+        user2.password("password1");
         user2.email("user2@hugegraph.com");
         user2.phone("1357924680");
         user2.avatar("image2.jpg");
@@ -78,13 +78,13 @@ public class UserApiTest extends AuthApiTest {
         User result2 = api.create(user2);
 
         Assert.assertEquals("user1", result1.name());
-        Assert.assertNotEquals("p1", result1.password());
+        Assert.assertNotEquals("password1", result1.password());
         Assert.assertEquals("user1@hugegraph.com", result1.email());
         Assert.assertEquals("123456789", result1.phone());
         Assert.assertEquals("image1.jpg", result1.avatar());
 
         Assert.assertEquals("user2", result2.name());
-        Assert.assertNotEquals("p2", result2.password());
+        Assert.assertNotEquals("password1", result2.password());
         Assert.assertEquals("user2@hugegraph.com", result2.email());
         Assert.assertEquals("1357924680", result2.phone());
         Assert.assertEquals("image2.jpg", result2.avatar());
@@ -122,8 +122,8 @@ public class UserApiTest extends AuthApiTest {
 
     @Test
     public void testGet() {
-        User user1 = createUser("test1", "psw1");
-        User user2 = createUser("test2", "psw2");
+        User user1 = createUser("test1", "test1");
+        User user2 = createUser("test2", "test2");
 
         Assert.assertEquals("test1", user1.name());
         Assert.assertEquals("test2", user2.name());
@@ -137,8 +137,8 @@ public class UserApiTest extends AuthApiTest {
 
     @Test
     public void testGetUserRole() {
-        User user1 = createUser("test1", "psw1");
-        User user2 = createUser("test2", "psw2");
+        User user1 = createUser("test1", "test1");
+        User user2 = createUser("test2", "test2");
 
         Assert.assertEquals("test1", user1.name());
         Assert.assertEquals("test2", user2.name());
@@ -152,9 +152,9 @@ public class UserApiTest extends AuthApiTest {
 
     @Test
     public void testList() {
-        createUser("test1", "psw1");
-        createUser("test2", "psw2");
-        createUser("test3", "psw3");
+        createUser("test1", "test1");
+        createUser("test2", "test2");
+        createUser("test3", "test3");
 
         List<User> users = api.list(-1);
         Assert.assertEquals(4, users.size());
@@ -180,15 +180,15 @@ public class UserApiTest extends AuthApiTest {
 
     @Test
     public void testUpdate() {
-        User user1 = createUser("test1", "psw1");
-        User user2 = createUser("test2", "psw2");
+        User user1 = createUser("test1", "test1");
+        User user2 = createUser("test2", "test2");
 
         Assert.assertEquals("test@hugegraph.com", user1.email());
         Assert.assertEquals("16812345678", user1.phone());
         Assert.assertEquals("image.jpg", user1.avatar());
 
         String oldPassw = user1.password();
-        Assert.assertNotEquals("psw1", oldPassw);
+        Assert.assertNotEquals("test1", oldPassw);
 
         user1.password("psw-udated");
         user1.email("test_updated@hugegraph.com");
@@ -221,8 +221,8 @@ public class UserApiTest extends AuthApiTest {
 
     @Test
     public void testDelete() {
-        User user1 = createUser("test1", "psw1");
-        User user2 = createUser("test2", "psw2");
+        User user1 = createUser("test1", "test1");
+        User user2 = createUser("test2", "test2");
 
         List<User> users = api.list(-1);
         Assert.assertEquals(3, users.size());
