@@ -7,13 +7,12 @@ if [[ $# -ne 1 ]]; then
     exit 1
 fi
 
-BRANCH_ID=$1
+COMMIT_ID=$1
 HUGEGRAPH_GIT_URL="https://github.com/starhugegraph/hugegraph.git"
 
 git clone --depth 100 ${HUGEGRAPH_GIT_URL}
 cd hugegraph
-git fetch
-git checkout -b gh-master origin/gh-master
+git checkout ${COMMIT_ID}
 mvn package -DskipTests
 mv hugegraph-*.tar.gz ../
 cd ../
