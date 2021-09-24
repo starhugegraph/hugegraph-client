@@ -19,9 +19,12 @@
 
 package com.baidu.hugegraph.api.traverser;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import com.baidu.hugegraph.structure.traverser.Steps;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -142,7 +145,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         KoutRequest request = builder.build();
 
@@ -154,7 +157,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         request = builder.build();
 
@@ -176,7 +179,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.nearest(false);
         KoutRequest request = builder.build();
@@ -189,7 +192,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         builder.nearest(false);
         request = builder.build();
@@ -212,7 +215,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.withPath(true);
         KoutRequest request = builder.build();
@@ -234,7 +237,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         builder.withPath(true);
         request = builder.build();
@@ -265,7 +268,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.withPath(false);
         builder.withVertex(true);
@@ -284,7 +287,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         builder.withPath(false);
         builder.withVertex(true);
@@ -303,7 +306,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.withPath(true);
         builder.withVertex(true);
@@ -331,7 +334,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         builder.withPath(true);
         builder.withVertex(true);
@@ -368,7 +371,8 @@ public class KoutApiTest extends TraverserApiTest {
 
         KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH).labels("created");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("created"));
         builder.maxDepth(1);
         KoutRequest request = builder.build();
 
@@ -380,7 +384,8 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH).labels("created");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("created"));
         builder.maxDepth(2);
         request = builder.build();
 
@@ -392,7 +397,8 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH).labels("knows");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("knows"));
         builder.maxDepth(1);
         request = builder.build();
 
@@ -404,7 +410,8 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH).labels("knows");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("knows"));
         builder.maxDepth(2);
         request = builder.build();
 
@@ -424,8 +431,9 @@ public class KoutApiTest extends TraverserApiTest {
 
         KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH)
-               .labels("knows").labels("created");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("knows"))
+               .edgeSteps(new Steps.StepEntity("created"));
         builder.maxDepth(1);
         KoutRequest request = builder.build();
 
@@ -437,8 +445,9 @@ public class KoutApiTest extends TraverserApiTest {
         
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH)
-               .labels("knows").labels("created");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("knows"))
+               .edgeSteps(new Steps.StepEntity("created"));
         builder.maxDepth(2);
         request = builder.build();
 
@@ -459,7 +468,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.OUT);
+        builder.steps().direction(Direction.OUT);
         builder.maxDepth(1);
         KoutRequest request = builder.build();
 
@@ -471,7 +480,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.OUT);
+        builder.steps().direction(Direction.OUT);
         builder.maxDepth(2);
         request = builder.build();
 
@@ -492,8 +501,10 @@ public class KoutApiTest extends TraverserApiTest {
 
         KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH)
-               .properties("date", "P.gt(\"2014-01-01 00:00:00\")");
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("date", "P.gt(\"2014-01-01 00:00:00\")");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("knows", properties));
         builder.maxDepth(1);
         KoutRequest request = builder.build();
 
@@ -505,21 +516,25 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH)
-               .properties("date", "P.gt(\"2014-01-01 00:00:00\")");
+        properties = new HashMap<>();
+        properties.put("date", "P.gt(\"2014-01-01 00:00:00\")");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("knows", properties));
         builder.maxDepth(2);
         request = builder.build();
 
         koutResult = koutAPI.post(request);
 
-        Assert.assertEquals(2, koutResult.size());
+        Assert.assertEquals(1, koutResult.size());
         expected = ImmutableSet.of(peterId, joshId);
         Assert.assertEquals(expected, koutResult.ids());
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH)
-               .properties("date", "P.gt(\"2014-01-01 00:00:00\")");
+        properties = new HashMap<>();
+        properties.put("date", "P.gt(\"2014-01-01 00:00:00\")");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("knows", properties));
         builder.maxDepth(3);
         request = builder.build();
 
@@ -541,7 +556,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.limit(2);
         KoutRequest request = builder.build();
@@ -554,7 +569,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         builder.limit(1);
         request = builder.build();
@@ -572,7 +587,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.countOnly(true);
         KoutRequest request = builder.build();
@@ -586,7 +601,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         builder.countOnly(true);
         request = builder.build();
@@ -600,7 +615,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.countOnly(true);
         builder.withPath(true);
@@ -612,7 +627,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         builder = KoutRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.countOnly(true);
         builder.withVertex(true);

@@ -148,7 +148,6 @@ public class GroupApiTest extends AuthApiTest {
         group1.description("description updated");
         Group updated = api.update(group1);
         Assert.assertEquals("description updated", updated.description());
-        Assert.assertNotEquals(group1.updateTime(), updated.updateTime());
 
         Assert.assertThrows(ServerException.class, () -> {
             group2.name("test2-updated");
