@@ -7,6 +7,8 @@ if [[ $# -ne 1 ]]; then
     exit 1
 fi
 
+echo `git version`
+
 COMMIT_ID=$1
 HUGEGRAPH_GIT_URL="https://github.com/starhugegraph/hugegraph.git"
 
