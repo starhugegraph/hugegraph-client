@@ -202,7 +202,7 @@ public class UserApiTest extends AuthApiTest {
         Assert.assertEquals("image-updated.jpg", updated.avatar());
 
         Assert.assertThrows(ServerException.class, () -> {
-            user2.name("test2-updated");
+            user2.name("test2_updated");
             api.update(user2);
         }, e -> {
             Assert.assertContains("The name of user can't be updated",
