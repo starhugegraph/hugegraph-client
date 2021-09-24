@@ -8,7 +8,7 @@ if [[ $# -ne 1 ]]; then
 fi
 
 BRANCH_ID=$1
-HUGEGRAPH_GIT_URL="https://github.com/starhugegraph/hugegraph.git"
+HUGEGRAPH_GIT_URL="git@github.com:starhugegraph/hugegraph.git"
 
 git clone --depth 100 ${HUGEGRAPH_GIT_URL}
 cd hugegraph
