@@ -65,10 +65,10 @@ public class BelongApiTest extends AuthApiTest {
     @Before
     @Override
     public void setup() {
-        user1 = UserApiTest.createUser("user-1", "p1");
-        user2 = UserApiTest.createUser("user-2", "p2");
-        group1 = GroupApiTest.createGroup("group-1", "group 1");
-        group2 = GroupApiTest.createGroup("group-2", "group 2");
+        user1 = UserApiTest.createUser("user1", "password1");
+        user2 = UserApiTest.createUser("user2", "password2");
+        group1 = GroupApiTest.createGroup("group1", "group 1");
+        group2 = GroupApiTest.createGroup("group2", "group 2");
     }
 
     @After

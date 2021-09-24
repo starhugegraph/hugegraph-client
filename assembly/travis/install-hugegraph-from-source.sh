@@ -42,8 +42,6 @@ echo "auth.remote_url=127.0.0.1:8090" >> ${REST_SERVER_CONFIG}
 echo "gremlinserver.url=http://127.0.0.1:8282" >> ${REST_SERVER_CONFIG}
 echo "auth.authenticator=com.baidu.hugegraph.auth.StandardAuthenticator" >> ${REST_SERVER_CONFIG}
 
-echo `cat ${REST_SERVER_CONFIG}`
-
 # start HugeGraphServer with https protocol
 bin/init-store.sh
 bin/start-hugegraph.sh

@@ -286,7 +286,6 @@ public class AccessApiTest extends AuthApiTest {
         access1.description("description updated");
         Access updated = api.update(access1);
         Assert.assertEquals("description updated", updated.description());
-        Assert.assertNotEquals(access1.updateTime(), updated.updateTime());
 
         Assert.assertThrows(ServerException.class, () -> {
             Group hk = GroupApiTest.createGroup("group-hk", "");
