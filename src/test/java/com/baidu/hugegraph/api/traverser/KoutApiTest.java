@@ -525,7 +525,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         koutResult = koutAPI.post(request);
 
-        Assert.assertEquals(2, koutResult.size());
+        Assert.assertEquals(1, koutResult.size());
         expected = ImmutableSet.of(peterId, joshId);
         Assert.assertEquals(expected, koutResult.ids());
 

@@ -260,7 +260,6 @@ public class BelongApiTest extends AuthApiTest {
         belong1.description("description updated");
         Belong updated = api.update(belong1);
         Assert.assertEquals("description updated", updated.description());
-        Assert.assertNotEquals(belong1.updateTime(), updated.updateTime());
 
         Assert.assertThrows(ServerException.class, () -> {
             belong2.user(user1);

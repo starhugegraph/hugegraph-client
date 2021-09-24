@@ -98,10 +98,10 @@ public class UserApiTest extends AuthApiTest {
 
         Assert.assertThrows(ServerException.class, () -> {
             User user3 = new User();
-            user3.name("test");
+            user3.name("test4");
             api.create(user3);
         }, e -> {
-            Assert.assertContains("The password of user can't be null",
+            Assert.assertContains("The password is 5-16 characters, which can be letters, numbers or special symbols",
                                   e.getMessage());
         });
 
@@ -200,7 +200,6 @@ public class UserApiTest extends AuthApiTest {
         Assert.assertEquals("test_updated@hugegraph.com", updated.email());
         Assert.assertEquals("1357924680", updated.phone());
         Assert.assertEquals("image-updated.jpg", updated.avatar());
-        Assert.assertNotEquals(user1.updateTime(), updated.updateTime());
 
         Assert.assertThrows(ServerException.class, () -> {
             user2.name("test2-updated");
