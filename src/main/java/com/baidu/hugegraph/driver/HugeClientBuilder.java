@@ -33,6 +33,7 @@ public class HugeClientBuilder {
     private String graph;
     private String username;
     private String password;
+    private String token;
     private int timeout;
     private int maxConns;
     private int maxConnsPerRoute;
@@ -51,6 +52,7 @@ public class HugeClientBuilder {
         this.graph = graph;
         this.username = "";
         this.password = "";
+        this.token = "";
         this.timeout = DEFAULT_TIMEOUT;
         this.maxConns = DEFAULT_MAX_CONNS;
         this.maxConnsPerRoute = DEFAULT_MAX_CONNS_PER_ROUTE;
@@ -125,6 +127,14 @@ public class HugeClientBuilder {
         return this;
     }
 
+    public HugeClientBuilder configToken(String token) {
+        if (token != null) {
+            this.token = token;
+        }
+
+        return this;
+    }
+
     public String url() {
         return this.url;
     }
@@ -139,6 +149,10 @@ public class HugeClientBuilder {
 
     public String password() {
         return this.password;
+    }
+
+    public String token() {
+        return this.token;
     }
 
     public int timeout() {
