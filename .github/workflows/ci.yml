@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-18.04
     env:
       TRAVIS_DIR: assembly/travis
+      LIB_DIR: assembly/lib
       COMMIT_ID: 58a0c71682a7218b08616a9550958d285b52eb64
       BRANCH_ID: gh-master
     steps:
@@ -42,6 +43,7 @@ jobs:
 
       - name: Compile
         run: |
+          mvn install:install-file -DgroupId=com.baidu.hugegraph -DartifactId=hugegraph-client -Dversion=1.8.9 -Dpackaging=jar -Dfile=$STATIC_DIR/hugegraph-common-1.8.9.jar -DpomFile=$STATIC_DIR/common-pom.xml
           mvn compile -Dmaven.javadoc.skip=true | grep -v "Downloading\|Downloaded"
 
       - name: Prepare env and service
