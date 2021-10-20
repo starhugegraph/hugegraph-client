@@ -58,6 +58,7 @@ public class LoginApiTest extends AuthApiTest {
         Login login = new Login();
         login.name("user1");
         login.password("password1");
+        login.expire(10080);
         Assert.assertThrows(ServerException.class, () -> {
             loginAPI.login(login);
         }, e -> {
