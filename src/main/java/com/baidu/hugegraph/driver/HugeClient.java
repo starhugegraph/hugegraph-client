@@ -44,6 +44,7 @@ public class HugeClient implements Closeable {
     private VariablesManager variable;
     private JobManager job;
     private TaskManager task;
+    private ComputerManager computer;
     private AuthManager auth;
     private MetricsManager metrics;
 
@@ -101,6 +102,7 @@ public class HugeClient implements Closeable {
         this.variable = new VariablesManager(client, graph);
         this.job = new JobManager(client, graph);
         this.task = new TaskManager(client, graph);
+        this.computer = new ComputerManager(client, graph);
         this.auth = new AuthManager(client, graph);
         this.metrics = new MetricsManager(client);
     }
@@ -139,6 +141,10 @@ public class HugeClient implements Closeable {
 
     public JobManager job() {
         return this.job;
+    }
+
+    public ComputerManager computer() {
+        return this.computer;
     }
 
     public TaskManager task() {
