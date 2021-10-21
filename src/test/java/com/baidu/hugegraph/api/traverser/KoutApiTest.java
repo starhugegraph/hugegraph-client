@@ -510,7 +510,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         Kout koutResult = koutAPI.post(request);
 
-        Assert.assertEquals(1, koutResult.size());
+        Assert.assertEquals(0, koutResult.size());
         Set<Object> expected = ImmutableSet.of(lopId);
         Assert.assertEquals(expected, koutResult.ids());
 
@@ -525,7 +525,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         koutResult = koutAPI.post(request);
 
-        Assert.assertEquals(1, koutResult.size());
+        Assert.assertEquals(0, koutResult.size());
         expected = ImmutableSet.of(peterId, joshId);
         Assert.assertEquals(expected, koutResult.ids());
 
@@ -540,7 +540,7 @@ public class KoutApiTest extends TraverserApiTest {
 
         koutResult = koutAPI.post(request);
 
-        Assert.assertEquals(1, koutResult.size());
+        Assert.assertEquals(0, koutResult.size());
         expected = ImmutableSet.of(rippleId);
         Assert.assertEquals(expected, koutResult.ids());
     }

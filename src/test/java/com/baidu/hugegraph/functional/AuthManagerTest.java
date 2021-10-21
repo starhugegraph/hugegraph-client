@@ -146,6 +146,7 @@ public class AuthManagerTest extends BaseFuncTest {
         Login login = new Login();
         login.name("bob");
         login.password("123456");
+        login.expire(10080);
         LoginResult result = auth().login(login);
 
         String token = result.token();

@@ -377,7 +377,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         Kneighbor kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(1, kneighborResult.size());
+        Assert.assertEquals(0, kneighborResult.size());
         Set<Object> expected = ImmutableSet.of(lopId);
         Assert.assertEquals(expected, kneighborResult.ids());
 
