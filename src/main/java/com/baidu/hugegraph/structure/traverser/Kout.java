@@ -22,6 +22,7 @@ package com.baidu.hugegraph.structure.traverser;
 import java.util.List;
 import java.util.Set;
 
+import com.baidu.hugegraph.structure.graph.Edge;
 import com.baidu.hugegraph.structure.graph.Path;
 import com.baidu.hugegraph.structure.graph.Vertex;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -36,6 +37,10 @@ public class Kout {
     private List<Path> paths;
     @JsonProperty
     private Set<Vertex> vertices;
+    @JsonProperty
+    private Set<Edge> edges;
+    @JsonProperty
+    private Object measure;
 
     public int size() {
         return this.size;
@@ -51,5 +56,9 @@ public class Kout {
 
     public Set<Vertex> vertices() {
         return this.vertices;
+    }
+
+    public Object measure() {
+        return this.measure;
     }
 }

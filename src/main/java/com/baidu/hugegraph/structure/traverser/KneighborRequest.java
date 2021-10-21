@@ -28,8 +28,8 @@ public class KneighborRequest {
 
     @JsonProperty("source")
     private Object source;
-    @JsonProperty("step")
-    public EdgeStep step;
+    @JsonProperty("steps")
+    public Steps steps;
     @JsonProperty("max_depth")
     public int maxDepth;
     @JsonProperty("count_only")
@@ -43,7 +43,7 @@ public class KneighborRequest {
 
     private KneighborRequest() {
         this.source = null;
-        this.step = null;
+        this.steps = null;
         this.maxDepth = Traverser.DEFAULT_MAX_DEPTH;
         this.countOnly = false;
         this.limit = Traverser.DEFAULT_PATHS_LIMIT;
@@ -57,9 +57,9 @@ public class KneighborRequest {
 
     @Override
     public String toString() {
-        return String.format("KneighborRequest{source=%s,step=%s,maxDepth=%s" +
+        return String.format("KneighborRequest{source=%s,steps=%s,maxDepth=%s" +
                              "countOnly=%s,limit=%s,withVertex=%s,withPath=%s}",
-                             this.source, this.step, this.maxDepth,
+                             this.source, this.steps, this.maxDepth,
                              this.countOnly, this.limit,
                              this.withVertex, this.withPath);
     }
@@ -67,11 +67,11 @@ public class KneighborRequest {
     public static class Builder {
 
         private KneighborRequest request;
-        private EdgeStep.Builder stepBuilder;
+        private Steps.Builder stepsBuilder;
 
         private Builder() {
             this.request = new KneighborRequest();
-            this.stepBuilder = EdgeStep.builder();
+            this.stepsBuilder = Steps.builder();
         }
 
         public Builder source(Object source) {
@@ -80,9 +80,9 @@ public class KneighborRequest {
             return this;
         }
 
-        public EdgeStep.Builder step() {
-            EdgeStep.Builder builder = EdgeStep.builder();
-            this.stepBuilder = builder;
+        public Steps.Builder steps() {
+            Steps.Builder builder = Steps.builder();
+            this.stepsBuilder = builder;
             return builder;
         }
 
@@ -115,8 +115,8 @@ public class KneighborRequest {
 
         public KneighborRequest build() {
             E.checkNotNull(this.request.source, "The source can't be null");
-            this.request.step = this.stepBuilder.build();
-            E.checkNotNull(this.request.step, "step");
+            this.request.steps = this.stepsBuilder.build();
+            E.checkNotNull(this.request.steps, "steps");
             TraversersAPI.checkPositive(this.request.maxDepth, "max depth");
             TraversersAPI.checkLimit(this.request.limit);
             if (this.request.countOnly) {

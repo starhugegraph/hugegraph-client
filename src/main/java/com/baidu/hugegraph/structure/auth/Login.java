@@ -29,6 +29,9 @@ public class Login {
     @JsonProperty("user_password")
     private String password;
 
+    @JsonProperty("token_expire")
+    private long expire;
+
     public void name(String name) {
         this.name = name;
     }
@@ -43,5 +46,13 @@ public class Login {
 
     public String password() {
         return this.password;
+    }
+
+    public void expire(long expire) {
+        this.expire = expire;
+    }
+
+    public long expire() {
+        return this.expire;
     }
 }

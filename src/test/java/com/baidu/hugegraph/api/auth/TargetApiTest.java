@@ -190,7 +190,6 @@ public class TargetApiTest extends AuthApiTest {
         Target updated = api.update(target1);
         Assert.assertEquals(HugeResourceType.ALL,
                             updated.resource().resourceType());
-        Assert.assertNotEquals(target1.updateTime(), updated.updateTime());
 
         Assert.assertThrows(ServerException.class, () -> {
             target2.name("test2-updated");

@@ -27,6 +27,7 @@ import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.ClientException;
 import com.baidu.hugegraph.util.VersionUtil;
 import com.baidu.hugegraph.version.ClientVersion;
+import org.apache.commons.lang3.StringUtils;
 
 public class HugeClient implements Closeable {
 
@@ -48,14 +49,24 @@ public class HugeClient implements Closeable {
 
     public HugeClient(HugeClientBuilder builder) {
         try {
-            this.client = new RestClient(builder.url(),
-                                         builder.username(),
-                                         builder.password(),
-                                         builder.timeout(),
-                                         builder.maxConns(),
-                                         builder.maxConnsPerRoute(),
-                                         builder.trustStoreFile(),
-                                         builder.trustStorePassword());
+            if (StringUtils.isEmpty(builder.token())) {
+                this.client = new RestClient(builder.url(),
+                                             builder.username(),
+                                             builder.password(),
+                                             builder.timeout(),
+                                             builder.maxConns(),
+                                             builder.maxConnsPerRoute(),
+                                             builder.trustStoreFile(),
+                                             builder.trustStorePassword());
+            } else {
+                this.client = new RestClient(builder.url(),
+                                             builder.token(),
+                                             builder.timeout(),
+                                             builder.maxConns(),
+                                             builder.maxConnsPerRoute(),
+                                             builder.trustStoreFile(),
+                                             builder.trustStorePassword());
+            }
         } catch (ProcessingException e) {
             throw new ClientException("Failed to connect url '%s'", builder.url());
         }

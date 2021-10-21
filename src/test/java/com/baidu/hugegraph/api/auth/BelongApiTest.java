@@ -65,10 +65,10 @@ public class BelongApiTest extends AuthApiTest {
     @Before
     @Override
     public void setup() {
-        user1 = UserApiTest.createUser("user-1", "p1");
-        user2 = UserApiTest.createUser("user-2", "p2");
-        group1 = GroupApiTest.createGroup("group-1", "group 1");
-        group2 = GroupApiTest.createGroup("group-2", "group 2");
+        user1 = UserApiTest.createUser("user1", "password1");
+        user2 = UserApiTest.createUser("user2", "password2");
+        group1 = GroupApiTest.createGroup("group1", "group 1");
+        group2 = GroupApiTest.createGroup("group2", "group 2");
     }
 
     @After
@@ -260,7 +260,6 @@ public class BelongApiTest extends AuthApiTest {
         belong1.description("description updated");
         Belong updated = api.update(belong1);
         Assert.assertEquals("description updated", updated.description());
-        Assert.assertNotEquals(belong1.updateTime(), updated.updateTime());
 
         Assert.assertThrows(ServerException.class, () -> {
             belong2.user(user1);

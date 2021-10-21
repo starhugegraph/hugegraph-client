@@ -19,9 +19,12 @@
 
 package com.baidu.hugegraph.api.traverser;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import com.baidu.hugegraph.structure.traverser.Steps;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -74,7 +77,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         KneighborRequest request = builder.build();
 
@@ -86,7 +89,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         request = builder.build();
 
@@ -108,7 +111,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.withPath(true);
         KneighborRequest request = builder.build();
@@ -130,7 +133,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         builder.withPath(true);
         request = builder.build();
@@ -164,7 +167,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.withPath(false);
         builder.withVertex(true);
@@ -183,7 +186,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         builder.withPath(false);
         builder.withVertex(true);
@@ -203,7 +206,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.withPath(true);
         builder.withVertex(true);
@@ -231,7 +234,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         builder.withPath(true);
         builder.withVertex(true);
@@ -271,7 +274,8 @@ public class KneighborApiTest extends TraverserApiTest {
 
         KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH).labels("created");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("created"));
         builder.maxDepth(1);
         KneighborRequest request = builder.build();
 
@@ -283,7 +287,8 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH).labels("created");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("created"));
         builder.maxDepth(2);
         request = builder.build();
 
@@ -295,7 +300,8 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH).labels("knows");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("knows"));
         builder.maxDepth(1);
         request = builder.build();
 
@@ -307,7 +313,8 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH).labels("knows");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("knows"));
         builder.maxDepth(2);
         request = builder.build();
 
@@ -328,7 +335,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.OUT);
+        builder.steps().direction(Direction.OUT);
         builder.maxDepth(1);
         KneighborRequest request = builder.build();
 
@@ -340,7 +347,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.OUT);
+        builder.steps().direction(Direction.OUT);
         builder.maxDepth(2);
         request = builder.build();
 
@@ -361,21 +368,25 @@ public class KneighborApiTest extends TraverserApiTest {
 
         KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH)
-               .properties("date", "P.gt(\"2014-01-01 00:00:00\")");
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("date", "P.gt(\"2014-01-01 00:00:00\")");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("knows", properties));
         builder.maxDepth(1);
         KneighborRequest request = builder.build();
 
         Kneighbor kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(1, kneighborResult.size());
+        Assert.assertEquals(0, kneighborResult.size());
         Set<Object> expected = ImmutableSet.of(lopId);
         Assert.assertEquals(expected, kneighborResult.ids());
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH)
-               .properties("date", "P.gt(\"2014-01-01 00:00:00\")");
+        properties = new HashMap<>();
+        properties.put("date", "P.gt(\"2014-01-01 00:00:00\")");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("knows", properties));
         builder.maxDepth(2);
         request = builder.build();
 
@@ -387,8 +398,10 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH)
-               .properties("date", "P.gt(\"2014-01-01 00:00:00\")");
+        properties = new HashMap<>();
+        properties.put("date", "P.gt(\"2014-01-01 00:00:00\")");
+        builder.steps().direction(Direction.BOTH)
+               .edgeSteps(new Steps.StepEntity("knows", properties));
         builder.maxDepth(3);
         request = builder.build();
 
@@ -411,7 +424,7 @@ public class KneighborApiTest extends TraverserApiTest {
         // 1 depth with in&out edges
         KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.limit(3);
         KneighborRequest request = builder.build();
@@ -425,7 +438,7 @@ public class KneighborApiTest extends TraverserApiTest {
         // 2 depth with out edges
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.OUT);
+        builder.steps().direction(Direction.OUT);
         builder.maxDepth(2);
         builder.limit(5);
         request = builder.build();
@@ -439,7 +452,7 @@ public class KneighborApiTest extends TraverserApiTest {
         // 2 depth with in&out edges
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         builder.limit(5);
         request = builder.build();
@@ -457,7 +470,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.countOnly(true);
         KneighborRequest request = builder.build();
@@ -471,7 +484,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(2);
         builder.countOnly(true);
         request = builder.build();
@@ -485,7 +498,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.countOnly(true);
         builder.withPath(true);
@@ -497,7 +510,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
-        builder.step().direction(Direction.BOTH);
+        builder.steps().direction(Direction.BOTH);
         builder.maxDepth(1);
         builder.countOnly(true);
         builder.withVertex(true);
