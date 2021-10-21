@@ -205,7 +205,7 @@ public class UserApiTest extends AuthApiTest {
             user2.name("test2_updated");
             api.update(user2);
         }, e -> {
-            Assert.assertContains("The name of user can't be updated",
+            Assert.assertContains("The password is 5-16 characters, which can be letters, numbers or special symbols",
                                   e.getMessage());
         });
 
