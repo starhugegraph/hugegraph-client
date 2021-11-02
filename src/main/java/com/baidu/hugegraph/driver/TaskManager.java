@@ -63,7 +63,11 @@ public class TaskManager {
     }
 
     public void delete(long id) {
-        this.taskAPI.delete(id);
+        this.delete(id, false);
+    }
+
+    public void delete(long id, boolean force) {
+        this.taskAPI.delete(id, force);
     }
 
     public Task cancel(long id) {

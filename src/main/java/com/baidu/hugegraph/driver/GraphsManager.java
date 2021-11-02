@@ -72,6 +72,14 @@ public class GraphsManager {
         this.graphsAPI.delete(graph, message);
     }
 
+    public void reload(String graph) {
+        this.graphsAPI.reload(graph);
+    }
+
+    public void reload() {
+        this.graphsAPI.reload();
+    }
+
     public void mode(String graph, GraphMode mode) {
         this.graphsAPI.mode(graph, mode);
     }

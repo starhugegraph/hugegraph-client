@@ -93,7 +93,12 @@ public class TaskAPI extends API {
     }
 
     public void delete(long id) {
-        this.client.delete(path(), String.valueOf(id));
+        this.delete(id, false);
+    }
+
+    public void delete(long id, boolean force) {
+        this.client.delete(String.join("/", path(), String.valueOf(id)),
+                           ImmutableMap.of("force", force));
     }
 
     public Task cancel(long id) {
