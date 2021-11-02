@@ -44,6 +44,9 @@ public class GraphsAPI extends API {
     private static final String MODE = "mode";
     private static final String GRAPH_READ_MODE = "graph_read_mode";
     private static final String CLEARED = "cleared";
+    private static final String RELOADED = "reloaded";
+    private static final String GRAPHS = "graphs";
+    private static final String MANAGE = "manage";
 
     public GraphsAPI(RestClient client) {
         super(client);
@@ -97,6 +100,35 @@ public class GraphsAPI extends API {
         this.client.checkApiVersion("0.67", "dynamic graph delete");
         this.client.delete(joinPath(this.path(), graph),
                            ImmutableMap.of(CONFIRM_MESSAGE, message));
+    }
+
+    public Map<String, String> reload(String name) {
+        RestResult result = this.client.put(this.path(), name,
+                                            ImmutableMap.of("action",
+                                                            "reload"));
+        Map<String, String> response = result.readObject(Map.class);
+
+        E.checkState(response.size() == 1 && response.containsKey(name),
+                     "Response must be formatted to {\"%s\" : status}, " +
+                     "but got %s", name, response);
+        String status = response.get(name);
+        E.checkState(RELOADED.equals(status),
+                     "Graph %s status must be %s, but got '%s'", name, status);
+        return response;
+    }
+
+    public Map<String, String> reload() {
+        RestResult result = this.client.put(this.path(), MANAGE,
+                                            ImmutableMap.of("action", "reload"));
+        Map<String, String> response = result.readObject(Map.class);
+
+        E.checkState(response.size() == 1 && response.containsKey(GRAPHS),
+                     "Response must be formatted to {\"%s\" : status}, " +
+                     "but got %s", GRAPHS, response);
+        String status = response.get(GRAPHS);
+        E.checkState(RELOADED.equals(status),
+                     "Server status must be %s, but got '%s'", status);
+        return response;
     }
 
     public void mode(String graph, GraphMode mode) {
