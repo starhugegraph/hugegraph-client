@@ -23,11 +23,12 @@ import java.io.Closeable;
 
 import javax.ws.rs.ProcessingException;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.ClientException;
 import com.baidu.hugegraph.util.VersionUtil;
 import com.baidu.hugegraph.version.ClientVersion;
-import org.apache.commons.lang3.StringUtils;
 
 public class HugeClient implements Closeable {
 

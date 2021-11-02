@@ -27,6 +27,9 @@ public class TraverserApiTest extends BaseApiTest {
 
     protected static SameNeighborsAPI sameNeighborsAPI;
     protected static JaccardSimilarityAPI jaccardSimilarityAPI;
+    protected static AdamicAdarAPI adamicAdarAPI;
+    protected static ResouceAllocationAPI resouceAllocationAPI;
+
     protected static ShortestPathAPI shortestPathAPI;
     protected static AllShortestPathsAPI allShortestPathsAPI;
     protected static SingleSourceShortestPathAPI singleSourceShortestPathAPI;
@@ -59,6 +62,9 @@ public class TraverserApiTest extends BaseApiTest {
 
         sameNeighborsAPI = new SameNeighborsAPI(client, GRAPH);
         jaccardSimilarityAPI = new JaccardSimilarityAPI(client, GRAPH);
+        adamicAdarAPI = new AdamicAdarAPI(client, GRAPH);
+        resouceAllocationAPI = new ResouceAllocationAPI(client, GRAPH);
+
         shortestPathAPI = new ShortestPathAPI(client, GRAPH);
         allShortestPathsAPI = new AllShortestPathsAPI(client, GRAPH);
         singleSourceShortestPathAPI = new SingleSourceShortestPathAPI(client,
