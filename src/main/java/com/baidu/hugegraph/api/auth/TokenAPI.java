@@ -26,8 +26,8 @@ import com.baidu.hugegraph.structure.constant.HugeType;
 
 public class TokenAPI extends AuthAPI {
 
-    public TokenAPI(RestClient client, String graph) {
-        super(client, graph);
+    public TokenAPI(RestClient client) {
+        super(client);
     }
 
     @Override

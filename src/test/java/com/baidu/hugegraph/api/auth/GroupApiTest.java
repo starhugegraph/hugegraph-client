@@ -37,7 +37,7 @@ public class GroupApiTest extends AuthApiTest {
 
     @BeforeClass
     public static void init() {
-        api = new GroupAPI(initClient(), GRAPH);
+        api = new GroupAPI(initClient(), DEFAULT_GRAPHSPACE);
     }
 
     @AfterClass

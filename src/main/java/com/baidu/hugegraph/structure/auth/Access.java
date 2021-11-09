@@ -27,6 +27,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Access extends AuthElement {
 
+    @JsonProperty("graphspace")
+    private String graphSpace;
     @JsonProperty("group")
     private Object group;
     @JsonProperty("target")
@@ -63,6 +65,14 @@ public class Access extends AuthElement {
     @Override
     public String creator() {
         return this.creator;
+    }
+
+    public String graphSpace() {
+        return this.graphSpace;
+    }
+
+    public void graphSpace(String graphSpace) {
+        this.graphSpace = graphSpace;
     }
 
     public Object group() {

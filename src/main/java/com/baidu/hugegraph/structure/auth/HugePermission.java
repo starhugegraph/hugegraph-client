@@ -28,6 +28,8 @@ public enum HugePermission {
     DELETE(0x04),
     EXECUTE(0x08),
 
+    SPACE(0x1f),
+
     ANY(0x7f);
 
     private final byte code;

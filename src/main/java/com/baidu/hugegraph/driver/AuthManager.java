@@ -20,16 +20,12 @@
 package com.baidu.hugegraph.driver;
 
 import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.collections.CollectionUtils;
 
 import com.baidu.hugegraph.api.auth.AccessAPI;
 import com.baidu.hugegraph.api.auth.BelongAPI;
 import com.baidu.hugegraph.api.auth.GroupAPI;
 import com.baidu.hugegraph.api.auth.LoginAPI;
 import com.baidu.hugegraph.api.auth.LogoutAPI;
-import com.baidu.hugegraph.api.auth.ProjectAPI;
 import com.baidu.hugegraph.api.auth.TargetAPI;
 import com.baidu.hugegraph.api.auth.TokenAPI;
 import com.baidu.hugegraph.api.auth.UserAPI;
@@ -39,7 +35,6 @@ import com.baidu.hugegraph.structure.auth.Belong;
 import com.baidu.hugegraph.structure.auth.Group;
 import com.baidu.hugegraph.structure.auth.Login;
 import com.baidu.hugegraph.structure.auth.LoginResult;
-import com.baidu.hugegraph.structure.auth.Project;
 import com.baidu.hugegraph.structure.auth.Target;
 import com.baidu.hugegraph.structure.auth.TokenPayload;
 import com.baidu.hugegraph.structure.auth.User;
@@ -52,21 +47,19 @@ public class AuthManager {
     private final UserAPI userAPI;
     private final AccessAPI accessAPI;
     private final BelongAPI belongAPI;
-    private final ProjectAPI projectAPI;
     private final LoginAPI loginAPI;
     private final LogoutAPI logoutAPI;
     private final TokenAPI tokenAPI;
 
-    public AuthManager(RestClient client, String graph) {
-        this.targetAPI = new TargetAPI(client, graph);
-        this.groupAPI = new GroupAPI(client, graph);
-        this.userAPI = new UserAPI(client, graph);
-        this.accessAPI = new AccessAPI(client, graph);
-        this.belongAPI = new BelongAPI(client, graph);
-        this.projectAPI = new ProjectAPI(client, graph);
-        this.loginAPI = new LoginAPI(client, graph);
-        this.logoutAPI = new LogoutAPI(client, graph);
-        this.tokenAPI = new TokenAPI(client, graph);
+    public AuthManager(RestClient client, String graphSpace) {
+        this.targetAPI = new TargetAPI(client, graphSpace);
+        this.groupAPI = new GroupAPI(client, graphSpace);
+        this.userAPI = new UserAPI(client);
+        this.accessAPI = new AccessAPI(client, graphSpace);
+        this.belongAPI = new BelongAPI(client, graphSpace);
+        this.loginAPI = new LoginAPI(client);
+        this.logoutAPI = new LogoutAPI(client);
+        this.tokenAPI = new TokenAPI(client);
     }
 
     public List<Target> listTargets() {
@@ -229,45 +222,6 @@ public class AuthManager {
         for (Target target : this.listTargets()) {
             this.deleteTarget(target.id());
         }
-        for (Project project : this.listProjects()) {
-            Set<String> graphs = project.graphs();
-            if (CollectionUtils.isNotEmpty(graphs)) {
-                this.projectRemoveGraphs(project.id(), graphs);
-            }
-            this.deleteProject(project.id());
-        }
-    }
-
-    public Project createProject(Project project) {
-        return this.projectAPI.create(project);
-    }
-
-    public Project getProject(Object id) {
-        return this.projectAPI.get(id);
-    }
-
-    public List<Project> listProjects() {
-        return this.listProject(-1);
-    }
-
-    public List<Project> listProject(int limit) {
-        return this.projectAPI.list(limit);
-    }
-
-    public Project updateProject(Project project) {
-        return this.projectAPI.update(project);
-    }
-
-    public Project projectAddGraphs(Object projectId, Set<String> graphs) {
-        return this.projectAPI.addGraphs(projectId, graphs);
-    }
-
-    public Project projectRemoveGraphs(Object projectId, Set<String> graphs) {
-        return this.projectAPI.removeGraphs(projectId, graphs);
-    }
-
-    public void deleteProject(Object id) {
-        this.projectAPI.delete(id);
     }
 
     public LoginResult login(Login login) {

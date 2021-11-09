@@ -124,9 +124,11 @@ public class User extends AuthElement {
     public static class UserRole {
 
         @JsonProperty("roles")
-        private Map<String, Map<HugePermission, List<HugeResource>>> roles;
+        private Map<String, Map<String, Map<HugePermission,
+                                            List<HugeResource>>>> roles;
 
-        public Map<String, Map<HugePermission, List<HugeResource>>> roles() {
+        public Map<String, Map<String, Map<HugePermission,
+                                           List<HugeResource>>>> roles() {
             return Collections.unmodifiableMap(this.roles);
         }
 
