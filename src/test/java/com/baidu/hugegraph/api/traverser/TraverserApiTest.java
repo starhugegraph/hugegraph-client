@@ -26,6 +26,7 @@ import com.baidu.hugegraph.api.BaseApiTest;
 public class TraverserApiTest extends BaseApiTest {
 
     protected static SameNeighborsAPI sameNeighborsAPI;
+    protected static SameNeighborsBatchAPI sameNeighborsBatchAPI;
     protected static JaccardSimilarityAPI jaccardSimilarityAPI;
     protected static AdamicAdarAPI adamicAdarAPI;
     protected static ResouceAllocationAPI resouceAllocationAPI;
@@ -61,6 +62,7 @@ public class TraverserApiTest extends BaseApiTest {
         BaseApiTest.init();
 
         sameNeighborsAPI = new SameNeighborsAPI(client, GRAPH);
+        sameNeighborsBatchAPI = new SameNeighborsBatchAPI(client, GRAPH);
         jaccardSimilarityAPI = new JaccardSimilarityAPI(client, GRAPH);
         adamicAdarAPI = new AdamicAdarAPI(client, GRAPH);
         resouceAllocationAPI = new ResouceAllocationAPI(client, GRAPH);
