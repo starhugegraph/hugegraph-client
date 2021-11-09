@@ -123,8 +123,8 @@ public class BelongApiTest extends AuthApiTest {
             belong4.group(group1);
             api.create(belong3);
         }, e -> {
-            Assert.assertContains("Can't save belong", e.getMessage());
-            Assert.assertContains("that already exists", e.getMessage());
+            Assert.assertContains("The belong name", e.getMessage());
+            Assert.assertContains("has existed", e.getMessage());
         });
     }
 
@@ -282,7 +282,7 @@ public class BelongApiTest extends AuthApiTest {
             Whitebox.setInternalState(belong2, "id", "fake-id");
             api.update(belong2);
         }, e -> {
-            Assert.assertContains("Invalid belong id: fake-id",
+            Assert.assertContains("not existed",
                                   e.getMessage());
         });
     }
@@ -304,13 +304,13 @@ public class BelongApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.delete(belong2.id());
         }, e -> {
-            Assert.assertContains("Invalid belong id:", e.getMessage());
+            Assert.assertContains("not existed", e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {
             api.delete("fake-id");
         }, e -> {
-            Assert.assertContains("Invalid belong id: fake-id",
+            Assert.assertContains("not existed",
                                   e.getMessage());
         });
     }
@@ -319,6 +319,7 @@ public class BelongApiTest extends AuthApiTest {
         Belong belong = new Belong();
         belong.user(user);
         belong.group(group);
+        belong.graphSpace(DEFAULT_GRAPHSPACE);
         belong.description(description);
         return api.create(belong);
     }

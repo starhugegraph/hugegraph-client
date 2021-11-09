@@ -107,8 +107,8 @@ public class AccessApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.create(access1);
         }, e -> {
-            Assert.assertContains("Can't save access", e.getMessage());
-            Assert.assertContains("that already exists", e.getMessage());
+            Assert.assertContains("The group name", e.getMessage());
+            Assert.assertContains("has existed", e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {
@@ -119,8 +119,8 @@ public class AccessApiTest extends AuthApiTest {
             access3.description("group beijing read gremlin");
             api.create(access3);
         }, e -> {
-            Assert.assertContains("Can't save access", e.getMessage());
-            Assert.assertContains("that already exists", e.getMessage());
+            Assert.assertContains("The access name", e.getMessage());
+            Assert.assertContains("has existed", e.getMessage());
         });
     }
 
@@ -311,7 +311,7 @@ public class AccessApiTest extends AuthApiTest {
             Whitebox.setInternalState(access2, "id", "fake-id");
             api.update(access2);
         }, e -> {
-            Assert.assertContains("Invalid access id: fake-id",
+            Assert.assertContains("not existed",
                                   e.getMessage());
         });
     }
@@ -339,7 +339,7 @@ public class AccessApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.delete("fake-id");
         }, e -> {
-            Assert.assertContains("Invalid access id: fake-id",
+            Assert.assertContains("not existed",
                                   e.getMessage());
         });
     }

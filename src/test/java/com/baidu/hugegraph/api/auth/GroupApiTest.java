@@ -77,8 +77,8 @@ public class GroupApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.create(group1);
         }, e -> {
-            Assert.assertContains("Can't save group", e.getMessage());
-            Assert.assertContains("that already exists", e.getMessage());
+            Assert.assertContains("The group name", e.getMessage());
+            Assert.assertContains("has existed", e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {
@@ -183,13 +183,13 @@ public class GroupApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.delete(group2.id());
         }, e -> {
-            Assert.assertContains("Invalid group id:", e.getMessage());
+            Assert.assertContains("not existed", e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {
             api.delete("fake-id");
         }, e -> {
-            Assert.assertContains("Invalid group id: fake-id",
+            Assert.assertContains("not existed",
                                   e.getMessage());
         });
     }
@@ -197,6 +197,7 @@ public class GroupApiTest extends AuthApiTest {
     protected static Group createGroup(String name, String description) {
         Group group = new Group();
         group.name(name);
+        group.graphSpace(DEFAULT_GRAPHSPACE);
         group.description(description);
         return api.create(group);
     }
