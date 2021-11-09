@@ -38,6 +38,5 @@ authentication: {
 sed -i 's/#auth.authenticator=/auth.authenticator=com.baidu.hugegraph.auth.StandardAuthenticator/' ${REST_SERVER_CONFIG}
 
 # start HugeGraphServer with https protocol
-bin/init-store.sh
 bin/start-hugegraph.sh
 cd ../
