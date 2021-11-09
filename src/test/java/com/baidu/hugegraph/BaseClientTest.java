@@ -41,7 +41,7 @@ public class BaseClientTest {
     private static HugeClient client;
 
     protected static HugeClient open() {
-        client = HugeClient.builder(BASE_URL, GRAPH)
+        client = HugeClient.builder(BASE_URL, DEFAULT_GRAPHSPACE, GRAPH)
                            .configUser(USERNAME, PASSWORD)
                            .build();
         return client;

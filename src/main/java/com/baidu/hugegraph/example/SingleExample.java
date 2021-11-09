@@ -39,6 +39,7 @@ public class SingleExample {
     public static void main(String[] args) throws IOException {
         // If connect failed will throw a exception.
         HugeClient hugeClient = HugeClient.builder("http://localhost:8080",
+                                                   "DEFAULT",
                                                    "hugegraph").build();
 
         SchemaManager schema = hugeClient.schema();

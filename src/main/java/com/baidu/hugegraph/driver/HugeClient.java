@@ -70,18 +70,21 @@ public class HugeClient implements Closeable {
                                              builder.trustStorePassword());
             }
         } catch (ProcessingException e) {
-            throw new ClientException("Failed to connect url '%s'", builder.url());
+            throw new ClientException("Failed to connect url '%s'",
+                                      builder.url());
         }
         try {
-            this.initManagers(this.client, builder.graph());
+            this.initManagers(this.client, builder.graphSpace(),
+                              builder.graph());
         } catch (Throwable e) {
             this.client.close();
             throw e;
         }
     }
 
-    public static HugeClientBuilder builder(String url, String graph) {
-        return new HugeClientBuilder(url, graph);
+    public static HugeClientBuilder builder(String url, String graphSpace,
+                                            String graph) {
+        return new HugeClientBuilder(url, graphSpace, graph);
     }
 
     @Override
@@ -89,7 +92,8 @@ public class HugeClient implements Closeable {
         this.client.close();
     }
 
-    private void initManagers(RestClient client, String graph) {
+    private void initManagers(RestClient client, String graphSpace,
+                              String graph) {
         assert client != null;
         // Check hugegraph-server api version
         this.version = new VersionManager(client);
@@ -98,7 +102,8 @@ public class HugeClient implements Closeable {
         this.graphs = new GraphsManager(client);
         this.schema = new SchemaManager(client, graph);
         this.graph = new GraphManager(client, graph);
-        this.gremlin = new GremlinManager(client, graph, this.graph);
+        this.gremlin = new GremlinManager(client, graphSpace,
+                                          graph, this.graph);
         this.traverser = new TraverserManager(client, this.graph);
         this.variable = new VariablesManager(client, graph);
         this.job = new JobManager(client, graph);

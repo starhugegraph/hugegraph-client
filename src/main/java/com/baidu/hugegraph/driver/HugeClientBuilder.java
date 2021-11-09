@@ -30,6 +30,7 @@ public class HugeClientBuilder {
     private static final int DEFAULT_IDLE_TIME = 30;
 
     private String url;
+    private String graphSpace;
     private String graph;
     private String username;
     private String password;
@@ -41,7 +42,7 @@ public class HugeClientBuilder {
     private String trustStoreFile;
     private String trustStorePassword;
 
-    public HugeClientBuilder(String url, String graph) {
+    public HugeClientBuilder(String url, String graphSpace, String graph) {
         E.checkArgument(url != null && !url.isEmpty(),
                         "Expect a string value as the url " +
                         "parameter argument, but got: %s", url);
@@ -49,6 +50,7 @@ public class HugeClientBuilder {
                         "Expect a string value as the graph name " +
                         "parameter argument, but got: %s", graph);
         this.url = url;
+        this.graphSpace = graphSpace;
         this.graph = graph;
         this.username = "";
         this.password = "";
@@ -67,6 +69,11 @@ public class HugeClientBuilder {
         E.checkArgument(this.graph != null,
                         "The graph parameter can't be null");
         return new HugeClient(this);
+    }
+
+    public HugeClientBuilder configGraphSpace(String graphSpace) {
+        this.graphSpace = graphSpace;
+        return this;
     }
 
     public HugeClientBuilder configGraph(String graph) {
@@ -137,6 +144,10 @@ public class HugeClientBuilder {
 
     public String url() {
         return this.url;
+    }
+
+    public String graphSpace() {
+        return this.graphSpace;
     }
 
     public String graph() {
