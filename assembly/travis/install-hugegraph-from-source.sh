@@ -47,9 +47,6 @@ authentication: {
 
 sed -i 's/#auth.authenticator=/auth.authenticator=com.baidu.hugegraph.auth.StandardAuthenticator/' ${REST_SERVER_CONFIG}
 
-# sed -i "s?http://127.0.0.1:8080?https://127.0.0.1:8443?g" "$REST_SERVER_CONFIG"
-echo "auth.authenticator=com.baidu.hugegraph.auth.StandardAuthenticator" >> ${REST_SERVER_CONFIG}
-
 # start HugeGraphServer with https protocol
 bin/init-store.sh
 bin/start-hugegraph.shs
