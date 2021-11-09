@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class AuthElement extends Element {
 
-    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss.SSS";
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     @JsonProperty("id")
     protected Object id;
