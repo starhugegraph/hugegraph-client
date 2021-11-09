@@ -22,17 +22,8 @@ mv hugegraph-*.tar.gz ../
 cd ../
 rm -rf hugegraph
 tar -zxvf hugegraph-*.tar.gz
-
-HTTPS_SERVER_DIR="hugegraph_https"
-mkdir ${HTTPS_SERVER_DIR}
-cp -r hugegraph-*/. ${HTTPS_SERVER_DIR}
 cd hugegraph-*/
-cp ../$TRAVIS_DIR/conf/* conf
-# start HugeGraphServer with http protocol
-echo -e "admin" | bin/init-store.sh || exit 1
-bin/start-hugegraph.sh || exit 1
 
-cd ../${HTTPS_SERVER_DIR}
 REST_SERVER_CONFIG="conf/rest-server.properties"
 GREMLIN_SERVER_CONFIG="conf/gremlin-server.yaml"
 
@@ -48,5 +39,5 @@ sed -i 's/#auth.authenticator=/auth.authenticator=com.baidu.hugegraph.auth.Stand
 
 # start HugeGraphServer with https protocol
 bin/init-store.sh
-bin/start-hugegraph.shs
+bin/start-hugegraph.sh
 cd ../
