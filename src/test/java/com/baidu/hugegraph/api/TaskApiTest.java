@@ -212,8 +212,8 @@ public class TaskApiTest extends BaseApiTest {
         schema().vertexLabel("man").useAutomaticId().ifNotExist().create();
 
         String groovy = "for (int i = 0; i < 10; i++) {" +
-                            "DEFAULT-hugegraph.addVertex(T.label, 'man');" +
-                            "DEFAULT-hugegraph.tx().commit();" +
+                            "graph.addVertex(T.label, 'man');" +
+                            "graph.tx().commit();" +
                         "}";
         // Insert 10 records in sync mode
         GremlinRequest request = new GremlinRequest(groovy);
