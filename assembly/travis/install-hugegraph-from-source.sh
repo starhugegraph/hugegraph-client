@@ -14,9 +14,8 @@ HUGEGRAPH_GIT_URL="https://github.com/starhugegraph/hugegraph.git"
 
 #git clone ${HUGEGRAPH_GIT_URL}
 #git checkout -b gh-dis-release origin/gh-dis-release
-git clone --depth 100 ${HUGEGRAPH_GIT_URL}
+git clone -b gh-dis-release --depth 20 ${HUGEGRAPH_GIT_URL}
 cd hugegraph
-git checkout ${COMMIT_ID}
 
 mvn package -DskipTests
 mv hugegraph-*.tar.gz ../
