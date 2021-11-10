@@ -197,7 +197,6 @@ public class GroupApiTest extends AuthApiTest {
     protected static Group createGroup(String name, String description) {
         Group group = new Group();
         group.name(name);
-        group.graphSpace(DEFAULT_GRAPHSPACE);
         group.description(description);
         return api.create(group);
     }

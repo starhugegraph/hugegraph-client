@@ -30,8 +30,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Target extends AuthElement {
 
-    @JsonProperty("graphspace")
-    private String graphSpace;
     @JsonProperty("target_name")
     private String name;
     @JsonProperty("target_graph")
@@ -68,14 +66,6 @@ public class Target extends AuthElement {
     @Override
     public String creator() {
         return this.creator;
-    }
-
-    public String graphSpace() {
-        return this.graphSpace;
-    }
-
-    public void graphSpace(String graphSpace) {
-        this.graphSpace = graphSpace;
     }
 
     public String name() {

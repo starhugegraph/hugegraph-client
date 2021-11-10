@@ -27,8 +27,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Group extends AuthElement {
 
-    @JsonProperty("graphspace")
-    private String graphSpace;
     @JsonProperty("group_name")
     private String name;
     @JsonProperty("group_description")
@@ -61,14 +59,6 @@ public class Group extends AuthElement {
     @Override
     public String creator() {
         return this.creator;
-    }
-
-    public String graphSpace() {
-        return this.graphSpace;
-    }
-
-    public void graphSpace(String graphSpace) {
-        this.graphSpace = graphSpace;
     }
 
     public String name() {

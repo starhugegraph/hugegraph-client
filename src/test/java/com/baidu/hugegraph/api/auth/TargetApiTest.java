@@ -239,7 +239,6 @@ public class TargetApiTest extends AuthApiTest {
     protected static Target createTarget(String name, HugeResourceType res) {
         Target target = new Target();
         target.name(name);
-        target.graphSpace(DEFAULT_GRAPHSPACE);
         target.graph("hugegraph");
         target.url("127.0.0.1:8080");
         target.resources(new HugeResource(res));

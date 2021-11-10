@@ -319,7 +319,6 @@ public class BelongApiTest extends AuthApiTest {
         Belong belong = new Belong();
         belong.user(user);
         belong.group(group);
-        belong.graphSpace(DEFAULT_GRAPHSPACE);
         belong.description(description);
         return api.create(belong);
     }
