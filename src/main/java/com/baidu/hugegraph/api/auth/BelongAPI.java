@@ -25,8 +25,10 @@ import java.util.Map;
 
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
+import com.baidu.hugegraph.structure.auth.AuthElement;
 import com.baidu.hugegraph.structure.auth.Belong;
 import com.baidu.hugegraph.structure.constant.HugeType;
+import com.baidu.hugegraph.util.E;
 
 public class BelongAPI extends AuthAPI {
 
@@ -40,7 +42,8 @@ public class BelongAPI extends AuthAPI {
     }
 
     public Belong create(Belong belong) {
-        RestResult result = this.client.post(this.path(), belong);
+        Object obj = this.checkCreateOrUpdate(belong);
+        RestResult result = this.client.post(this.path(), obj);
         return result.readObject(Belong.class);
     }
 
@@ -61,11 +64,18 @@ public class BelongAPI extends AuthAPI {
 
     public Belong update(Belong belong) {
         String id = formatRelationId(belong.id());
-        RestResult result = this.client.put(this.path(), id, belong);
+        Object obj = this.checkCreateOrUpdate(belong);
+        RestResult result = this.client.put(this.path(), id, obj);
         return result.readObject(Belong.class);
     }
 
     public void delete(Object id) {
         this.client.delete(this.path(), formatRelationId(id));
+    }
+
+    @Override
+    protected Object checkCreateOrUpdate(AuthElement authElement) {
+        Belong belong = (Belong) authElement;
+        return belong.switchReq();
     }
 }

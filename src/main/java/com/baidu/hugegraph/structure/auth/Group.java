@@ -23,14 +23,17 @@ import java.util.Date;
 
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Group extends AuthElement {
 
+    @JsonProperty("graphspace")
+    protected String graphSpace;
     @JsonProperty("group_name")
-    private String name;
+    protected String name;
     @JsonProperty("group_description")
-    private String description;
+    protected String description;
 
     @JsonProperty("group_create")
     @JsonFormat(pattern = DATE_FORMAT)
@@ -61,6 +64,14 @@ public class Group extends AuthElement {
         return this.creator;
     }
 
+    public String graphSpace() {
+        return this.graphSpace;
+    }
+
+    public void graphSpace(String graphSpace) {
+        this.graphSpace = graphSpace;
+    }
+
     public String name() {
         return this.name;
     }
@@ -75,5 +86,22 @@ public class Group extends AuthElement {
 
     public void description(String description) {
         this.description = description;
+    }
+
+    public GroupReq switchReq() {
+        return new GroupReq(this);
+    }
+
+    @JsonIgnoreProperties({"graphspace"})
+    public static class GroupReq extends Group {
+
+        public GroupReq(Group group) {
+            this.id = group.id();
+            this.name = group.name();
+            this.description = group.description();
+            this.update = group.updateTime();
+            this.create = group.createTime();
+            this.creator = group.creator();
+        }
     }
 }

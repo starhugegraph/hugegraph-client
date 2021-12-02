@@ -56,4 +56,6 @@ public abstract class AuthAPI extends API {
         }
         return String.valueOf(id);
     }
+
+    protected abstract Object checkCreateOrUpdate(AuthElement authElement);
 }

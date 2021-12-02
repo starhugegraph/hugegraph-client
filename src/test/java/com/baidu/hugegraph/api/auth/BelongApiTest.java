@@ -113,8 +113,8 @@ public class BelongApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.create(belong1);
         }, e -> {
-            Assert.assertContains("Can't save belong", e.getMessage());
-            Assert.assertContains("that already exists", e.getMessage());
+            Assert.assertContains("The belong name", e.getMessage());
+            Assert.assertContains("has existed", e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {

@@ -20,6 +20,7 @@
 package com.baidu.hugegraph.api.auth;
 
 import com.baidu.hugegraph.client.RestClient;
+import com.baidu.hugegraph.structure.auth.AuthElement;
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.google.common.collect.ImmutableMap;
 
@@ -36,5 +37,11 @@ public class LogoutAPI extends AuthAPI {
 
     public void logout() {
         this.client.delete(this.path(), ImmutableMap.of());
+    }
+
+    @Override
+    protected Object checkCreateOrUpdate(AuthElement authElement) {
+
+        return null;
     }
 }

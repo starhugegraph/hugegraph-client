@@ -24,6 +24,7 @@ import java.util.Map;
 
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
+import com.baidu.hugegraph.structure.auth.AuthElement;
 import com.baidu.hugegraph.structure.auth.User;
 import com.baidu.hugegraph.structure.auth.User.UserRole;
 import com.baidu.hugegraph.structure.constant.HugeType;
@@ -72,5 +73,11 @@ public class UserAPI extends AuthAPI {
 
     public void delete(Object id) {
         this.client.delete(this.path(), formatEntityId(id));
+    }
+
+    @Override
+    protected Object checkCreateOrUpdate(AuthElement authElement) {
+
+        return null;
     }
 }

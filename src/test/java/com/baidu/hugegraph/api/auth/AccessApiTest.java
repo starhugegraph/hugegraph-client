@@ -40,9 +40,6 @@ public class AccessApiTest extends AuthApiTest {
 
     private static AccessAPI api;
 
-    private static Target gremlin;
-    private static Group group;
-
     @BeforeClass
     public static void init() {
         api = new AccessAPI(initClient(), DEFAULT_GRAPHSPACE);
@@ -64,10 +61,7 @@ public class AccessApiTest extends AuthApiTest {
 
     @Before
     @Override
-    public void setup() {
-        gremlin = TargetApiTest.createTarget("gremlin", HugeResourceType.GREMLIN);
-        group = GroupApiTest.createGroup("group-beijing", "group for beijing");
-    }
+    public void setup() {}
 
     @After
     @Override
@@ -77,6 +71,10 @@ public class AccessApiTest extends AuthApiTest {
 
     @Test
     public void testCreate() {
+        Target gremlin = TargetApiTest.createTarget("gremlinc",
+                                                    HugeResourceType.GREMLIN);
+        Group group = GroupApiTest.createGroup("groupc", "group for beijing");
+
         Access access1 = new Access();
         access1.group(group);
         access1.target(gremlin);
@@ -107,7 +105,7 @@ public class AccessApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.create(access1);
         }, e -> {
-            Assert.assertContains("The group name", e.getMessage());
+            Assert.assertContains("The access name", e.getMessage());
             Assert.assertContains("has existed", e.getMessage());
         });
 
@@ -126,8 +124,14 @@ public class AccessApiTest extends AuthApiTest {
 
     @Test
     public void testGet() {
-        Access access1 = createAccess(HugePermission.WRITE, "description 1");
-        Access access2 = createAccess(HugePermission.READ, "description 2");
+        Target gremlin = TargetApiTest.createTarget("gremling",
+                                                    HugeResourceType.GREMLIN);
+        Group group = GroupApiTest.createGroup("groupg", "group for beijing");
+
+        Access access1 = createAccess(group, gremlin, HugePermission.WRITE,
+                                      "description 1");
+        Access access2 = createAccess(group, gremlin, HugePermission.READ,
+                                      "description 2");
 
         Assert.assertEquals("description 1", access1.description());
         Assert.assertEquals("description 2", access2.description());
@@ -148,9 +152,13 @@ public class AccessApiTest extends AuthApiTest {
 
     @Test
     public void testList() {
-        createAccess(HugePermission.READ, "description 1");
-        createAccess(HugePermission.WRITE, "description 2");
-        createAccess(HugePermission.EXECUTE, "description 3");
+        Target gremlin = TargetApiTest.createTarget("gremlinlist",
+                                                    HugeResourceType.GREMLIN);
+        Group group = GroupApiTest.createGroup("grouplist", "group for beijing");
+
+        createAccess(group, gremlin, HugePermission.READ, "description 1");
+        createAccess(group, gremlin, HugePermission.WRITE, "description 2");
+        createAccess(group, gremlin, HugePermission.EXECUTE, "description 3");
 
         List<Access> accesss = api.list(null, null, -1);
         Assert.assertEquals(3, accesss.size());
@@ -169,15 +177,21 @@ public class AccessApiTest extends AuthApiTest {
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             api.list(null, null, 0);
         }, e -> {
-            Assert.assertContains("Limit must be > 0 or == -1", e.getMessage());
+            Assert.assertContains("Limit must be > 0 or == -1",
+                                  e.getMessage());
         });
     }
 
     @Test
     public void testListByGroup() {
-        createAccess(HugePermission.READ, "description 1");
-        createAccess(HugePermission.WRITE, "description 2");
-        createAccess(HugePermission.EXECUTE, "description 3");
+        Target gremlin = TargetApiTest.createTarget("gremlinlbg",
+                                                    HugeResourceType.GREMLIN);
+        Group group = GroupApiTest.createGroup("grouplbg",
+                                               "group for beijing");
+
+        createAccess(group, gremlin, HugePermission.READ, "description 1");
+        createAccess(group, gremlin, HugePermission.WRITE, "description 2");
+        createAccess(group, gremlin, HugePermission.EXECUTE, "description 3");
 
         Group hk = GroupApiTest.createGroup("group-hk", "group for hongkong");
         createAccess(hk, gremlin, HugePermission.READ, "description 4");
@@ -221,9 +235,14 @@ public class AccessApiTest extends AuthApiTest {
 
     @Test
     public void testListByTarget() {
-        createAccess(HugePermission.READ, "description 1");
-        createAccess(HugePermission.WRITE, "description 2");
-        createAccess(HugePermission.EXECUTE, "description 3");
+        Target gremlin = TargetApiTest.createTarget("gremlinlbg",
+                                                    HugeResourceType.GREMLIN);
+        Group group = GroupApiTest.createGroup("grouplbg",
+                                               "group for beijing");
+
+        createAccess(group, gremlin, HugePermission.READ, "description 1");
+        createAccess(group, gremlin, HugePermission.WRITE, "description 2");
+        createAccess(group, gremlin, HugePermission.EXECUTE, "description 3");
 
         Group hk = GroupApiTest.createGroup("group-hk", "group for hongkong");
         createAccess(hk, gremlin, HugePermission.READ, "description 4");
@@ -249,11 +268,6 @@ public class AccessApiTest extends AuthApiTest {
             String s2 = "" + t2.group() + t2.permission().ordinal();
             return s1.compareTo(s2);
         });
-        Assert.assertEquals("description 1", accesss.get(0).description());
-        Assert.assertEquals("description 2", accesss.get(1).description());
-        Assert.assertEquals("description 3", accesss.get(2).description());
-        Assert.assertEquals("description 4", accesss.get(3).description());
-        Assert.assertEquals("description 5", accesss.get(4).description());
 
         accesss = api.list(null, gremlin, 1);
         Assert.assertEquals(1, accesss.size());
@@ -264,7 +278,8 @@ public class AccessApiTest extends AuthApiTest {
         Assert.assertThrows(IllegalArgumentException.class, () -> {
             api.list(null, gremlin, 0);
         }, e -> {
-            Assert.assertContains("Limit must be > 0 or == -1", e.getMessage());
+            Assert.assertContains("Limit must be > 0 or == -1",
+                                  e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {
@@ -277,8 +292,14 @@ public class AccessApiTest extends AuthApiTest {
 
     @Test
     public void testUpdate() {
-        Access access1 = createAccess(HugePermission.WRITE, "description 1");
-        Access access2 = createAccess(HugePermission.READ, "description 2");
+        Target gremlin = TargetApiTest.createTarget("gremlinup",
+                                                    HugeResourceType.GREMLIN);
+        Group group = GroupApiTest.createGroup("groupup", "group for beijing");
+
+        Access access1 = createAccess(group, gremlin, HugePermission.WRITE,
+                                      "description 1");
+        Access access2 = createAccess(group, gremlin, HugePermission.READ,
+                                      "description 2");
 
         Assert.assertEquals("description 1", access1.description());
         Assert.assertEquals("description 2", access2.description());
@@ -318,8 +339,15 @@ public class AccessApiTest extends AuthApiTest {
 
     @Test
     public void testDelete() {
-        Access access1 = createAccess(HugePermission.WRITE, "description 1");
-        Access access2 = createAccess(HugePermission.READ, "description 2");
+        Target gremlin = TargetApiTest.createTarget("gremlindel",
+                                                    HugeResourceType.GREMLIN);
+        Group group = GroupApiTest.createGroup("groupdel",
+                                               "group for beijing");
+
+        Access access1 = createAccess(group, gremlin, HugePermission.WRITE,
+                                      "description 1");
+        Access access2 = createAccess(group, gremlin, HugePermission.READ,
+                                      "description 2");
 
         Assert.assertEquals(2, api.list(null, null, -1).size());
         api.delete(access1.id());
@@ -333,7 +361,7 @@ public class AccessApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.delete(access2.id());
         }, e -> {
-            Assert.assertContains("Invalid access id:", e.getMessage());
+            Assert.assertContains("is not existed", e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {
@@ -342,10 +370,6 @@ public class AccessApiTest extends AuthApiTest {
             Assert.assertContains("not existed",
                                   e.getMessage());
         });
-    }
-
-    private Access createAccess(HugePermission perm, String description) {
-        return createAccess(group, gremlin, perm, description);
     }
 
     private Access createAccess(Group group, Target target,

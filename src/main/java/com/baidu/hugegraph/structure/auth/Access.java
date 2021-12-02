@@ -23,18 +23,21 @@ import java.util.Date;
 
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Access extends AuthElement {
 
+    @JsonProperty("graphspace")
+    protected String graphSpace;
     @JsonProperty("group")
-    private Object group;
+    protected Object group;
     @JsonProperty("target")
-    private Object target;
+    protected Object target;
     @JsonProperty("access_permission")
-    private HugePermission permission;
+    protected HugePermission permission;
     @JsonProperty("access_description")
-    private String description;
+    protected String description;
 
     @JsonProperty("access_create")
     @JsonFormat(pattern = DATE_FORMAT)
@@ -63,6 +66,14 @@ public class Access extends AuthElement {
     @Override
     public String creator() {
         return this.creator;
+    }
+
+    public String graphSpace() {
+        return this.graphSpace;
+    }
+
+    public void graphSpace(String graphSpace) {
+        this.graphSpace = graphSpace;
     }
 
     public Object group() {
@@ -101,5 +112,24 @@ public class Access extends AuthElement {
 
     public void description(String description) {
         this.description = description;
+    }
+
+    public AccessReq switchReq() {
+        return new AccessReq(this);
+    }
+
+    @JsonIgnoreProperties({"graphspace"})
+    public static class AccessReq extends Access {
+
+        public AccessReq(Access access) {
+            this.id = access.id();
+            this.group = access.group();
+            this.target = access.target();
+            this.permission = access.permission();
+            this.description = access.description();
+            this.create = access.createTime();
+            this.update = access.updateTime();
+            this.creator = access.creator();
+        }
     }
 }
