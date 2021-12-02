@@ -28,8 +28,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PersonalRankAPI extends TraversersAPI {
 
-    public PersonalRankAPI(RestClient client, String graph) {
-        super(client, graph);
+    public PersonalRankAPI(RestClient client, String graphSpace, String graph) {
+        super(client, graphSpace, graph);
     }
 
     @Override

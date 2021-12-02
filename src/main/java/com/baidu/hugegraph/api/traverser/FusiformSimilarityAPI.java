@@ -26,8 +26,8 @@ import com.baidu.hugegraph.structure.traverser.FusiformSimilarityRequest;
 
 public class FusiformSimilarityAPI extends TraversersAPI {
 
-    public FusiformSimilarityAPI(RestClient client, String graph) {
-        super(client, graph);
+    public FusiformSimilarityAPI(RestClient client, String graphSpace, String graph) {
+        super(client, graphSpace, graph);
     }
 
     @Override

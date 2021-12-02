@@ -38,8 +38,8 @@ import com.google.common.collect.ImmutableMap;
 
 public class VertexAPI extends GraphAPI {
 
-    public VertexAPI(RestClient client, String graph) {
-        super(client, graph);
+    public VertexAPI(RestClient client, String graphSpace, String graph) {
+        super(client, graphSpace, graph);
     }
 
     @Override

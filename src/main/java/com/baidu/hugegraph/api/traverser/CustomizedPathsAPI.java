@@ -26,8 +26,8 @@ import com.baidu.hugegraph.structure.traverser.CustomizedPathsRequest;
 
 public class CustomizedPathsAPI extends TraversersAPI {
 
-    public CustomizedPathsAPI(RestClient client, String graph) {
-        super(client, graph);
+    public CustomizedPathsAPI(RestClient client, String graphSpace, String graph) {
+        super(client, graphSpace, graph);
     }
 
     @Override

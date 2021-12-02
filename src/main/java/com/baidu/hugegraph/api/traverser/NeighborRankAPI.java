@@ -33,8 +33,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NeighborRankAPI extends TraversersAPI {
 
-    public NeighborRankAPI(RestClient client, String graph) {
-        super(client, graph);
+    public NeighborRankAPI(RestClient client, String graphSpace, String graph) {
+        super(client, graphSpace, graph);
     }
 
     @Override
