@@ -7,12 +7,14 @@ on:
       - /^release-.*$/
       - /^test-.*$/
       - gh-master
+      - gh-dis-release
   pull_request:
     branches:
       - master
       - /^release-.*$/
       - /^test-.*$/
       - gh-master
+      - gh-dis-release
 
 jobs:
   build:
@@ -20,8 +22,8 @@ jobs:
     env:
       TRAVIS_DIR: assembly/travis
       LIB_DIR: assembly/lib
-      COMMIT_ID: 58a0c71682a7218b08616a9550958d285b52eb64
-      BRANCH_ID: gh-master
+      COMMIT_ID: 7a572238e3239a22a9ea3b4a29724055b9bb12ad
+      BRANCH_ID: gh-dis-release
     steps:
       - name: Install JDK 8
         uses: actions/setup-java@v2
@@ -43,11 +45,12 @@ jobs:
 
       - name: Compile
         run: |
-          mvn install:install-file -DgroupId=com.baidu.hugegraph -DartifactId=hugegraph-common -Dversion=1.8.9 -Dpackaging=jar -Dfile=$LIB_DIR/hugegraph-common-1.8.9.jar -DpomFile=$LIB_DIR/common-pom.xml
+          mvn install:install-file -DgroupId=com.baidu.hugegraph -DartifactId=hugegraph-common -Dversion=1.8.10 -Dpackaging=jar -Dfile=$LIB_DIR/hugegraph-common-1.8.10.jar -DpomFile=$LIB_DIR/common-pom.xml
           mvn compile -Dmaven.javadoc.skip=true | grep -v "Downloading\|Downloaded"
 
       - name: Prepare env and service
         run: |
+          $TRAVIS_DIR/install-etcd.sh
           $TRAVIS_DIR/install-hugegraph-from-source.sh $COMMIT_ID | grep -v "Downloading\|Downloaded"
 
       - name: Run test

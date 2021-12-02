@@ -32,21 +32,23 @@ public class GremlinManager {
 
     private GremlinAPI gremlinAPI;
     private GremlinJobAPI gremlinJobAPI;
+    private String graphSpace;
     private String graph;
 
-    public GremlinManager(RestClient client, String graph,
-                          GraphManager graphManager) {
+    public GremlinManager(RestClient client, String graphSpace,
+                          String graph, GraphManager graphManager) {
         this.graphManager = graphManager;
         this.gremlinAPI = new GremlinAPI(client);
         this.gremlinJobAPI = new GremlinJobAPI(client, graph);
+        this.graphSpace = graphSpace;
         this.graph = graph;
     }
 
     public ResultSet execute(GremlinRequest request) {
         // Bind "graph" to all graphs
-        request.aliases.put("graph", this.graph);
+        request.aliases.put("graph", this.graphSpace + "-" + this.graph);
         // Bind "g" to all graphs by custom rule which define in gremlin server.
-        request.aliases.put("g", "__g_" + this.graph);
+        request.aliases.put("g", "__g_" + this.graphSpace + "-" + this.graph);
 
         Response response = this.gremlinAPI.post(request);
         response.graphManager(this.graphManager);

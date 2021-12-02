@@ -32,6 +32,7 @@ import com.google.common.collect.ImmutableMap;
 public class BaseClientTest {
 
     protected static final String BASE_URL = "http://127.0.0.1:8080";
+    protected static final String DEFAULT_GRAPHSPACE = "DEFAULT";
     protected static final String GRAPH = "hugegraph";
     protected static final String USERNAME = "admin";
     protected static final String PASSWORD = "admin";
@@ -40,7 +41,7 @@ public class BaseClientTest {
     private static HugeClient client;
 
     protected static HugeClient open() {
-        client = HugeClient.builder(BASE_URL, GRAPH)
+        client = HugeClient.builder(BASE_URL, DEFAULT_GRAPHSPACE, GRAPH)
                            .configUser(USERNAME, PASSWORD)
                            .build();
         return client;

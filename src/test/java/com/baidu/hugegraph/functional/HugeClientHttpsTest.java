@@ -55,7 +55,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
 
     @Test
     public void testHttpsClientBuilderWithConnection() {
-        client = HugeClient.builder(BASE_URL, GRAPH)
+        client = HugeClient.builder(BASE_URL, DEFAULT_GRAPHSPACE, GRAPH)
                            .configSSL(TRUST_STORE_FILE, TRUST_STORE_PASSWORD)
                            .build();
         Assert.assertTrue(client.graphs().listGraph().contains("hugegraph"));
@@ -64,7 +64,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
 
     @Test
     public void testHttpsClientWithConnectionPoolNoUserParam() {
-        client = HugeClient.builder(BASE_URL, GRAPH)
+        client = HugeClient.builder(BASE_URL, DEFAULT_GRAPHSPACE, GRAPH)
                            .configTimeout(TIMEOUT)
                            .configPool(MAX_CONNS, MAX_CONNS_PER_ROUTE)
                            .configSSL(TRUST_STORE_FILE, TRUST_STORE_PASSWORD)
@@ -75,7 +75,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
 
     @Test
     public void testHttpsClientWithConnectionPoolNoTimeOutParam() {
-        client = HugeClient.builder(BASE_URL, GRAPH)
+        client = HugeClient.builder(BASE_URL, DEFAULT_GRAPHSPACE, GRAPH)
                            .configUser(USERNAME, PASSWORD)
                            .configPool(MAX_CONNS, MAX_CONNS_PER_ROUTE)
                            .configSSL(TRUST_STORE_FILE, TRUST_STORE_PASSWORD)
@@ -86,7 +86,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
 
     @Test
     public void testHttpsClientNewBuilderWithConnectionNoPoolParam() {
-        client = HugeClient.builder(BASE_URL, GRAPH)
+        client = HugeClient.builder(BASE_URL, DEFAULT_GRAPHSPACE, GRAPH)
                            .configUser(USERNAME, PASSWORD)
                            .configTimeout(TIMEOUT)
                            .configSSL(TRUST_STORE_FILE, TRUST_STORE_PASSWORD)
@@ -97,7 +97,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
 
     @Test
     public void testHttpsClientNewBuilderWithConnectionPool() {
-        client = HugeClient.builder(BASE_URL, GRAPH)
+        client = HugeClient.builder(BASE_URL, DEFAULT_GRAPHSPACE, GRAPH)
                            .configUser(USERNAME, PASSWORD)
                            .configTimeout(TIMEOUT)
                            .configPool(MAX_CONNS, MAX_CONNS_PER_ROUTE)
@@ -110,7 +110,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
 
     @Test
     public void testHttpsClientNewBuilderZeroPoolParam() {
-        client = HugeClient.builder(BASE_URL, GRAPH)
+        client = HugeClient.builder(BASE_URL, DEFAULT_GRAPHSPACE, GRAPH)
                            .configUser(USERNAME, PASSWORD)
                            .configTimeout(TIMEOUT)
                            .configPool(0, 0)
@@ -123,7 +123,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
     @Test
     public void testHttpsClientBuilderWithConnectionPoolNoParam() {
         Assert.assertThrows(IllegalArgumentException.class, () -> {
-            HugeClient.builder(BASE_URL, GRAPH)
+            HugeClient.builder(BASE_URL, DEFAULT_GRAPHSPACE, GRAPH)
                       .configUrl(null)
                       .configGraph(null)
                       .configSSL("", "")
@@ -137,7 +137,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
     @Test
     public void testHttpsClientBuilderWithConnectionPoolNoGraphParam() {
         Assert.assertThrows(IllegalArgumentException.class, () -> {
-            HugeClient.builder(BASE_URL, GRAPH)
+            HugeClient.builder(BASE_URL, DEFAULT_GRAPHSPACE, GRAPH)
                       .configGraph(null)
                       .configSSL("", "")
                       .build();
@@ -150,7 +150,7 @@ public class HugeClientHttpsTest extends BaseFuncTest {
     @Test
     public void testHttpsClientBuilderWithConnectionPoolZeroIdleTimeParam() {
         Assert.assertThrows(IllegalArgumentException.class, () -> {
-            HugeClient.builder(BASE_URL, GRAPH)
+            HugeClient.builder(BASE_URL, DEFAULT_GRAPHSPACE, GRAPH)
                       .configIdleTime(0)
                       .build();
         }, e -> {

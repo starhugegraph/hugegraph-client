@@ -30,8 +30,8 @@ import com.baidu.hugegraph.structure.constant.HugeType;
 
 public class BelongAPI extends AuthAPI {
 
-    public BelongAPI(RestClient client, String graph) {
-        super(client, graph);
+    public BelongAPI(RestClient client, String graphSpace) {
+        super(client, graphSpace);
     }
 
     @Override

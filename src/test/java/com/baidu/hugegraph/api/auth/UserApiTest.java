@@ -38,7 +38,7 @@ public class UserApiTest extends AuthApiTest {
 
     @BeforeClass
     public static void init() {
-        api = new UserAPI(initClient(), GRAPH);
+        api = new UserAPI(initClient());
     }
 
     @AfterClass
@@ -213,7 +213,7 @@ public class UserApiTest extends AuthApiTest {
             Whitebox.setInternalState(user2, "id", "fake-id");
             api.update(user2);
         }, e -> {
-            Assert.assertContains("Invalid user id: fake-id",
+            Assert.assertContains("not existed",
                                   e.getMessage());
         });
     }
@@ -249,13 +249,13 @@ public class UserApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.delete(user2.id());
         }, e -> {
-            Assert.assertContains("Invalid user id:", e.getMessage());
+            Assert.assertContains("not existed", e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {
             api.delete("fake-id");
         }, e -> {
-            Assert.assertContains("Invalid user id: fake-id", e.getMessage());
+            Assert.assertContains("not existed", e.getMessage());
         });
     }
 

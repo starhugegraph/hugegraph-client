@@ -40,7 +40,7 @@ public class TargetApiTest extends AuthApiTest {
 
     @BeforeClass
     public static void init() {
-        api = new TargetAPI(initClient(), GRAPH);
+        api = new TargetAPI(initClient(), DEFAULT_GRAPHSPACE);
     }
 
     @AfterClass
@@ -89,8 +89,8 @@ public class TargetApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.create(target1);
         }, e -> {
-            Assert.assertContains("Can't save target", e.getMessage());
-            Assert.assertContains("that already exists", e.getMessage());
+            Assert.assertContains("The target name", e.getMessage());
+            Assert.assertContains("has existed", e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {
@@ -225,13 +225,13 @@ public class TargetApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.delete(target2.id());
         }, e -> {
-            Assert.assertContains("Invalid target id:", e.getMessage());
+            Assert.assertContains("not existed", e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {
             api.delete("fake-id");
         }, e -> {
-            Assert.assertContains("Invalid target id: fake-id",
+            Assert.assertContains("not existed",
                                   e.getMessage());
         });
     }
