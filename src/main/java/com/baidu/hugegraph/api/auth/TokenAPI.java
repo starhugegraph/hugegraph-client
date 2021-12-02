@@ -21,6 +21,7 @@ package com.baidu.hugegraph.api.auth;
 
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
+import com.baidu.hugegraph.structure.auth.AuthElement;
 import com.baidu.hugegraph.structure.auth.TokenPayload;
 import com.baidu.hugegraph.structure.constant.HugeType;
 
@@ -38,5 +39,11 @@ public class TokenAPI extends AuthAPI {
     public TokenPayload verifyToken() {
         RestResult result = this.client.get(this.path());
         return result.readObject(TokenPayload.class);
+    }
+
+    @Override
+    protected Object checkCreateOrUpdate(AuthElement authElement) {
+
+        return null;
     }
 }

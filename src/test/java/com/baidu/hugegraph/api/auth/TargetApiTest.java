@@ -203,7 +203,7 @@ public class TargetApiTest extends AuthApiTest {
             Whitebox.setInternalState(target2, "id", "fake-id");
             api.update(target2);
         }, e -> {
-            Assert.assertContains("Invalid target id: fake-id",
+            Assert.assertContains("is not existed",
                                   e.getMessage());
         });
     }

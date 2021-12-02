@@ -23,16 +23,19 @@ import java.util.Date;
 
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Belong extends AuthElement {
 
+    @JsonProperty("graphspace")
+    protected String graphSpace;
     @JsonProperty("user")
-    private Object user;
+    protected Object user;
     @JsonProperty("group")
-    private Object group;
+    protected Object group;
     @JsonProperty("belong_description")
-    private String description;
+    protected String description;
 
     @JsonProperty("belong_create")
     @JsonFormat(pattern = DATE_FORMAT)
@@ -63,6 +66,14 @@ public class Belong extends AuthElement {
         return this.creator;
     }
 
+    public String graphSpace() {
+        return this.graphSpace;
+    }
+
+    public void graphSpace(String graphSpace) {
+        this.graphSpace = graphSpace;
+    }
+
     public Object user() {
         return this.user;
     }
@@ -91,5 +102,23 @@ public class Belong extends AuthElement {
 
     public void description(String description) {
         this.description = description;
+    }
+
+    public BelongReq switchReq() {
+        return new BelongReq(this);
+    }
+
+    @JsonIgnoreProperties({"graphspace"})
+    public static class BelongReq extends Belong {
+
+        public BelongReq(Belong belong) {
+            this.id = belong.id();
+            this.user = belong.user();
+            this.group = belong.group();
+            this.description = belong.description();
+            this.update = belong.updateTime();
+            this.create = belong.createTime();
+            this.creator = belong.creator();
+        }
     }
 }

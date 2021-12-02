@@ -21,6 +21,7 @@ package com.baidu.hugegraph.api.auth;
 
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
+import com.baidu.hugegraph.structure.auth.AuthElement;
 import com.baidu.hugegraph.structure.auth.Login;
 import com.baidu.hugegraph.structure.auth.LoginResult;
 import com.baidu.hugegraph.structure.constant.HugeType;
@@ -39,5 +40,11 @@ public class LoginAPI extends AuthAPI {
     public LoginResult login(Login login) {
         RestResult result = this.client.post(this.path(), login);
         return result.readObject(LoginResult.class);
+    }
+
+    @Override
+    protected Object checkCreateOrUpdate(AuthElement authElement) {
+
+        return null;
     }
 }

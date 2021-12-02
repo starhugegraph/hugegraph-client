@@ -26,18 +26,21 @@ import java.util.List;
 
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Target extends AuthElement {
 
     @JsonProperty("target_name")
-    private String name;
+    protected String name;
+    @JsonProperty("graphspace")
+    protected String graphSpace;
     @JsonProperty("target_graph")
-    private String graph;
+    protected String graph;
     @JsonProperty("target_url")
-    private String url;
+    protected String url;
     @JsonProperty("target_resources")
-    private List<HugeResource> resources;
+    protected List<HugeResource> resources;
 
     @JsonProperty("target_create")
     @JsonFormat(pattern = DATE_FORMAT)
@@ -76,6 +79,14 @@ public class Target extends AuthElement {
         this.name = name;
     }
 
+    public String graphSpace() {
+        return this.graphSpace;
+    }
+
+    public void graphSpace(String graphSpace) {
+        this.graphSpace = graphSpace;
+    }
+
     public String graph() {
         return this.graph;
     }
@@ -112,5 +123,24 @@ public class Target extends AuthElement {
 
     public void resources(HugeResource... resources) {
         this.resources = Arrays.asList(resources);
+    }
+
+    public TargetReq switchReq() {
+        return new TargetReq(this);
+    }
+
+    @JsonIgnoreProperties({"graphspace"})
+    public static class TargetReq extends Target {
+
+        public TargetReq(Target target) {
+            this.id = target.id();
+            this.name = target.name();
+            this.graph = target.graph();
+            this.url = target.url();
+            this.resources = target.resources();
+            this.create = target.createTime();
+            this.update = target.updateTime();
+            this.creator = target.creator();
+        }
     }
 }

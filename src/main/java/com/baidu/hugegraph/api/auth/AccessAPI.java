@@ -26,7 +26,9 @@ import java.util.Map;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.auth.Access;
+import com.baidu.hugegraph.structure.auth.AuthElement;
 import com.baidu.hugegraph.structure.constant.HugeType;
+import com.baidu.hugegraph.util.E;
 
 public class AccessAPI extends AuthAPI {
 
@@ -40,7 +42,8 @@ public class AccessAPI extends AuthAPI {
     }
 
     public Access create(Access access) {
-        RestResult result = this.client.post(this.path(), access);
+        Object obj = this.checkCreateOrUpdate(access);
+        RestResult result = this.client.post(this.path(), obj);
         return result.readObject(Access.class);
     }
 
@@ -61,11 +64,19 @@ public class AccessAPI extends AuthAPI {
 
     public Access update(Access access) {
         String id = formatRelationId(access.id());
-        RestResult result = this.client.put(this.path(), id, access);
+        Object obj = this.checkCreateOrUpdate(access);
+        RestResult result = this.client.put(this.path(), id, obj);
         return result.readObject(Access.class);
     }
 
     public void delete(Object id) {
         this.client.delete(this.path(), formatRelationId(id));
+    }
+
+    @Override
+    protected Object checkCreateOrUpdate(AuthElement authElement) {
+        Access access = (Access) authElement;
+        return access.switchReq();
+
     }
 }

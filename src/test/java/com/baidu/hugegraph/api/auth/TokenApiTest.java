@@ -63,12 +63,12 @@ public class TokenApiTest extends AuthApiTest {
     @Test
     public void testVerify() {
         User user1 = new User();
-        user1.name("user1");
+        user1.name("usertoken1");
         user1.password("password1");
         User user = userAPI.create(user1);
 
         Login login = new Login();
-        login.name("user1");
+        login.name("usertoken1");
         login.password("password1");
         LoginResult result = loginAPI.login(login);
         Assert.assertNotNull(result);
@@ -86,7 +86,7 @@ public class TokenApiTest extends AuthApiTest {
         RestClient client = Whitebox.getInternalState(tokenAPI, "client");
         client.setAuthContext("Bearer " + token);
         TokenPayload payload = tokenAPI.verifyToken();
-        Assert.assertEquals("user1", payload.username());
+        Assert.assertEquals("usertoken1", payload.username());
         Assert.assertEquals(user.id(), payload.userId());
 
         client.setAuthContext("Bearer qweqwaasa");

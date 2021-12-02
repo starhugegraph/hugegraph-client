@@ -22,7 +22,7 @@ jobs:
     env:
       TRAVIS_DIR: assembly/travis
       LIB_DIR: assembly/lib
-      COMMIT_ID: 7a572238e3239a22a9ea3b4a29724055b9bb12ad
+      COMMIT_ID: f82f65a3746c631304a9c92fd18ebba865c37e6c
       BRANCH_ID: gh-dis-release
     steps:
       - name: Install JDK 8

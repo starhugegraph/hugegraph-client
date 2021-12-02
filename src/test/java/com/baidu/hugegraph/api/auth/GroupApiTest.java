@@ -153,7 +153,7 @@ public class GroupApiTest extends AuthApiTest {
             group2.name("test2-updated");
             api.update(group2);
         }, e -> {
-            Assert.assertContains("The name of group can't be updated",
+            Assert.assertContains("is not existed",
                                   e.getMessage());
         });
 

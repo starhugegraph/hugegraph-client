@@ -108,15 +108,15 @@ public class UserApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.create(user1);
         }, e -> {
-            Assert.assertContains("Can't save user", e.getMessage());
-            Assert.assertContains("that already exists", e.getMessage());
+            Assert.assertContains("The user name", e.getMessage());
+            Assert.assertContains("has existed", e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {
             user1.name("admin");
             api.create(user1);
         }, e -> {
-            Assert.assertContains("Invalid user name 'admin'", e.getMessage());
+            Assert.assertContains("The user name 'admin' has existed", e.getMessage());
         });
     }
 
@@ -137,11 +137,11 @@ public class UserApiTest extends AuthApiTest {
 
     @Test
     public void testGetUserRole() {
-        User user1 = createUser("test1", "test1");
-        User user2 = createUser("test2", "test2");
+        User user1 = createUser("testrole1", "test1");
+        User user2 = createUser("testrole2", "test2");
 
-        Assert.assertEquals("test1", user1.name());
-        Assert.assertEquals("test2", user2.name());
+        Assert.assertEquals("testrole1", user1.name());
+        Assert.assertEquals("testrole2", user2.name());
 
         UserRole role1 = api.getUserRole(user1.id());
         UserRole role2 = api.getUserRole(user2.id());
@@ -152,18 +152,18 @@ public class UserApiTest extends AuthApiTest {
 
     @Test
     public void testList() {
-        createUser("test1", "test1");
-        createUser("test2", "test2");
-        createUser("test3", "test3");
+        createUser("testlist1", "test1");
+        createUser("testlist2", "test2");
+        createUser("testlist3", "test3");
 
         List<User> users = api.list(-1);
         Assert.assertEquals(4, users.size());
 
         users.sort((t1, t2) -> t1.name().compareTo(t2.name()));
         Assert.assertEquals("admin", users.get(0).name());
-        Assert.assertEquals("test1", users.get(1).name());
-        Assert.assertEquals("test2", users.get(2).name());
-        Assert.assertEquals("test3", users.get(3).name());
+        Assert.assertEquals("testlist1", users.get(1).name());
+        Assert.assertEquals("testlist2", users.get(2).name());
+        Assert.assertEquals("testlist3", users.get(3).name());
 
         users = api.list(1);
         Assert.assertEquals(1, users.size());
@@ -180,15 +180,15 @@ public class UserApiTest extends AuthApiTest {
 
     @Test
     public void testUpdate() {
-        User user1 = createUser("test1", "test1");
-        User user2 = createUser("test2", "test2");
+        User user1 = createUser("testupdate1", "test1");
+        User user2 = createUser("testupdate2", "test2");
 
         Assert.assertEquals("test@hugegraph.com", user1.email());
         Assert.assertEquals("16812345678", user1.phone());
         Assert.assertEquals("image.jpg", user1.avatar());
 
         String oldPassw = user1.password();
-        Assert.assertNotEquals("test1", oldPassw);
+        Assert.assertNotEquals("testupdate1", oldPassw);
 
         user1.password("psw_udated");
         user1.email("test_updated@hugegraph.com");
@@ -205,7 +205,9 @@ public class UserApiTest extends AuthApiTest {
             user2.name("test2_updated");
             api.update(user2);
         }, e -> {
-            Assert.assertContains("The password is 5-16 characters, which can be letters, numbers or special symbols",
+            Assert.assertContains("The password is 5-16 characters," +
+                                  " which can be letters, numbers or" +
+                                  " special symbols",
                                   e.getMessage());
         });
 
@@ -213,15 +215,17 @@ public class UserApiTest extends AuthApiTest {
             Whitebox.setInternalState(user2, "id", "fake-id");
             api.update(user2);
         }, e -> {
-            Assert.assertContains("not existed",
+            Assert.assertContains("The password is 5-16 characters," +
+                                  " which can be letters, numbers or" +
+                                  " special symbols",
                                   e.getMessage());
         });
     }
 
     @Test
     public void testDelete() {
-        User user1 = createUser("test1", "test1");
-        User user2 = createUser("test2", "test2");
+        User user1 = createUser("testdel1", "test1");
+        User user2 = createUser("testdel2", "test2");
 
         List<User> users = api.list(-1);
         Assert.assertEquals(3, users.size());
@@ -243,7 +247,7 @@ public class UserApiTest extends AuthApiTest {
         Assert.assertThrows(ServerException.class, () -> {
             api.delete(admin.id());
         }, e -> {
-            Assert.assertContains("Can't delete user 'admin'", e.getMessage());
+            Assert.assertContains("admin could not be removed", e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {
