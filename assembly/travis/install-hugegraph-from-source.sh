@@ -7,8 +7,6 @@ if [[ $# -ne 1 ]]; then
     exit 1
 fi
 
-TRAVIS_DIR=`dirname $0`
-
 echo `git version`
 
 COMMIT_ID=$1
@@ -26,8 +24,6 @@ rm -rf hugegraph
 tar -zxvf hugegraph-*.tar.gz
 cd hugegraph-*/
 
-cp -rf ../$TRAVIS_DIR/conf/log4j2.xml conf/
-
 REST_SERVER_CONFIG="conf/rest-server.properties"
 GREMLIN_SERVER_CONFIG="conf/gremlin-server.yaml"
 
@@ -39,7 +35,7 @@ authentication: {
   config: {tokens: conf/rest-server.properties}
 }" >> $GREMLIN_SERVER_CONFIG
 
-sed -i 's/#auth.authenticator=/auth.authenticator=com.baidu.hugegraph.auth.StandardAuthenticator/' ${REST_SERVER_CONFIG}
+gsed -i 's/#auth.authenticator=com.baidu.hugegraph.auth.StandardAuthenticator/auth.authenticator=com.baidu.hugegraph.auth.StandardAuthenticator/' ${REST_SERVER_CONFIG}
 
 
 # start HugeGraphServer with https protocol
