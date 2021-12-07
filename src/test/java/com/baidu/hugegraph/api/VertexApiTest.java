@@ -412,7 +412,12 @@ public class VertexApiTest extends BaseApiTest {
             Map<String, Object> props = ImmutableMap.of("name", "Person-" + i,
                                                         "city", "Beijing",
                                                         "age", 30);
-            Assert.assertEquals(props, person.properties());
+            Assert.assertEquals(props.get("name"), person.properties().get(
+                    "name"));
+            Assert.assertEquals(props.get("city"), person.properties().get(
+                    "city"));
+            Assert.assertEquals(props.get("age"), person.properties().get(
+                    "age"));
         }
 
         // Set graph read mode to 'ALL'
@@ -534,8 +539,8 @@ public class VertexApiTest extends BaseApiTest {
 
     @Test
     public void testBatchCreateWithMoreThanBatchSize() {
-        List<Vertex> vertices = new ArrayList<>(1000);
-        for (int i = 0; i < 1000; i++) {
+        List<Vertex> vertices = new ArrayList<>(2100);
+        for (int i = 0; i < 2100; i++) {
             Vertex vertex = new Vertex("person");
             vertex.property("name", "Person" + "-" + i);
             vertex.property("city", "Beijing");

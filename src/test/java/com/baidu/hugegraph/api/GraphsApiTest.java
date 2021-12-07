@@ -44,7 +44,7 @@ public class GraphsApiTest extends BaseApiTest {
             "src/test/resources/hugegraph2.properties";
 
     @Test
-    public void testCreateAndRemoveGraph() {
+    public void testCreateAndRemoveGraph() throws InterruptedException {
         int initialGraphNumber = graphsAPI.list().size();
 
         // Create new graph dynamically
@@ -113,6 +113,9 @@ public class GraphsApiTest extends BaseApiTest {
 
         // Remove new created graph dynamically
         graphsAPI.delete(GRAPH, "I'm sure to drop the graph");
+
+        // Wait for the delete operation to complete
+        Thread.sleep(5000);
 
         Assert.assertEquals(initialGraphNumber, graphsAPI.list().size());
     }

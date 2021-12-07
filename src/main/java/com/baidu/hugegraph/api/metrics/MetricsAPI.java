@@ -26,6 +26,7 @@ import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.baidu.hugegraph.util.CommonUtil;
+import com.google.common.collect.ImmutableMap;
 
 public class MetricsAPI extends API {
 
@@ -67,7 +68,8 @@ public class MetricsAPI extends API {
 
     @SuppressWarnings("unchecked")
     public Map<String, Map<String, Object>> all() {
-        RestResult result = this.client.get(this.path());
+        RestResult result = this.client.get(this.path(), ImmutableMap.of(
+                "type", "json"));
         Map<?, ?> map = result.readObject(Map.class);
         CommonUtil.checkMapClass(map, String.class, Map.class);
         for (Object mapValue : map.values()) {
