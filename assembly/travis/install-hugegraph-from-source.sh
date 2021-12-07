@@ -39,5 +39,5 @@ gsed -i 's/#auth.authenticator=com.baidu.hugegraph.auth.StandardAuthenticator/au
 
 
 # start HugeGraphServer with https protocol
-bin/start-hugegraph.sh
+sh -x ./bin/start-hugegraph.sh
 cd ../
