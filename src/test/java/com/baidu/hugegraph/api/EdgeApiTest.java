@@ -465,8 +465,8 @@ public class EdgeApiTest extends BaseApiTest {
         vertexAPI.create(persons);
         vertexAPI.create(softwares);
 
-        List<Edge> edges = new ArrayList<>(1000);
-        for (int i = 0; i < 1000; i++) {
+        List<Edge> edges = new ArrayList<>(2500);
+        for (int i = 0; i < 2500; i++) {
             Edge edge = new Edge("created");
             edge.sourceLabel("person");
             edge.targetLabel("software");

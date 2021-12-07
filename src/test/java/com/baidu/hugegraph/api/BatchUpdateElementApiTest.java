@@ -567,7 +567,7 @@ public class BatchUpdateElementApiTest extends BaseApiTest {
                                                  UpdateStrategy.ELIMINATE);
         Assert.assertThrows(ServerException.class, () -> {
             List<Edge> edges = this.createNEdgesBatch("object", "updates",
-                                                      "old", 501);
+                                                      "old", 2001);
             Whitebox.setInternalState(req7, "edges", edges);
             edgeAPI.update(req7);
         }, e -> {

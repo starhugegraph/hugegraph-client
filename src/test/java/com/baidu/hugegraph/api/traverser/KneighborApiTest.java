@@ -365,11 +365,12 @@ public class KneighborApiTest extends TraverserApiTest {
         Object joshId = getVertexId("person", "name", "josh");
         Object lopId = getVertexId("software", "name", "lop");
         Object peterId = getVertexId("person", "name", "peter");
+        Object vadasId = getVertexId("person", "name", "vadas");
 
         KneighborRequest.Builder builder = KneighborRequest.builder();
         builder.source(markoId);
         Map<String, Object> properties = new HashMap<>();
-        properties.put("date", "P.gt(\"2014-01-01 00:00:00\")");
+        properties.put("date", "P.lte(\"2014-01-01 00:00:00\")");
         builder.steps().direction(Direction.BOTH)
                .edgeSteps(new Steps.StepEntity("knows", properties));
         builder.maxDepth(1);
@@ -377,8 +378,8 @@ public class KneighborApiTest extends TraverserApiTest {
 
         Kneighbor kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(0, kneighborResult.size());
-        Set<Object> expected = ImmutableSet.of(lopId);
+        Assert.assertEquals(2, kneighborResult.size());
+        Set<Object> expected = ImmutableSet.of(joshId, vadasId);
         Assert.assertEquals(expected, kneighborResult.ids());
 
         builder = KneighborRequest.builder();
@@ -392,9 +393,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(3, kneighborResult.size());
-        expected = ImmutableSet.of(lopId, peterId, joshId);
-        Assert.assertEquals(expected, kneighborResult.ids());
+        Assert.assertEquals(0, kneighborResult.size());
 
         builder = KneighborRequest.builder();
         builder.source(markoId);
@@ -407,9 +406,7 @@ public class KneighborApiTest extends TraverserApiTest {
 
         kneighborResult = kneighborAPI.post(request);
 
-        Assert.assertEquals(4, kneighborResult.size());
-        expected = ImmutableSet.of(lopId, peterId, joshId, rippleId);
-        Assert.assertEquals(expected, kneighborResult.ids());
+        Assert.assertEquals(0, kneighborResult.size());
     }
 
     @Test
