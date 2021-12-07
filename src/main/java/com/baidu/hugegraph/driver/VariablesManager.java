@@ -28,8 +28,8 @@ public class VariablesManager {
 
     private VariablesAPI variablesAPI;
 
-    public VariablesManager(RestClient client, String graph) {
-        this.variablesAPI = new VariablesAPI(client, graph);
+    public VariablesManager(RestClient client, String graphSpace, String graph) {
+        this.variablesAPI = new VariablesAPI(client, graphSpace, graph);
     }
 
     public Map<String, Object> get(String key) {

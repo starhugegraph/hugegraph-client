@@ -48,6 +48,7 @@ public class HugeClient implements Closeable {
     private ComputerManager computer;
     private AuthManager auth;
     private MetricsManager metrics;
+    private GraphSpaceManager graphSpace;
 
     public HugeClient(HugeClientBuilder builder) {
         try {
@@ -95,22 +96,23 @@ public class HugeClient implements Closeable {
     private void initManagers(RestClient client, String graphSpace,
                               String graph) {
         assert client != null;
+        assert graphSpace != null;
         // Check hugegraph-server api version
         this.version = new VersionManager(client);
         this.checkServerApiVersion();
 
-        this.graphs = new GraphsManager(client);
-        this.schema = new SchemaManager(client, graph);
-        this.graph = new GraphManager(client, graph);
-        this.gremlin = new GremlinManager(client, graphSpace,
-                                          graph, this.graph);
+        this.graphs = new GraphsManager(client, graphSpace);
+        this.schema = new SchemaManager(client, graphSpace, graph);
+        this.graph = new GraphManager(client, graphSpace, graph);
+        this.gremlin = new GremlinManager(client, graphSpace, graph, this.graph);
         this.traverser = new TraverserManager(client, this.graph);
-        this.variable = new VariablesManager(client, graph);
-        this.job = new JobManager(client, graph);
-        this.task = new TaskManager(client, graph);
-        this.computer = new ComputerManager(client, graph);
-        this.auth = new AuthManager(client, graph);
+        this.variable = new VariablesManager(client, graphSpace, graph);
+        this.job = new JobManager(client, graphSpace, graph);
+        this.task = new TaskManager(client, graphSpace, graph);
+        this.computer = new ComputerManager(client, graphSpace, graph);
+        this.auth = new AuthManager(client, graphSpace);
         this.metrics = new MetricsManager(client);
+        this.graphSpace = new GraphSpaceManager(client);
     }
 
     private void checkServerApiVersion() {
@@ -163,6 +165,10 @@ public class HugeClient implements Closeable {
 
     public MetricsManager metrics() {
         return this.metrics;
+    }
+
+    public GraphSpaceManager graphSpace() {
+        return this.graphSpace;
     }
 
     public void setAuthContext(String auth) {

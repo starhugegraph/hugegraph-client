@@ -35,8 +35,8 @@ import com.google.common.collect.ImmutableMap;
 
 public class IndexLabelAPI extends SchemaElementAPI {
 
-    public IndexLabelAPI(RestClient client, String graph) {
-        super(client, graph);
+    public IndexLabelAPI(RestClient client, String graphSpace, String graph) {
+        super(client, graphSpace, graph);
     }
 
     @Override

@@ -28,6 +28,7 @@ public class HugeClientBuilder {
     private static final int DEFAULT_MAX_CONNS = 4 * CPUS;
     private static final int DEFAULT_MAX_CONNS_PER_ROUTE = 2 * CPUS;
     private static final int DEFAULT_IDLE_TIME = 30;
+    private static final String DEFAULT_GRAPHSPACE = "default";
 
     private String url;
     private String graphSpace;

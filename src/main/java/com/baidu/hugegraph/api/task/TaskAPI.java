@@ -35,16 +35,18 @@ import com.google.common.collect.ImmutableMap;
 
 public class TaskAPI extends API {
 
-    private static final String PATH = "graphs/%s/tasks";
+    private static final String PATH = "graphspaces/%s/graphs/%s/tasks";
+    private String graphSpace;
     private String graph;
     public static final String TASKS = "tasks";
     public static final String TASK_ID = "task_id";
     public static final long TASK_TIMEOUT = 60L;
     private static final long QUERY_INTERVAL = 500L;
 
-    public TaskAPI(RestClient client, String graph) {
+    public TaskAPI(RestClient client, String graphSpace, String graph) {
         super(client);
-        this.path(String.format(PATH, graph));
+        this.path(String.format(PATH, graphSpace, graph));
+        this.graphSpace = graphSpace;
         this.graph = graph;
     }
 

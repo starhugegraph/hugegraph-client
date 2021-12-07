@@ -33,8 +33,8 @@ public class ResouceAllocationAPI extends TraversersAPI {
 
     private static final String AA = "adamic_adar";
 
-    public ResouceAllocationAPI(RestClient client, String graph) {
-        super(client, graph);
+    public ResouceAllocationAPI(RestClient client, String graphSpace, String graph) {
+        super(client, graphSpace, graph);
     }
 
     @Override
