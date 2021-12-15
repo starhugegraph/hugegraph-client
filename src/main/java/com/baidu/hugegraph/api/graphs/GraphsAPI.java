@@ -47,7 +47,7 @@ public class GraphsAPI extends API {
     private static final String RELOADED = "reloaded";
     private static final String GRAPHS = "graphs";
     private static final String MANAGE = "manage";
-    private static final String PATH = "graphspaces/%s/%s";
+    private static final String PATH = "graphspaces/%s/graphs/%s";
 
     public GraphsAPI(RestClient client, String graphSpace) {
         super(client);

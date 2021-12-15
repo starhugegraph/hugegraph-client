@@ -35,6 +35,8 @@ public class HugeClient implements Closeable {
     static {
         ClientVersion.check();
     }
+    private String graphSpaceName;
+    private String graphName;
     private final RestClient client;
     private VersionManager version;
     private GraphsManager graphs;
@@ -51,6 +53,9 @@ public class HugeClient implements Closeable {
     private GraphSpaceManager graphSpace;
 
     public HugeClient(HugeClientBuilder builder) {
+        this.graphSpaceName = builder.graphSpace();
+        this.graphName = builder.graph();
+
         try {
             if (StringUtils.isEmpty(builder.token())) {
                 this.client = new RestClient(builder.url(),
@@ -86,6 +91,11 @@ public class HugeClient implements Closeable {
     public static HugeClientBuilder builder(String url, String graphSpace,
                                             String graph) {
         return new HugeClientBuilder(url, graphSpace, graph);
+    }
+
+    public HugeClient assignGraph(String graph) {
+        this.initManagers(this.client, graphSpaceName, graphName);
+        return this;
     }
 
     @Override

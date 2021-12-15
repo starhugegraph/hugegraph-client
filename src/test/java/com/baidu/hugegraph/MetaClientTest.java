@@ -5,7 +5,6 @@ import com.baidu.hugegraph.driver.factory.DefaultHugeClientFactory;
 import com.baidu.hugegraph.driver.factory.MetaHugeClientFactory;
 import com.baidu.hugegraph.structure.auth.Login;
 import com.baidu.hugegraph.structure.auth.LoginResult;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -25,7 +24,7 @@ public class MetaClientTest {
 
     @BeforeClass
     public static void init() {
-        factory = MetaHugeClientFactory.connect(CLUSTER, null,
+        factory = MetaHugeClientFactory.connect(null,
                                                 ETCD_ENDPOINT);
         defaultFactory =
                 new DefaultHugeClientFactory(new String[]{"http://localhost:8080"});
@@ -35,7 +34,7 @@ public class MetaClientTest {
     }
 
     public static void initAdminClient() {
-        HugeClient tool1 = defaultFactory.getClient(GRAPHSPACE, GRAPH);
+        HugeClient tool1 = defaultFactory.createClient(GRAPHSPACE, GRAPH);
         Login login = new Login();
         login.name(USERNAME);
         login.password(PASSWORD);
@@ -43,7 +42,7 @@ public class MetaClientTest {
         tool1.auth().login(login);
         LoginResult r = tool1.auth().login(login);
 
-        admin = defaultFactory.getClient(GRAPHSPACE, GRAPH, r.token());
+        admin = defaultFactory.createClient(GRAPHSPACE, GRAPH, r.token());
 
         tool1.close();
     }
@@ -55,7 +54,8 @@ public class MetaClientTest {
 
     @Ignore
     public void testMetaClientAuth() {
-        HugeClient client = factory.getClient(GRAPHSPACE, GRAPH);
+        HugeClient client = factory.createUnauthClient(CLUSTER, GRAPHSPACE,
+                                                     GRAPH);
 
         Login login = new Login();
         login.name(USERNAME);
@@ -66,8 +66,13 @@ public class MetaClientTest {
     }
 
     @Test
+    public void testMetaFactoryListSpace() {
+        factory.listClusters().stream().forEach(System.out::println);
+    }
+
+    @Test
     public void defaultClientAuth() {
-        HugeClient client = defaultFactory.getClient(GRAPHSPACE, GRAPH);
+        HugeClient client = defaultFactory.createClient(GRAPHSPACE, GRAPH);
 
         Login login = new Login();
         login.name(USERNAME);
