@@ -35,7 +35,7 @@ public class SchemaApiTest extends BaseApiTest {
         BaseApiTest.initVertexLabel();
         BaseApiTest.initEdgeLabel();
 
-        Map<String, List<SchemaElement>> schemas = schemaAPI.list();
+        Map<String, List<SchemaElement>> schemas = schemaAPI.listJsonSchema();
 
         Assert.assertEquals(4, schemas.size());
         Assert.assertTrue(schemas.containsKey("propertykeys"));

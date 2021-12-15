@@ -25,6 +25,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.baidu.hugegraph.BaseClientTest;
+import com.baidu.hugegraph.api.gremlin.GremlinRequest;
 import com.baidu.hugegraph.structure.SchemaElement;
 import com.baidu.hugegraph.testutil.Assert;
 
@@ -37,6 +38,41 @@ public class SchemaTest extends BaseFuncTest {
         BaseClientTest.initEdgeLabel();
 
         Map<String, List<SchemaElement>> schemas = schema().getSchema();
+
+        Assert.assertEquals(4, schemas.size());
+        Assert.assertTrue(schemas.containsKey("propertykeys"));
+        Assert.assertTrue(schemas.containsKey("vertexlabels"));
+        Assert.assertTrue(schemas.containsKey("edgelabels"));
+        Assert.assertTrue(schemas.containsKey("indexlabels"));
+        Assert.assertEquals(7, schemas.get("propertykeys").size());
+        Assert.assertEquals(3, schemas.get("vertexlabels").size());
+        Assert.assertEquals(2, schemas.get("edgelabels").size());
+        Assert.assertTrue(schemas.get("indexlabels").isEmpty());
+    }
+
+    @Test
+    public void testlistGroovy() {
+        BaseClientTest.initPropertyKey();
+        BaseClientTest.initVertexLabel();
+        BaseClientTest.initEdgeLabel();
+
+        String schemaString = schema().getGroovySchema();
+        graphs().clear(GRAPH, "I'm sure to delete all data");
+        Map<String, List<SchemaElement>> schemas = schema().getSchema();
+
+        Assert.assertEquals(4, schemas.size());
+        Assert.assertTrue(schemas.containsKey("propertykeys"));
+        Assert.assertTrue(schemas.containsKey("vertexlabels"));
+        Assert.assertTrue(schemas.containsKey("edgelabels"));
+        Assert.assertTrue(schemas.containsKey("indexlabels"));
+        Assert.assertTrue(schemas.get("propertykeys").isEmpty());
+        Assert.assertTrue(schemas.get("vertexlabels").isEmpty());
+        Assert.assertTrue(schemas.get("edgelabels").isEmpty());
+        Assert.assertTrue(schemas.get("indexlabels").isEmpty());
+
+        gremlin().execute(new GremlinRequest(schemaString));
+
+        schemas = schema().getSchema();
 
         Assert.assertEquals(4, schemas.size());
         Assert.assertTrue(schemas.containsKey("propertykeys"));
