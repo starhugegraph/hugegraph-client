@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import com.baidu.hugegraph.util.E;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
@@ -48,8 +49,7 @@ public class MetaHugeClientFactory {
 
     public static MetaHugeClientFactory connect(MetaDriverType type,
                                                 String... args) {
-        MetaHugeClientFactory factory = new MetaHugeClientFactory(type, args);
-        return factory;
+        return new MetaHugeClientFactory(type, args);
     }
 
     protected String graphKey(String cluster, String graphSpace, String graph) {
@@ -91,122 +91,6 @@ public class MetaHugeClientFactory {
                            cluster, META_PATH_GRAPHSPACE, graphSpace,
                            META_PATH_SERVICE_CONF);
     }
-
-    public Map<String, Object> getGraphConfig(String cluster, String graphspace,
-                                              String graph) {
-        String value = this.metaDriver.get(this.graphKey(cluster, graphspace,
-                                                         graph));
-        if (value != null) {
-            return JsonUtil.fromJson(value, Map.class);
-        }
-        return null;
-    }
-
-    public Map<String, Object> getServiceConfig(String cluster,
-                                                String graphspace,
-                                              String service) {
-        String value =
-                this.metaDriver.get(this.graphServiceKey(cluster, graphspace,
-                                                         service));
-        if (value != null) {
-            return JsonUtil.fromJson(value, Map.class);
-        }
-        return null;
-    }
-
-    protected ImmutableSet<String> getServiceUrls(String cluster,
-                                                  String graphSpace,
-                                                  String serviceName) {
-        Map<String, Object> graphService =
-                this.getServiceConfig(cluster, graphSpace, serviceName);
-        if (graphService == null) {
-            LOG.warn("{}/{} 's service info is null",
-                     graphSpace, serviceName);
-            return null;
-        }
-
-        LOG.debug("Get {}/{} 's serviceConfig From Meta: {}",
-                  graphSpace, serviceName, graphService);
-
-        ImmutableSet<String> urls = ImmutableSet.copyOf(
-                (List<String>) graphService.get("urls"));
-        if (urls == null || urls.size() == 0) {
-            LOG.warn("{}/{} 's urls is empty", graphSpace, serviceName);
-            return null;
-        }
-
-        return urls;
-    }
-
-    protected HugeClient createClientWithService(String cluster,
-                                               String graphSpace,
-                                   String service, String token) {
-
-        E.checkArgument(cluster != null && graphSpace != null & service != null,
-                        "createClientWithService: cluster & graphspace must not null");
-
-        ImmutableSet<String> urls = this.getServiceUrls(cluster, graphSpace,
-                                                        service);
-
-        LOG.info("Host of {}/{}: {} ", graphSpace, service, urls);
-
-        DefaultHugeClientFactory defaultFactory = new DefaultHugeClientFactory(
-                (String[]) urls.toArray());
-
-        return defaultFactory.createClient(graphSpace, null, token);
-    }
-
-    public HugeClient createUnauthClient(String cluster, String graphSpace,
-                                            String graph) {
-        E.checkArgument(cluster != null && graphSpace != null, "create unauth" +
-                " client: cluster & graphspace must not null");
-
-        return createClient(cluster, graphSpace, graph, null);
-    }
-
-    public HugeClient createAuthClient(String cluster, String graphSpace,
-                                            String graph, String token) {
-        E.checkArgument(cluster != null && graphSpace != null && token != null,
-                        "create auth client: cluster & graphspace & token " +
-                                "must not null");
-
-        return createClient(cluster, graphSpace, graph, token);
-    }
-
-    protected HugeClient createClient(String cluster, String graphSpace,
-                                           String graph, String token) {
-
-        String serviceName = null;
-        if (!Strings.isEmpty(graph)) {
-            Map<String, Object> graphConfig = this.getGraphConfig(cluster,
-                                                                  graphSpace,
-                                                                  graph);
-            if (graphConfig == null) {
-                LOG.warn("{}/{} 's graphConfig is null", graphSpace, graph);
-                return null;
-            }
-
-            LOG.debug("Get {}/{} 's graphConfig From Meta: {}",
-                      graphSpace, graph, graphConfig);
-            serviceName = (String) graphConfig.get("service");
-
-            if (Strings.isEmpty(serviceName)) {
-                LOG.warn("{}/{} 's servicename is null", graphSpace, graph);
-            }
-        }
-
-        if (Strings.isEmpty(serviceName)) {
-            ImmutableSet<String> services = this.listServices(cluster,
-                                                              graphSpace);
-            serviceName = services.asList()
-                                  .get((int) (Math.random() * services.size()));
-        }
-
-
-        return this.createClientWithService(cluster, graphSpace, serviceName,
-                                            token);
-    }
-
 
     public ImmutableSet<String> listClusters() {
         Map<String, String> scanData = this.metaDriver.scanWithPrefix(
@@ -252,10 +136,151 @@ public class MetaHugeClientFactory {
                 this.graphServicePrefixKey(cluster, graphSpace));
 
         for (Map.Entry<String, String> entry: kvs.entrySet()) {
-            String spaceName = entry.getKey().split(META_PATH_DELIMETER)[5];
-            services.add(spaceName);
+            String serviceName = entry.getKey().split(META_PATH_DELIMETER)[5];
+            services.add(serviceName);
         }
         return ImmutableSet.copyOf(services);
+    }
+
+    public ImmutableSet<ImmutableList<String>> listExtendServices(String cluster) {
+        // Get All OLTP Service
+        Set<ImmutableList<String>> services = new HashSet<>();
+
+        ImmutableSet<String> graphSpaces = this.listGraphSpaces(cluster);
+
+        for (String graphSpace: graphSpaces) {
+            Map<String, String> kvs = this.metaDriver.scanWithPrefix(
+                    this.graphServicePrefixKey(cluster, graphSpace));
+
+            for (Map.Entry<String, String> entry: kvs.entrySet()) {
+                String serviceName =
+                        entry.getKey().split(META_PATH_DELIMETER)[5];
+                ServiceConfigEntity s
+                        = JsonUtil.fromJson(entry.getValue(),
+                                            ServiceConfigEntity.class);
+
+                if (s.isOLTP() && s.getUrls().size() > 0){
+                    services.add(ImmutableList.of(graphSpace, serviceName));
+                }
+            }
+        }
+        return ImmutableSet.copyOf(services);
+    }
+
+    public ImmutableSet<ImmutableList<String>> listExtendGraphs(String cluster) {
+
+        Set<ImmutableList<String>> graphs = new HashSet<>();
+
+        ImmutableSet<String> graphSpaces = this.listGraphSpaces(cluster);
+
+        for (String graphSpace: graphSpaces) {
+            this.listGraphs(cluster, graphSpace).forEach((g) -> {
+                graphs.add(ImmutableList.of(graphSpace, g));
+            });
+        }
+
+        return ImmutableSet.copyOf(graphs);
+    }
+
+    public GraphCoinfigEntity getGraphConfig(String cluster, String graphspace,
+                                              String graph) {
+        String value = this.metaDriver.get(this.graphKey(cluster, graphspace,
+                                                         graph));
+        if (value != null) {
+            return JsonUtil.fromJson(value, GraphCoinfigEntity.class);
+        }
+        return null;
+    }
+
+    public ServiceConfigEntity getServiceConfig(String cluster,
+                                                String graphspace,
+                                              String service) {
+        String value =
+                this.metaDriver.get(this.graphServiceKey(cluster, graphspace,
+                                                         service));
+        if (value != null) {
+            return JsonUtil.fromJson(value, ServiceConfigEntity.class);
+        }
+        return null;
+    }
+
+    protected HugeClient createClientWithService(String cluster,
+                                               String graphSpace,
+                                   String service, String token) {
+
+        E.checkArgument(cluster != null && graphSpace != null & service != null,
+                        "createClientWithService: cluster & graphspace must not null");
+
+        ServiceConfigEntity serviceConfig = getServiceConfig(cluster,
+                                                             graphSpace,
+                                                             service);
+
+        LOG.info("create client with graphspace:{}, service:{}, service " +
+                         "config: {} ", graphSpace, service, serviceConfig);
+
+        DefaultHugeClientFactory defaultFactory = new DefaultHugeClientFactory(
+                serviceConfig.getUrls().toArray(new String[0]));
+
+        return defaultFactory.createClient(graphSpace, null, token);
+    }
+
+    public HugeClient createUnauthClient(String cluster, String graphSpace,
+                                            String graph) {
+        E.checkArgument(cluster != null, "create unauth client: cluster must " +
+                "not null");
+
+        return createClient(cluster, graphSpace, graph, null);
+    }
+
+    public HugeClient createAuthClient(String cluster, String graphSpace,
+                                            String graph, String token) {
+        E.checkArgument(cluster != null && token != null,
+                        "create auth client: cluster & token" +
+                                " must not null");
+
+        return createClient(cluster, graphSpace, graph, token);
+    }
+
+    protected HugeClient createClient(String cluster, String graphSpace,
+                                           String graph, String token) {
+
+        String serviceName = null;
+        if (Strings.isEmpty(graphSpace)) {
+            ImmutableSet<ImmutableList<String>> services
+                    = this.listExtendServices(cluster);
+
+            E.checkArgument(services.size() > 0, "No OLTP Service Exist " +
+                    "Under" + cluster);
+
+            int r1 = (int) (Math.random() * services.size());
+            ImmutableList<String> rand = services.asList().get(r1);
+            graphSpace = rand.get(0);
+            serviceName = rand.get(1);
+        }
+
+        if (!Strings.isEmpty(graphSpace)) {
+            if (!Strings.isEmpty(graph)) {
+                GraphCoinfigEntity graphConfig = getGraphConfig(cluster,
+                                                                graphSpace,
+                                                                graph);
+                if (graphConfig != null && !Strings.isEmpty(
+                        graphConfig.service)) {
+                    serviceName = graphConfig.getService();
+                }
+            }
+
+            if (Strings.isEmpty(serviceName)) {
+                ImmutableSet<String> serviceNames
+                        = listServices(cluster, graphSpace);
+                int r2 = (int) (Math.random() * serviceNames.size());
+                serviceName = serviceNames.asList().get(r2);
+            }
+        }
+
+        LOG.info("create client with graphSpace:{}, serviceName:{}",
+                 graphSpace, serviceName);
+
+        return createClientWithService(cluster, graphSpace, serviceName, token);
     }
 
     public enum MetaDriverType {
@@ -283,7 +308,7 @@ public class MetaHugeClientFactory {
     }
 
     protected interface MetaDriver {
-        public String get(String key);
+        String get(String key);
 
         Map<String, String> scanWithPrefix(String prefix);
     }

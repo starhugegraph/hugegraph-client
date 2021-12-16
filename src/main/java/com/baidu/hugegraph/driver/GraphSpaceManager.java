@@ -30,4 +30,7 @@ public class GraphSpaceManager {
         this.graphSpaceAPI.delete(name);
     }
 
+    public GraphSpace updateGraphSpace(GraphSpace graphSpace) {
+        return this.graphSpaceAPI.update(graphSpace);
+    }
 }

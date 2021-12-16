@@ -5,6 +5,7 @@ import java.util.List;
 import com.baidu.hugegraph.api.API;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
+import com.baidu.hugegraph.structure.auth.Belong;
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.baidu.hugegraph.structure.space.GraphSpace;
 
@@ -42,5 +43,12 @@ public class GraphSpaceAPI extends API {
 
     public void delete(String name) {
         this.client.delete(this.path(), name);
+    }
+
+    public GraphSpace update(GraphSpace graphSpace) {
+        RestResult result = this.client.put(this.type(), graphSpace.getName(),
+                                            graphSpace);
+
+        return result.readObject(GraphSpace.class);
     }
 }
