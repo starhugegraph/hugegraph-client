@@ -279,6 +279,10 @@ public class SchemaManager {
     }
 
     public Map<String, List<SchemaElement>> getSchema() {
-        return this.schemaAPI.list();
+        return this.schemaAPI.listJsonSchema();
+    }
+
+    public String getGroovySchema() {
+        return this.schemaAPI.listGroovySchema();
     }
 }

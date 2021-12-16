@@ -19,6 +19,7 @@
 
 package com.baidu.hugegraph.api.schema;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,18 +33,32 @@ public class SchemaAPI extends API {
 
     private static final String PATH = "graphs/%s/%s";
 
+    private static final String SCHEMA = "schema";
+
     public SchemaAPI(RestClient client, String graph) {
         super(client);
         this.path(PATH, graph, this.type());
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, List<SchemaElement>> list() {
+    public Map<String, List<SchemaElement>> listJsonSchema() {
         if (this.client.apiVersionLt("0.66")) {
             throw new NotSupportException("schema get api");
         }
         RestResult result = this.client.get(this.path());
         return result.readObject(Map.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    public String listGroovySchema() {
+        if (this.client.apiVersionLt("0.67")) {
+            throw new NotSupportException("schema get api with format");
+        }
+        Map<String, Object> params = new LinkedHashMap<>();
+        params.put("format", "groovy");
+        RestResult result = this.client.get(this.path(), params);
+        Map<String, String> schema = result.readObject(Map.class);
+        return schema.get(SCHEMA);
     }
 
     @Override
