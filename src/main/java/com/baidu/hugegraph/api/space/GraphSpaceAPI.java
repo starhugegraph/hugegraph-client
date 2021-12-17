@@ -5,7 +5,6 @@ import java.util.List;
 import com.baidu.hugegraph.api.API;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
-import com.baidu.hugegraph.structure.auth.Belong;
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.baidu.hugegraph.structure.space.GraphSpace;
 
@@ -25,7 +24,7 @@ public class GraphSpaceAPI extends API {
     }
 
     public GraphSpace create(GraphSpace graphSpace) {
-        // this.client.checkApiVersion("0.67", "dynamic graph add");
+        this.client.checkApiVersion("0.67", "dynamic graph add");
         RestResult result = this.client.post(this.path(), graphSpace);
         return result.readObject(GraphSpace.class);
     }

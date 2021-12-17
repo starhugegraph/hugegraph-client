@@ -63,7 +63,10 @@ public enum HugeType {
     METRICS(240, "metrics"),
 
     // GraphSpaces
-    GRAPHSPACES(250, "graphSpaces");
+    GRAPHSPACES(250, "graphSpaces"),
+
+    // Services
+    SERVICES(251, "services");
 
     private int code;
     private String name = null;
