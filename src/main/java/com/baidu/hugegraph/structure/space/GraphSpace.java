@@ -41,6 +41,10 @@ public class GraphSpace {
     @JsonProperty("role_number_used")
     private int roleNumberUsed;
 
+    public GraphSpace(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }

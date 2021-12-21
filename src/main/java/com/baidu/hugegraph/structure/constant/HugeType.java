@@ -66,7 +66,10 @@ public enum HugeType {
     GRAPHSPACES(250, "graphSpaces"),
 
     // Services
-    SERVICES(251, "services");
+    SERVICES(251, "services"),
+
+    // SchemeTemplate
+    SCHEMATEMPLATES(252, "schematemplates");
 
     private int code;
     private String name = null;

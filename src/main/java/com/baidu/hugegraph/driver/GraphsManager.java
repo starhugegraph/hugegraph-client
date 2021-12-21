@@ -21,7 +21,6 @@ package com.baidu.hugegraph.driver;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +65,10 @@ public class GraphsManager {
 
     public void clear(String graph, String message) {
         this.graphsAPI.clear(graph, message);
+    }
+
+    public void clear(String graph, boolean clearSchema) {
+        this.graphsAPI.clear(graph, clearSchema);
     }
 
     public void remove(String graph, String message) {

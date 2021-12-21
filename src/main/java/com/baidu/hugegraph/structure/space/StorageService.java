@@ -3,5 +3,5 @@ package com.baidu.hugegraph.structure.space;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties
-public class StoreService {
+public class StorageService extends Service {
 }

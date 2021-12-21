@@ -27,6 +27,7 @@ import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.exception.NotSupportException;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.SchemaElement;
+import com.google.common.collect.ImmutableMap;
 
 public class SchemaAPI extends API {
 
@@ -39,10 +40,16 @@ public class SchemaAPI extends API {
 
     @SuppressWarnings("unchecked")
     public Map<String, List<SchemaElement>> list() {
+        return this.list("json");
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, List<SchemaElement>> list(String format) {
         if (this.client.apiVersionLt("0.66")) {
             throw new NotSupportException("schema get api");
         }
-        RestResult result = this.client.get(this.path());
+        RestResult result = this.client.get(this.path(), ImmutableMap.of(
+                "format", format));
         return result.readObject(Map.class);
     }
 

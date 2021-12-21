@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import com.baidu.hugegraph.util.E;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 
@@ -182,12 +183,13 @@ public class MetaHugeClientFactory {
         return ImmutableSet.copyOf(graphs);
     }
 
-    public GraphCoinfigEntity getGraphConfig(String cluster, String graphspace,
+    public Map<String, String> getGraphConfig(String cluster,
+                                               String graphspace,
                                               String graph) {
         String value = this.metaDriver.get(this.graphKey(cluster, graphspace,
                                                          graph));
         if (value != null) {
-            return JsonUtil.fromJson(value, GraphCoinfigEntity.class);
+            return JsonUtil.fromJson(value, Map.class);
         }
         return null;
     }
@@ -245,7 +247,7 @@ public class MetaHugeClientFactory {
                                            String graph, String token) {
 
         String serviceName = null;
-        if (Strings.isEmpty(graphSpace)) {
+        if (StringUtils.isEmpty(graphSpace)) {
             ImmutableSet<ImmutableList<String>> services
                     = this.listExtendServices(cluster);
 
@@ -258,18 +260,18 @@ public class MetaHugeClientFactory {
             serviceName = rand.get(1);
         }
 
-        if (!Strings.isEmpty(graphSpace)) {
-            if (!Strings.isEmpty(graph)) {
-                GraphCoinfigEntity graphConfig = getGraphConfig(cluster,
+        if (!StringUtils.isEmpty(graphSpace)) {
+            if (!StringUtils.isEmpty(graph)) {
+                Map<String, String> graphConfig = getGraphConfig(cluster,
                                                                 graphSpace,
                                                                 graph);
-                if (graphConfig != null && !Strings.isEmpty(
-                        graphConfig.service)) {
-                    serviceName = graphConfig.getService();
+                if (graphConfig != null && !StringUtils.isEmpty(
+                        graphConfig.get("service"))) {
+                    serviceName = graphConfig.get("service");
                 }
             }
 
-            if (Strings.isEmpty(serviceName)) {
+            if (StringUtils.isEmpty(serviceName)) {
                 ImmutableSet<String> serviceNames
                         = listServices(cluster, graphSpace);
                 int r2 = (int) (Math.random() * serviceNames.size());

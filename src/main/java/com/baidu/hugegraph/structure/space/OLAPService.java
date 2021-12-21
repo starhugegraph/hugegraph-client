@@ -3,5 +3,5 @@ package com.baidu.hugegraph.structure.space;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties
-public class OLAPService {
+public class OLAPService extends Service {
 }

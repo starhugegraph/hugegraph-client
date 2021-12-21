@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Set;
 
 @JsonIgnoreProperties
-public class OLTPService {
+public class OLTPService extends Service {
     @JsonProperty("name")
     private String name;
     @JsonProperty("description")
