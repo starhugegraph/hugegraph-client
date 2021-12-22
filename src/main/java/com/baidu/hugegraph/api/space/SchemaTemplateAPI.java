@@ -28,7 +28,7 @@ public class SchemaTemplateAPI extends API {
 
     public List<String> list() {
         RestResult result = this.client.get(this.path());
-        return result.readList(this.path(), String.class);
+        return result.readList(this.type(), String.class);
     }
 
     public SchemaTemplate get(String name) {
@@ -41,7 +41,7 @@ public class SchemaTemplateAPI extends API {
     }
 
     public SchemaTemplate update(SchemaTemplate template) {
-        RestResult result = this.client.put(this.type(), template.name(),
+        RestResult result = this.client.put(this.path(), template.name(),
                                             template);
 
         return result.readObject(SchemaTemplate.class);

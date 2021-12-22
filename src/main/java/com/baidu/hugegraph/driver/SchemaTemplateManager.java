@@ -26,7 +26,7 @@ public class SchemaTemplateManager {
     }
 
     public SchemaTemplate updateSchemaTemplate(SchemaTemplate template) {
-        return this.updateSchemaTemplate(template);
+        return this.schemaTemplateAPI.update(template);
     }
 
     public void deleteSchemaTemplate(String name) {

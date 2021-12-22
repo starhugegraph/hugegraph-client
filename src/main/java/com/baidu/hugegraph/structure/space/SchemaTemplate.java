@@ -7,9 +7,12 @@ import java.util.Map;
 
 public class SchemaTemplate {
     @JsonProperty("name")
-    public String name;
+    private String name;
     @JsonProperty("schema")
-    public String schema;
+    private String schema;
+
+    public SchemaTemplate() {
+    }
 
     public SchemaTemplate(String name, String schema) {
         this.name = name;
