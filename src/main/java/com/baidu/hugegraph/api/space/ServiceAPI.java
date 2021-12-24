@@ -4,11 +4,11 @@ import com.baidu.hugegraph.api.API;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.HugeType;
-import com.baidu.hugegraph.structure.space.Service;
+import com.baidu.hugegraph.structure.space.OLTPService;
 
 import java.util.List;
 
-public class ServiceAPI<T> extends API {
+public class ServiceAPI extends API {
 
     private static final String PATH = "graphspaces/%s/services";
 
@@ -28,19 +28,19 @@ public class ServiceAPI<T> extends API {
         return result.readList(this.type(), String.class);
     }
 
-    public <T extends Service> Object add(String name, Class<T> clazz) {
-        // TODO
-        return null;
+    public OLTPService add(OLTPService service) {
+        RestResult result = this.client.post(this.path(), service);
+        return result.readObject(OLTPService.class);
     }
 
     public void delete(String service) {
         this.client.delete(this.path(), service);
     }
 
-    public <T> T get(String service, Class<T> clazz) {
-        RestResult result = this.client.get(this.path(), service);
+    public OLTPService get(String serviceName) {
+        RestResult result = this.client.get(this.path(), serviceName);
 
-        return (T) result.readObject(clazz);
+        return result.readObject(OLTPService.class);
     }
 }
 

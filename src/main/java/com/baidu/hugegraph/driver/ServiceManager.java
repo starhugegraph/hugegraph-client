@@ -4,8 +4,7 @@ import java.util.List;
 
 import com.baidu.hugegraph.api.space.ServiceAPI;
 import com.baidu.hugegraph.client.RestClient;
-import com.baidu.hugegraph.driver.factory.ServiceConfigEntity;
-import com.baidu.hugegraph.structure.space.Service;
+import com.baidu.hugegraph.structure.space.OLTPService;
 
 public class ServiceManager {
     private ServiceAPI serviceAPI;
@@ -15,24 +14,22 @@ public class ServiceManager {
     }
 
     public List<String> listService() {
-        // TODO
-        return null;
+        return serviceAPI.list();
     }
 
-    public <T extends Service> T getService(String name, Class<T> clazz) {
-        return (T) this.serviceAPI.get(name, clazz);
+    public OLTPService getService(String name) {
+        return this.serviceAPI.get(name);
     }
 
-    public <T extends Service> T addService(String name, Class<T> clazz) {
-       return (T) this.serviceAPI.add(name, clazz);
+    public OLTPService addService(OLTPService service) {
+       return this.serviceAPI.add(service);
     }
 
     public void delService(String name) {
-        // TODO
+        this.serviceAPI.delete(name);
     }
 
-    public void updateService(String name) {
-        // TODO
+    public OLTPService updateService(OLTPService service) {
+        return this.serviceAPI.add(service);
     }
-
 }
