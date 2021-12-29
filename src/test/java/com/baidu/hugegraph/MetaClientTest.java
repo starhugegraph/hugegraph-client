@@ -24,8 +24,13 @@ public class MetaClientTest {
 
     @BeforeClass
     public static void init() {
-        factory = MetaHugeClientFactory.connect(null,
-                                                ETCD_ENDPOINT);
+        // factory = MetaHugeClientFactory.connect(null,
+        //                                         ETCD_ENDPOINT);
+        factory = MetaHugeClientFactory
+                .connect(null, ETCD_ENDPOINT,
+                         "/Users/wenchuanbo/workspace/cfssl/ca.pem",
+                         "/Users/wenchuanbo/workspace/cfssl/client.pem",
+                         "/Users/wenchuanbo/workspace/cfssl/client-key-pkcs8.pem");
         defaultFactory =
                 new DefaultHugeClientFactory(new String[]{"http://localhost:8080"});
 
@@ -42,7 +47,8 @@ public class MetaClientTest {
         tool1.auth().login(login);
         LoginResult r = tool1.auth().login(login);
 
-        admin = defaultFactory.createClient(GRAPHSPACE, GRAPH, r.token());
+        admin = defaultFactory.createClient(GRAPHSPACE, GRAPH, r.token(),
+                                            null, null);
 
         tool1.close();
     }
@@ -52,7 +58,7 @@ public class MetaClientTest {
         admin.close();
     }
 
-    @Ignore
+    @Test
     public void testMetaClientAuth() {
         HugeClient client = factory.createUnauthClient(CLUSTER, GRAPHSPACE,
                                                      GRAPH);
