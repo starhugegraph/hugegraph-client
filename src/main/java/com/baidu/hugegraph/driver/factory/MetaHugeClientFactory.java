@@ -1,5 +1,6 @@
 package com.baidu.hugegraph.driver.factory;
 
+import java.io.File;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -9,11 +10,18 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
+import com.baidu.hugegraph.rest.ClientException;
 import com.baidu.hugegraph.util.E;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import io.etcd.jetcd.ClientBuilder;
+import io.netty.handler.ssl.ApplicationProtocolConfig;
+import io.netty.handler.ssl.ApplicationProtocolNames;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.handler.ssl.SslProvider;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.logging.log4j.util.Strings;
 import org.slf4j.Logger;
 
 import io.etcd.jetcd.kv.GetResponse;
@@ -40,17 +48,34 @@ public class MetaHugeClientFactory {
     public static final String META_PATH_SERVICE_CONF = "SERVICE_CONF";
     public static final String META_PATH_GRAPH_CONF = "GRAPH_CONF";
 
-    public MetaHugeClientFactory(MetaDriverType type, String... endpoints) {
+    public MetaHugeClientFactory(MetaDriverType type, String[] endpoints,
+                                 String trustFile, String clientCertFile,
+                                 String clientKeyFile) {
         if (type == null || type.equals(MetaDriverType.ETCD)) {
-            this.metaDriver = new EtcdMetaDriver(endpoints);
+            if (StringUtils.isEmpty(trustFile)) {
+                this.metaDriver = new EtcdMetaDriver(endpoints);
+            } else {
+                this.metaDriver = new EtcdMetaDriver(endpoints, trustFile,
+                                                     clientCertFile,
+                                                     clientKeyFile);
+            }
         } else {
             throw new RuntimeException("Only ETCD SUPPORT");
         }
     }
 
     public static MetaHugeClientFactory connect(MetaDriverType type,
-                                                String... args) {
-        return new MetaHugeClientFactory(type, args);
+                                                String[] endpoints,
+                                                String trustFile,
+                                                String clientCertFile,
+                                                String clientKeyFile) {
+        return new MetaHugeClientFactory(type, endpoints, trustFile,
+                                         clientCertFile, clientKeyFile);
+    }
+
+    public static MetaHugeClientFactory connect(MetaDriverType type,
+                                                String[] endpoints) {
+        return new MetaHugeClientFactory(type, endpoints, null, null, null);
     }
 
     protected String graphKey(String cluster, String graphSpace, String graph) {
@@ -96,8 +121,8 @@ public class MetaHugeClientFactory {
     public ImmutableSet<String> listClusters() {
         Map<String, String> scanData = this.metaDriver.scanWithPrefix(
                 this.clusterPrefixKey());
-        Set<String> clusters = scanData.entrySet().stream()
-                                       .map((e) -> e.getKey().split("/")[1])
+        Set<String> clusters = scanData.keySet().stream()
+                                       .map(s -> s.split("/")[1])
                                        .collect(Collectors.toSet());
 
         return ImmutableSet.copyOf(clusters);
@@ -274,6 +299,8 @@ public class MetaHugeClientFactory {
             if (StringUtils.isEmpty(serviceName)) {
                 ImmutableSet<String> serviceNames
                         = listServices(cluster, graphSpace);
+                E.checkArgument(serviceNames.size() > 0, "No service under " +
+                        "cluster: %s", cluster);
                 int r2 = (int) (Math.random() * serviceNames.size());
                 serviceName = serviceNames.asList().get(r2);
             }
@@ -318,11 +345,51 @@ public class MetaHugeClientFactory {
     protected class EtcdMetaDriver implements MetaDriver{
         private Client client;
 
-        public EtcdMetaDriver(String... endpoints) {
+        public EtcdMetaDriver(String[] endpoints) {
             this.client = Client.builder()
-                                .endpoints((String[]) endpoints)
+                                .endpoints(endpoints)
                                 .build();
         }
+
+        public EtcdMetaDriver(String [] endpoints, String trustFile,
+                              String clientCertFile, String clientKeyFile) {
+            ClientBuilder builder = Client.builder()
+                                          .endpoints(endpoints);
+
+            SslContext sslContext = openSslContext(trustFile, clientCertFile,
+                                                   clientKeyFile);
+
+            this.client = builder.sslContext(sslContext).build();
+        }
+
+        protected SslContext openSslContext(String trustFile,
+                                                String clientCertFile,
+                                                String clientKeyFile) {
+            SslContext ssl;
+            try {
+                File trustManagerFile = FileUtils.getFile(trustFile);
+                File keyCertChainFile = FileUtils.getFile(clientCertFile);
+                File keyFile = FileUtils.getFile(clientKeyFile);
+                ApplicationProtocolConfig alpn = new ApplicationProtocolConfig(
+                        ApplicationProtocolConfig.Protocol.ALPN,
+                        ApplicationProtocolConfig.SelectorFailureBehavior.NO_ADVERTISE,
+
+                        ApplicationProtocolConfig.SelectedListenerFailureBehavior
+                                .ACCEPT,
+                        ApplicationProtocolNames.HTTP_2);
+
+                ssl = SslContextBuilder.forClient()
+                                       .applicationProtocolConfig(alpn)
+                                       .sslProvider(SslProvider.OPENSSL)
+                                       .trustManager(trustManagerFile)
+                                       .keyManager(keyCertChainFile, keyFile)
+                                       .build();
+            } catch (Exception e) {
+                throw new ClientException("Failed to open ssl context", e);
+            }
+            return ssl;
+        }
+
 
         @Override
         public String get(String key) {
@@ -333,7 +400,7 @@ public class MetaHugeClientFactory {
                                     .get().getKvs();
             } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(String.format("Failed to get key '%s'" +
-                        " from etcd", key, e));
+                        " from etcd, %s", key, e));
             }
 
             if (keyValues.size() > 0) {
@@ -357,8 +424,9 @@ public class MetaHugeClientFactory {
                 response = this.client.getKVClient().get(toByteSequence(prefix),
                                                          getOption).get();
             } catch (InterruptedException | ExecutionException e) {
-                throw new ServerException("Failed to scan etcd with prefix " +
-                                                prefix, e);
+                LOG.error("Failed to scan etcd with prefix: {}", prefix, e);
+                throw new ServerException("Failed to scan etcd with prefix: " +
+                                                prefix + " " + e);
             }
             int size = (int) response.getCount();
             Map<String, String> keyValues = new HashMap<>(size);
