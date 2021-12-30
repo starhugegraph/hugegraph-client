@@ -29,6 +29,71 @@ public class OLTPService {
 
     enum DepleymentType {
         K8S,
-        MENUAL;
+        MANUAL;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public DepleymentType getDepleymentType() {
+        return depleymentType;
+    }
+
+    public void setDepleymentType(
+            DepleymentType depleymentType) {
+        this.depleymentType = depleymentType;
+    }
+
+    public int getRunning() {
+        return running;
+    }
+
+    public void setRunning(int running) {
+        this.running = running;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public int getCpuLimit() {
+        return cpuLimit;
+    }
+
+    public void setCpuLimit(int cpuLimit) {
+        this.cpuLimit = cpuLimit;
+    }
+
+    public int getMemoryLimit() {
+        return memoryLimit;
+    }
+
+    public void setMemoryLimit(int memoryLimit) {
+        this.memoryLimit = memoryLimit;
+    }
+
+    public Set<String> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(Set<String> urls) {
+        this.urls = urls;
     }
 }

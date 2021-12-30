@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import com.baidu.hugegraph.rest.ClientException;
+import com.baidu.hugegraph.structure.space.OLTPService;
 import com.baidu.hugegraph.util.E;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -35,8 +36,6 @@ import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.util.JsonUtil;
 import com.baidu.hugegraph.util.Log;
 import com.baidu.hugegraph.driver.HugeClient;
-
-import javax.swing.*;
 
 public class MetaHugeClientFactory {
 
@@ -183,11 +182,11 @@ public class MetaHugeClientFactory {
             for (Map.Entry<String, String> entry: kvs.entrySet()) {
                 String serviceName =
                         entry.getKey().split(META_PATH_DELIMETER)[5];
-                ServiceConfigEntity s
+                OLTPService s
                         = JsonUtil.fromJson(entry.getValue(),
-                                            ServiceConfigEntity.class);
+                                            OLTPService.class);
 
-                if (s.isOLTP() && s.getUrls().size() > 0){
+                if (s.getUrls().size() > 0){
                     services.add(ImmutableList.of(graphSpace, serviceName));
                 }
             }
@@ -221,14 +220,14 @@ public class MetaHugeClientFactory {
         return null;
     }
 
-    public ServiceConfigEntity getServiceConfig(String cluster,
+    public OLTPService getServiceConfig(String cluster,
                                                 String graphspace,
                                               String service) {
         String value =
                 this.metaDriver.get(this.graphServiceKey(cluster, graphspace,
                                                          service));
         if (value != null) {
-            return JsonUtil.fromJson(value, ServiceConfigEntity.class);
+            return JsonUtil.fromJson(value, OLTPService.class);
         }
         return null;
     }
@@ -241,9 +240,8 @@ public class MetaHugeClientFactory {
         E.checkArgument(cluster != null && graphSpace != null & service != null,
                         "createClientWithService: cluster & graphspace must not null");
 
-        ServiceConfigEntity serviceConfig = getServiceConfig(cluster,
-                                                             graphSpace,
-                                                             service);
+        OLTPService serviceConfig = getServiceConfig(cluster, graphSpace,
+                                                     service);
 
         LOG.info("create client with graphspace:{}, service:{}, service " +
                          "config: {} ", graphSpace, service, serviceConfig);
