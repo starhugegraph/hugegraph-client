@@ -274,8 +274,10 @@ public class MetaHugeClientFactory {
         return createClient(cluster, graphSpace, graph, token, username, password);
     }
 
-    protected String randomService(String cluster, String graphSpace,
-                                   String graph) {
+    protected HugeClient createClient(String cluster, String graphSpace,
+                                      String graph, String token,
+                                      String username, String password) {
+
         String serviceName = null;
         if (StringUtils.isEmpty(graphSpace)) {
             ImmutableSet<ImmutableList<String>> services
@@ -314,15 +316,6 @@ public class MetaHugeClientFactory {
         LOG.info("create client with graphSpace:{}, serviceName:{}",
                  graphSpace, serviceName);
 
-        return serviceName;
-    }
-
-    protected HugeClient createClient(String cluster, String graphSpace,
-                                      String graph, String token,
-                                      String username, String password) {
-
-        // Choose one service as server instance
-        String serviceName = randomService(cluster, graphSpace, graph);
         return createClientWithService(cluster, graphSpace, serviceName,
                                        token, username, password);
     }

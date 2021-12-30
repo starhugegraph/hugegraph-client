@@ -99,7 +99,7 @@ public class GraphsApiTest extends BaseApiTest {
         Assert.assertEquals(100, resultSet.iterator().next().getInt());
 
         // Clear graph schema and data from new created graph
-        graphsAPI.clear(GRAPH, "I'm sure to delete all data");
+        graphsAPI.clear(GRAPH, true);
 
         resultSet = client.gremlin().gremlin("g.V().count()").execute();
         Assert.assertEquals(0, resultSet.iterator().next().getInt());

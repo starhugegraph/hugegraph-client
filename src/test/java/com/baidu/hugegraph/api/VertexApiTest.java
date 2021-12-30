@@ -340,7 +340,7 @@ public class VertexApiTest extends BaseApiTest {
         List<Object> ids = vertexAPI.create(vertices);
 
         // Create olap property key
-        PropertyKey pagerank = schema().propertyKey("pagerank")
+        PropertyKey pagerank = schema().propertyKey("olap_pagerank")
                                        .asDouble()
                                        .writeType(WriteType.OLAP_RANGE)
                                        .build();
@@ -351,7 +351,7 @@ public class VertexApiTest extends BaseApiTest {
         Assert.assertNotEquals(0L, taskId);
         waitUntilTaskCompleted(taskId);
 
-        PropertyKey wcc = schema().propertyKey("wcc")
+        PropertyKey wcc = schema().propertyKey("olap_wcc")
                                   .asText()
                                   .writeType(WriteType.OLAP_SECONDARY)
                                   .build();
@@ -361,7 +361,7 @@ public class VertexApiTest extends BaseApiTest {
         Assert.assertNotEquals(0L, taskId);
         waitUntilTaskCompleted(taskId);
 
-        PropertyKey none = schema().propertyKey("none")
+        PropertyKey none = schema().propertyKey("olap_none")
                                    .asText()
                                    .writeType(WriteType.OLAP_COMMON)
                                    .build();
@@ -376,7 +376,7 @@ public class VertexApiTest extends BaseApiTest {
         for (int i = 0; i < 100; i++) {
             Vertex vertex = new Vertex(null);
             vertex.id(ids.get(i));
-            vertex.property("pagerank", 0.1D * i);
+            vertex.property("olap_pagerank", 0.1D * i);
             vertices.add(vertex);
         }
 
@@ -387,7 +387,7 @@ public class VertexApiTest extends BaseApiTest {
         for (int i = 0; i < 100; i++) {
             Vertex vertex = new Vertex(null);
             vertex.id(ids.get(i));
-            vertex.property("wcc", "wcc" + i);
+            vertex.property("olap_wcc", "wcc" + i);
             vertices.add(vertex);
         }
 
@@ -398,7 +398,7 @@ public class VertexApiTest extends BaseApiTest {
         for (int i = 0; i < 100; i++) {
             Vertex vertex = new Vertex(null);
             vertex.id(ids.get(i));
-            vertex.property("none", "none" + i);
+            vertex.property("olap_none", "none" + i);
             vertices.add(vertex);
         }
 
@@ -431,21 +431,23 @@ public class VertexApiTest extends BaseApiTest {
                                                     .put("name", "Person-" + i)
                                                     .put("city", "Beijing")
                                                     .put("age", 30)
-                                                    .put("pagerank", 0.1D * i)
-                                                    .put("wcc", "wcc" + i)
-                                                    .put("none", "none" + i)
+                                                    .put("olap_pagerank",
+                                                         0.1D * i)
+                                                    .put("olap_wcc", "wcc" + i)
+                                                    .put("olap_none",
+                                                         "none" + i)
                                                     .build();
             Assert.assertEquals(props, person.properties());
         }
 
         // Query vertices by olap properties
         GremlinRequest request = new GremlinRequest(
-                                 "g.V().has(\"pagerank\", P.gte(5))");
+                                 "g.V().has(\"olap_pagerank\", P.gte(5))");
         ResultSet resultSet = gremlin().execute(request);
         Assert.assertEquals(50, resultSet.size());
 
         request = new GremlinRequest(
-                  "g.V().has(\"wcc\", P.within(\"wcc10\", \"wcc20\"))");
+                  "g.V().has(\"olap_wcc\", P.within(\"wcc10\", \"wcc20\"))");
         resultSet = gremlin().execute(request);
         Assert.assertEquals(2, resultSet.size());
 
@@ -466,12 +468,12 @@ public class VertexApiTest extends BaseApiTest {
         waitUntilTaskCompleted(taskId);
 
         // Query after clear olap property key
-        request = new GremlinRequest("g.V().has(\"pagerank\", P.gte(5))");
+        request = new GremlinRequest("g.V().has(\"olap_pagerank\", P.gte(5))");
         resultSet = gremlin().execute(request);
         Assert.assertEquals(0, resultSet.size());
 
         request = new GremlinRequest(
-                  "g.V().has(\"wcc\", P.within(\"wcc10\", \"wcc20\"))");
+                  "g.V().has(\"olap_wcc\", P.within(\"wcc10\", \"wcc20\"))");
         resultSet = gremlin().execute(request);
         Assert.assertEquals(0, resultSet.size());
 
@@ -491,17 +493,18 @@ public class VertexApiTest extends BaseApiTest {
         // Query after delete olap property key
         Assert.assertThrows(ServerException.class, () -> {
             gremlin().execute(new GremlinRequest(
-                              "g.V().has(\"pagerank\", P.gte(5))"));
+                              "g.V().has(\"olap_pagerank\", P.gte(5))"));
         }, e -> {
-            Assert.assertContains("Undefined property key: 'pagerank'",
+            Assert.assertContains("Undefined property key: 'olap_pagerank'",
                                   e.getMessage());
         });
 
         Assert.assertThrows(ServerException.class, () -> {
             gremlin().execute(new GremlinRequest(
-                      "g.V().has(\"wcc\", P.within(\"wcc10\", \"wcc20\"))"));
+                      "g.V().has(\"olap_wcc\", P.within(\"wcc10\", \"wcc20\")" +
+                              ")"));
         }, e -> {
-            Assert.assertContains("Undefined property key: 'wcc'",
+            Assert.assertContains("Undefined property key: 'olap_wcc'",
                                   e.getMessage());
         });
 
