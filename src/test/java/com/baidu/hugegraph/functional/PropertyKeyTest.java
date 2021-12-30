@@ -180,7 +180,7 @@ public class PropertyKeyTest extends BaseFuncTest {
     @Test
     public void testOlapPropertyKey() {
         SchemaManager schema = schema();
-        PropertyKey pagerank = schema.propertyKey("pagerank")
+        PropertyKey pagerank = schema.propertyKey("olap_pagerank")
                                      .asDouble()
                                      .writeType(WriteType.OLAP_RANGE)
                                      .build();
