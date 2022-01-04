@@ -79,6 +79,10 @@ public class MetaHugeClientFactory {
         return new MetaHugeClientFactory(type, endpoints, null, null, null);
     }
 
+    public void close() {
+        this.metaDriver.close();
+    }
+
     protected String graphKey(String cluster, String graphSpace, String graph) {
         // HUGEGRAPH/{cluster}/GRAPHSPACE/{graphspace}/GRAPH_CONF/{graph}
         return String.join(META_PATH_DELIMETER, META_PATH_HUGEGRAPH,
@@ -348,6 +352,8 @@ public class MetaHugeClientFactory {
         String get(String key);
 
         Map<String, String> scanWithPrefix(String prefix);
+
+        void close();
     }
 
     protected class EtcdMetaDriver implements MetaDriver{
@@ -444,6 +450,11 @@ public class MetaHugeClientFactory {
             }
             return keyValues;
         }
+
+        @Override
+        public void close() {
+            this.client.close();
+        }
     }
 
     protected class PdMetaDriver implements MetaDriver{
@@ -455,6 +466,11 @@ public class MetaHugeClientFactory {
         @Override
         public Map<String, String> scanWithPrefix(String prefix) {
             return null;
+        }
+
+        @Override
+        public void close() {
+
         }
     }
 }
