@@ -32,7 +32,7 @@ import java.util.List;
 public class SameNeighborsBatchRequest {
 
     @JsonProperty("vertex_list")
-    private List<List<String>> vertexList;
+    private List<List<Object>> vertexList;
     @JsonProperty("direction")
     private String direction;
     @JsonProperty("label")
@@ -71,11 +71,9 @@ public class SameNeighborsBatchRequest {
         }
 
         public Builder vertex(Object vertexId, Object otherId ) {
-            String vertex = GraphAPI.formatVertexId(vertexId, false);
-            String other = GraphAPI.formatVertexId(otherId, false);
-            List<String> vertexPair = new ArrayList<>();
-            vertexPair.add(vertex);
-            vertexPair.add(other);
+            List<Object> vertexPair = new ArrayList<>();
+            vertexPair.add(vertexId);
+            vertexPair.add(otherId);
             this.request.vertexList.add(vertexPair);
             return this;
         }
