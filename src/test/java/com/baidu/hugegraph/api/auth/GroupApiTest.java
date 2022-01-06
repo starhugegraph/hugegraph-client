@@ -159,9 +159,10 @@ public class GroupApiTest extends AuthApiTest {
 
         Assert.assertThrows(ServerException.class, () -> {
             Whitebox.setInternalState(group2, "id", "fake-id");
+            Whitebox.setInternalState(group2, "name", "fake-name");
             api.update(group2);
         }, e -> {
-            Assert.assertContains("Invalid group id: fake-id",
+            Assert.assertContains("group name 'fake-name' is not existed",
                                   e.getMessage());
         });
     }

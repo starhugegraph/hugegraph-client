@@ -31,8 +31,8 @@ import com.baidu.hugegraph.structure.graph.Path;
 
 public class ShortestPathAPI extends TraversersAPI {
 
-    public ShortestPathAPI(RestClient client, String graph) {
-        super(client, graph);
+    public ShortestPathAPI(RestClient client,  String graphSpace, String graph) {
+        super(client, graphSpace, graph);
     }
 
     @Override

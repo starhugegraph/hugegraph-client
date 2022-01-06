@@ -33,8 +33,8 @@ import com.baidu.hugegraph.structure.traverser.PathsWithVertices;
 
 public class PathsAPI extends TraversersAPI {
 
-    public PathsAPI(RestClient client, String graph) {
-        super(client, graph);
+    public PathsAPI(RestClient client, String graphSpace, String graph) {
+        super(client, graphSpace, graph);
     }
 
     @Override

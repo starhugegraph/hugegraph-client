@@ -31,8 +31,8 @@ public class ComputerManager {
 
     private ComputerDisAPI computerDisAPI;
 
-    public ComputerManager(RestClient client, String graph) {
-        this.computerDisAPI = new ComputerDisAPI(client, graph);
+    public ComputerManager(RestClient client, String graphSpace, String graph) {
+        this.computerDisAPI = new ComputerDisAPI(client, graphSpace, graph);
     }
 
     public long create(String algorithm, long worker,

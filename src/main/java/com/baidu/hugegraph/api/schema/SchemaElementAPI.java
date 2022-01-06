@@ -25,11 +25,11 @@ import com.baidu.hugegraph.structure.SchemaElement;
 
 public abstract class SchemaElementAPI extends API {
 
-    private static final String PATH = "graphs/%s/schema/%s";
+    private static final String PATH = "graphspaces/%s/graphs/%s/schema/%s";
 
-    public SchemaElementAPI(RestClient client, String graph) {
+    public SchemaElementAPI(RestClient client, String graphSpace, String graph) {
         super(client);
-        this.path(PATH, graph, this.type());
+        this.path(PATH, graphSpace, graph, this.type());
     }
 
     protected abstract Object checkCreateOrUpdate(SchemaElement schemaElement);

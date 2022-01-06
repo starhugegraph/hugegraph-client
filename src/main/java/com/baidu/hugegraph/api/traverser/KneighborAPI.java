@@ -32,8 +32,8 @@ import com.baidu.hugegraph.structure.traverser.KneighborRequest;
 
 public class KneighborAPI extends TraversersAPI {
 
-    public KneighborAPI(RestClient client, String graph) {
-        super(client, graph);
+    public KneighborAPI(RestClient client, String graphSpace, String graph) {
+        super(client, graphSpace, graph);
     }
 
     @Override

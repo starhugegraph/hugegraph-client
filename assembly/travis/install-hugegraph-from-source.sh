@@ -35,7 +35,8 @@ authentication: {
   config: {tokens: conf/rest-server.properties}
 }" >> $GREMLIN_SERVER_CONFIG
 
-sed -i 's/#auth.authenticator=/auth.authenticator=com.baidu.hugegraph.auth.StandardAuthenticator/' ${REST_SERVER_CONFIG}
+sed -i 's/#auth.authenticator=com.baidu.hugegraph.auth.StandardAuthenticator/auth.authenticator=com.baidu.hugegraph.auth.StandardAuthenticator/' ${REST_SERVER_CONFIG}
+
 
 # start HugeGraphServer with https protocol
 bin/start-hugegraph.sh

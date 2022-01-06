@@ -44,7 +44,7 @@ public class GraphsApiTest extends BaseApiTest {
             "src/test/resources/hugegraph2.properties";
 
     @Test
-    public void testCreateAndRemoveGraph() {
+    public void testCreateAndRemoveGraph() throws InterruptedException {
         int initialGraphNumber = graphsAPI.list().size();
 
         // Create new graph dynamically
@@ -99,7 +99,7 @@ public class GraphsApiTest extends BaseApiTest {
         Assert.assertEquals(100, resultSet.iterator().next().getInt());
 
         // Clear graph schema and data from new created graph
-        graphsAPI.clear(GRAPH, "I'm sure to delete all data");
+        graphsAPI.clear(GRAPH, true);
 
         resultSet = client.gremlin().gremlin("g.V().count()").execute();
         Assert.assertEquals(0, resultSet.iterator().next().getInt());
@@ -113,6 +113,9 @@ public class GraphsApiTest extends BaseApiTest {
 
         // Remove new created graph dynamically
         graphsAPI.delete(GRAPH, "I'm sure to drop the graph");
+
+        // Wait for the delete operation to complete
+        Thread.sleep(5000);
 
         Assert.assertEquals(initialGraphNumber, graphsAPI.list().size());
     }

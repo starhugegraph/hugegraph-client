@@ -498,27 +498,27 @@ public class KoutApiTest extends TraverserApiTest {
         Object joshId = getVertexId("person", "name", "josh");
         Object lopId = getVertexId("software", "name", "lop");
         Object peterId = getVertexId("person", "name", "peter");
+        Object vadasId = getVertexId("person", "name", "vadas");
 
         KoutRequest.Builder builder = KoutRequest.builder();
         builder.source(markoId);
         Map<String, Object> properties = new HashMap<>();
-        properties.put("date", "P.gt(\"2014-01-01 00:00:00\")");
-        builder.steps().direction(Direction.BOTH)
+        properties.put("date", "P.gt(\"2012-05-01 00:00:00\")");
+        builder.steps().direction(Direction.OUT)
                .edgeSteps(new Steps.StepEntity("knows", properties));
         builder.maxDepth(1);
         KoutRequest request = builder.build();
 
         Kout koutResult = koutAPI.post(request);
 
-        Assert.assertEquals(0, koutResult.size());
-        Set<Object> expected = ImmutableSet.of(lopId);
+        Set<Object> expected = ImmutableSet.of(joshId);
         Assert.assertEquals(expected, koutResult.ids());
 
         builder = KoutRequest.builder();
         builder.source(markoId);
         properties = new HashMap<>();
         properties.put("date", "P.gt(\"2014-01-01 00:00:00\")");
-        builder.steps().direction(Direction.BOTH)
+        builder.steps().direction(Direction.OUT)
                .edgeSteps(new Steps.StepEntity("knows", properties));
         builder.maxDepth(2);
         request = builder.build();
@@ -526,22 +526,20 @@ public class KoutApiTest extends TraverserApiTest {
         koutResult = koutAPI.post(request);
 
         Assert.assertEquals(0, koutResult.size());
-        expected = ImmutableSet.of(peterId, joshId);
-        Assert.assertEquals(expected, koutResult.ids());
 
         builder = KoutRequest.builder();
         builder.source(markoId);
         properties = new HashMap<>();
-        properties.put("date", "P.gt(\"2014-01-01 00:00:00\")");
-        builder.steps().direction(Direction.BOTH)
+        properties.put("date", "P.lt(\"2014-01-01 00:00:00\")");
+        builder.steps().direction(Direction.OUT)
                .edgeSteps(new Steps.StepEntity("knows", properties));
-        builder.maxDepth(3);
+        builder.maxDepth(1);
         request = builder.build();
 
         koutResult = koutAPI.post(request);
 
-        Assert.assertEquals(0, koutResult.size());
-        expected = ImmutableSet.of(rippleId);
+        Assert.assertEquals(2, koutResult.size());
+        expected = ImmutableSet.of(joshId, vadasId);
         Assert.assertEquals(expected, koutResult.ids());
     }
 

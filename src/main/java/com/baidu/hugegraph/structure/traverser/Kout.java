@@ -41,6 +41,8 @@ public class Kout {
     private Set<Edge> edges;
     @JsonProperty
     private Object measure;
+    @JsonProperty
+    private List<Integer> sizes;
 
     public int size() {
         return this.size;

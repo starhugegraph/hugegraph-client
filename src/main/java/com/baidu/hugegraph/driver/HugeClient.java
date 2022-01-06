@@ -35,6 +35,8 @@ public class HugeClient implements Closeable {
     static {
         ClientVersion.check();
     }
+    private String graphSpaceName;
+    private String graphName;
     private final RestClient client;
     private VersionManager version;
     private GraphsManager graphs;
@@ -48,8 +50,14 @@ public class HugeClient implements Closeable {
     private ComputerManager computer;
     private AuthManager auth;
     private MetricsManager metrics;
+    private GraphSpaceManager graphSpace;
+    private ServiceManager serviceManager;
+    private SchemaTemplateManager schemaTemplageManager;
 
     public HugeClient(HugeClientBuilder builder) {
+        this.graphSpaceName = builder.graphSpace();
+        this.graphName = builder.graph();
+
         try {
             if (StringUtils.isEmpty(builder.token())) {
                 this.client = new RestClient(builder.url(),
@@ -87,6 +95,11 @@ public class HugeClient implements Closeable {
         return new HugeClientBuilder(url, graphSpace, graph);
     }
 
+    public HugeClient assignGraph(String graph) {
+        this.initManagers(this.client, graphSpaceName, graphName);
+        return this;
+    }
+
     @Override
     public void close() {
         this.client.close();
@@ -95,22 +108,25 @@ public class HugeClient implements Closeable {
     private void initManagers(RestClient client, String graphSpace,
                               String graph) {
         assert client != null;
+        assert graphSpace != null;
         // Check hugegraph-server api version
         this.version = new VersionManager(client);
         this.checkServerApiVersion();
 
-        this.graphs = new GraphsManager(client);
-        this.schema = new SchemaManager(client, graph);
-        this.graph = new GraphManager(client, graph);
-        this.gremlin = new GremlinManager(client, graphSpace,
-                                          graph, this.graph);
+        this.graphs = new GraphsManager(client, graphSpace);
+        this.schema = new SchemaManager(client, graphSpace, graph);
+        this.graph = new GraphManager(client, graphSpace, graph);
+        this.gremlin = new GremlinManager(client, graphSpace, graph, this.graph);
         this.traverser = new TraverserManager(client, this.graph);
-        this.variable = new VariablesManager(client, graph);
-        this.job = new JobManager(client, graph);
-        this.task = new TaskManager(client, graph);
-        this.computer = new ComputerManager(client, graph);
-        this.auth = new AuthManager(client, graph);
+        this.variable = new VariablesManager(client, graphSpace, graph);
+        this.job = new JobManager(client, graphSpace, graph);
+        this.task = new TaskManager(client, graphSpace, graph);
+        this.computer = new ComputerManager(client, graphSpace, graph);
+        this.auth = new AuthManager(client, graphSpace);
         this.metrics = new MetricsManager(client);
+        this.graphSpace = new GraphSpaceManager(client);
+        this.schemaTemplageManager = new SchemaTemplateManager(client, graphSpace);
+        this.serviceManager = new ServiceManager(client, graphSpace);
     }
 
     private void checkServerApiVersion() {
@@ -119,6 +135,14 @@ public class HugeClient implements Closeable {
         VersionUtil.check(apiVersion, "0.38", "0.69",
                           "hugegraph-api in server");
         this.client.apiVersion(apiVersion);
+    }
+
+    public String getGraphSpaceName() {
+        return graphSpaceName;
+    }
+
+    public String getGraphName() {
+        return graphName;
     }
 
     public GraphsManager graphs() {
@@ -163,6 +187,18 @@ public class HugeClient implements Closeable {
 
     public MetricsManager metrics() {
         return this.metrics;
+    }
+
+    public GraphSpaceManager graphSpace() {
+        return this.graphSpace;
+    }
+
+    public SchemaTemplateManager schemaTemplateManager() {
+        return this.schemaTemplageManager;
+    }
+
+    public ServiceManager serviceManager() {
+        return this.serviceManager;
     }
 
     public void setAuthContext(String auth) {

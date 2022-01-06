@@ -60,7 +60,16 @@ public enum HugeType {
     VERSION(230, "versions"),
 
     // Metrics
-    METRICS(240, "metrics");
+    METRICS(240, "metrics"),
+
+    // GraphSpaces
+    GRAPHSPACES(250, "graphSpaces"),
+
+    // Services
+    SERVICES(251, "services"),
+
+    // SchemeTemplate
+    SCHEMATEMPLATES(252, "schema_templates");
 
     private int code;
     private String name = null;

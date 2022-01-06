@@ -35,11 +35,11 @@ public class GremlinManager {
     private String graphSpace;
     private String graph;
 
-    public GremlinManager(RestClient client, String graphSpace,
-                          String graph, GraphManager graphManager) {
+    public GremlinManager(RestClient client, String graphSpace, String graph,
+                          GraphManager graphManager) {
         this.graphManager = graphManager;
         this.gremlinAPI = new GremlinAPI(client);
-        this.gremlinJobAPI = new GremlinJobAPI(client, graph);
+        this.gremlinJobAPI = new GremlinJobAPI(client, graphSpace,  graph);
         this.graphSpace = graphSpace;
         this.graph = graph;
     }

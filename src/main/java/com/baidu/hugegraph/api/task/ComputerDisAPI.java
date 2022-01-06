@@ -32,14 +32,17 @@ import java.util.Map;
 
 public class ComputerDisAPI extends API {
 
-    private static final String PATH = "graphs/%s/jobs/computerdis";
+    private static final String PATH = "graphspaces/%s/graphs/%s/jobs" +
+            "/computerdis";
+    private String graphSpace;
     private String graph;
     public static final String TASKS = "tasks";
     public static final String TASK_ID = "task_id";
 
-    public ComputerDisAPI(RestClient client, String graph) {
+    public ComputerDisAPI(RestClient client, String graphSpace, String graph) {
         super(client);
-        this.path(String.format(PATH, graph));
+        this.path(String.format(PATH, graphSpace, graph));
+        this.graphSpace = graphSpace;
         this.graph = graph;
     }
 

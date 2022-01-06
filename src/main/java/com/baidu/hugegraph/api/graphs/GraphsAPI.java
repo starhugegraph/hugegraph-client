@@ -21,11 +21,12 @@ package com.baidu.hugegraph.api.graphs;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+
+import com.google.common.collect.ImmutableMap;
 
 import com.baidu.hugegraph.api.API;
 import com.baidu.hugegraph.client.RestClient;
@@ -35,7 +36,6 @@ import com.baidu.hugegraph.structure.constant.GraphMode;
 import com.baidu.hugegraph.structure.constant.GraphReadMode;
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.baidu.hugegraph.util.E;
-import com.google.common.collect.ImmutableMap;
 
 public class GraphsAPI extends API {
 
@@ -47,10 +47,11 @@ public class GraphsAPI extends API {
     private static final String RELOADED = "reloaded";
     private static final String GRAPHS = "graphs";
     private static final String MANAGE = "manage";
+    private static final String PATH = "graphspaces/%s/graphs";
 
-    public GraphsAPI(RestClient client) {
+    public GraphsAPI(RestClient client, String graphSpace) {
         super(client);
-        this.path(this.type());
+        this.path(String.format(PATH, graphSpace));
     }
 
     @Override
@@ -90,6 +91,23 @@ public class GraphsAPI extends API {
         E.checkState(response.size() == 1 && response.containsKey(name),
                      "Response must be formatted to {\"%s\" : status}, " +
                      "but got %s", name, response);
+        String status = response.get(name);
+        E.checkState(CLEARED.equals(status),
+                     "Graph %s status must be %s, but got '%s'", name, status);
+        return response;
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, String> clear(String name, boolean clearSchema) {
+        RestResult result = this.client.put(this.path(), name,
+                                            ImmutableMap.of("action", "clear",
+                                                            "clear_schema",
+                                                            clearSchema));
+        Map<String, String> response = result.readObject(Map.class);
+
+        E.checkState(response.size() == 1 && response.containsKey(name),
+                     "Response must be formatted to {\"%s\" : status}, " +
+                             "but got %s", name, response);
         String status = response.get(name);
         E.checkState(CLEARED.equals(status),
                      "Graph %s status must be %s, but got '%s'", name, status);
