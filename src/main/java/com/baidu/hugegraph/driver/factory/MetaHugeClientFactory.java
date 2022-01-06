@@ -1,3 +1,22 @@
+/*
+ * Copyright 2017 HugeGraph Authors
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with this
+ * work for additional information regarding copyright ownership. The ASF
+ * licenses this file to You under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
 package com.baidu.hugegraph.driver.factory;
 
 import java.io.File;
@@ -239,10 +258,12 @@ public class MetaHugeClientFactory {
     protected HugeClient createClientWithService(String cluster,
                                                  String graphSpace,
                                                  String service, String token,
-                                                 String username, String password) {
+                                                 String username,
+                                                 String password, int timeout) {
 
         E.checkArgument(cluster != null && graphSpace != null & service != null,
                         "createClientWithService: cluster & graphspace must not null");
+        E.checkArgument(timeout > 0, "Client timeout must > 0");
 
         OLTPService serviceConfig = getServiceConfig(cluster, graphSpace,
                                                      service);
@@ -254,20 +275,38 @@ public class MetaHugeClientFactory {
                 serviceConfig.getUrls().toArray(new String[0]));
 
         return defaultFactory.createClient(graphSpace, null, token, username,
-                                           password);
+                                           password, timeout);
     }
 
     public HugeClient createUnauthClient(String cluster, String graphSpace,
-                                            String graph) {
+                                         String graph) {
         E.checkArgument(cluster != null, "create unauth client: cluster must " +
                 "not null");
 
-        return createClient(cluster, graphSpace, graph, null, null, null);
+        return createUnauthClient(cluster, graphSpace, graph, 60);
     }
+
+    public HugeClient createUnauthClient(String cluster, String graphSpace,
+                                         String graph, int timeout) {
+        E.checkArgument(cluster != null, "create unauth client: cluster must " +
+                "not null");
+
+        return createClient(cluster, graphSpace, graph, null, null, null, timeout);
+    }
+
 
     public HugeClient createAuthClient(String cluster, String graphSpace,
                                        String graph, String token,
                                        String username, String password) {
+
+        return createAuthClient(cluster, graphSpace, graph, token, username,
+                                password, 60);
+    }
+
+    public HugeClient createAuthClient(String cluster, String graphSpace,
+                                       String graph, String token,
+                                       String username, String password,
+                                       int timeout) {
         E.checkArgument(cluster != null,
                         "create auth client: cluster must not null");
 
@@ -275,12 +314,14 @@ public class MetaHugeClientFactory {
                         "create auth client: token must not null or " +
                                 "username/password must not null");
 
-        return createClient(cluster, graphSpace, graph, token, username, password);
+        return createClient(cluster, graphSpace, graph, token, username,
+                            password, timeout);
     }
 
     protected HugeClient createClient(String cluster, String graphSpace,
                                       String graph, String token,
-                                      String username, String password) {
+                                      String username, String password,
+                                      int timeout) {
 
         String serviceName = null;
         if (StringUtils.isEmpty(graphSpace)) {
@@ -321,7 +362,7 @@ public class MetaHugeClientFactory {
                  graphSpace, serviceName);
 
         return createClientWithService(cluster, graphSpace, serviceName,
-                                       token, username, password);
+                                       token, username, password, timeout);
     }
 
     public enum MetaDriverType {
