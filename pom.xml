@@ -5,7 +5,7 @@
 
     <groupId>com.baidu.hugegraph</groupId>
     <artifactId>hugegraph-client</artifactId>
-    <version>1.9.8</version>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
 
     <name>hugegraph-client</name>
@@ -136,7 +136,7 @@
                         <manifestEntries>
                             <!-- Must be on one line, otherwise the automatic
                                  upgrade script cannot replace the version number -->
-                            <Implementation-Version>1.9.8.0</Implementation-Version>
+                            <Implementation-Version>3.0.0.0</Implementation-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>
