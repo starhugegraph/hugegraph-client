@@ -17,19 +17,20 @@ public class ServiceManager {
         return serviceAPI.list();
     }
 
-    public OLTPService getService(String name) {
+    public Object getService(String name) {
         return this.serviceAPI.get(name);
     }
 
-    public OLTPService addService(OLTPService service) {
+    public Object addService(OLTPService service) {
        return this.serviceAPI.add(service);
     }
 
-    public void delService(String name) {
-        this.serviceAPI.delete(name);
+    public void delService(String name, String message) {
+        this.serviceAPI.delete(name, message);
     }
 
-    public OLTPService updateService(OLTPService service) {
+    public Object updateService(OLTPService service) {
+        delService(service.getName(), "I'm sure to delete the service");
         return this.serviceAPI.add(service);
     }
 }

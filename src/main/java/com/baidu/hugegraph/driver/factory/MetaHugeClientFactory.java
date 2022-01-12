@@ -365,8 +365,12 @@ public class MetaHugeClientFactory {
         LOG.info("create client with graphSpace:{}, serviceName:{}",
                  graphSpace, serviceName);
 
-        return createClientWithService(cluster, graphSpace, serviceName,
-                                       token, username, password, timeout);
+        HugeClient client = createClientWithService(cluster, graphSpace,
+                                                    serviceName,
+                                                    token, username, password,
+                                                    timeout);
+        client.assignGraph(graph);
+        return client;
     }
 
     public enum MetaDriverType {

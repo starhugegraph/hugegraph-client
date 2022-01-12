@@ -38,18 +38,25 @@ public class SchemaAPI extends API {
         this.path(PATH, graphSpace, graph, this.type());
     }
 
-    @SuppressWarnings("unchecked")
     public Map<String, List<SchemaElement>> list() {
-        return this.list("json");
+        return this.listJson();
     }
 
-    @SuppressWarnings("unchecked")
-    public Map<String, List<SchemaElement>> list(String format) {
+    public Map<String, String> listGroovy() {
         if (this.client.apiVersionLt("0.66")) {
             throw new NotSupportException("schema get api");
         }
         RestResult result = this.client.get(this.path(), ImmutableMap.of(
-                "format", format));
+                "format", "groovy"));
+        return result.readObject(Map.class);
+    }
+
+    public Map<String, List<SchemaElement>> listJson() {
+        if (this.client.apiVersionLt("0.66")) {
+            throw new NotSupportException("schema get api");
+        }
+        RestResult result = this.client.get(this.path(), ImmutableMap.of(
+                "format", "json"));
         return result.readObject(Map.class);
     }
 

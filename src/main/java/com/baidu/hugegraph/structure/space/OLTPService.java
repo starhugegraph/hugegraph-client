@@ -33,8 +33,9 @@ public class OLTPService {
     @JsonProperty("deployment_type")
     private DepleymentType depleymentType;
 
-    @JsonProperty("running")
-    private int running; // 当前运行节点数
+    @JsonProperty("type")
+    private String type = "OLTP";
+
     @JsonProperty("count")
     private int count; // 最大可运行节点
 
@@ -42,6 +43,8 @@ public class OLTPService {
     private int cpuLimit;
     @JsonProperty("memory_limit")
     private int memoryLimit; // GB
+    @JsonProperty("storage_limit")
+    private int storageLimit = 1;
 
     @JsonProperty("urls")
     private Set<String> urls;
@@ -74,14 +77,6 @@ public class OLTPService {
     public void setDepleymentType(
             DepleymentType depleymentType) {
         this.depleymentType = depleymentType;
-    }
-
-    public int getRunning() {
-        return running;
-    }
-
-    public void setRunning(int running) {
-        this.running = running;
     }
 
     public int getCount() {
