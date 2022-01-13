@@ -19,7 +19,6 @@
 
 package com.baidu.hugegraph.structure.traverser;
 
-import com.baidu.hugegraph.api.graph.GraphAPI;
 import com.baidu.hugegraph.api.traverser.TraversersAPI;
 import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.constant.Traverser;

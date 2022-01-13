@@ -26,8 +26,8 @@ import com.baidu.hugegraph.structure.traverser.SameNeighborsBatchRequest;
 
 public class SameNeighborsBatchAPI extends TraversersAPI {
 
-    public SameNeighborsBatchAPI(RestClient client, String graph) {
-        super(client, graph);
+    public SameNeighborsBatchAPI(RestClient client, String graphSpace, String graph) {
+        super(client, graphSpace, graph);
     }
 
     @Override
