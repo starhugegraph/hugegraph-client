@@ -1,14 +1,14 @@
 package com.baidu.hugegraph.api.space;
 
 import java.util.List;
+
+import com.baidu.hugegraph.structure.space.GraphSpace;
 import com.google.common.collect.ImmutableMap;
 
 import com.baidu.hugegraph.api.API;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.HugeType;
-import com.baidu.hugegraph.structure.space.GraphSpace;
-import com.baidu.hugegraph.structure.space.GraphSpaceReq;
 
 
 public class GraphSpaceAPI extends API {
@@ -26,9 +26,10 @@ public class GraphSpaceAPI extends API {
         return HugeType.GRAPHSPACES.string();
     }
 
-    public GraphSpace create(GraphSpaceReq graphSpaceReq) {
+    public GraphSpace create(GraphSpace graphSpace) {
         this.client.checkApiVersion("0.67", "dynamic graph add");
-        RestResult result = this.client.post(this.path(), graphSpaceReq);
+        Object obj = graphSpace.convertReq();
+        RestResult result = this.client.post(this.path(), obj);
         return result.readObject(GraphSpace.class);
     }
 
@@ -48,12 +49,13 @@ public class GraphSpaceAPI extends API {
                            ImmutableMap.of("confirm_message", message));
     }
 
-    public GraphSpace update(GraphSpaceReq graphSpaceReq) {
+    public GraphSpace update(GraphSpace graphSpace) {
+        Object obj = graphSpace.convertReq();
         RestResult result = this.client.put(this.path(),
-                                            graphSpaceReq.getName(),
+                                            graphSpace.getName(),
                                             ImmutableMap.of("action", "update",
                                                             "update",
-                                                            graphSpaceReq));
+                                                            obj));
 
         return result.readObject(GraphSpace.class);
     }
