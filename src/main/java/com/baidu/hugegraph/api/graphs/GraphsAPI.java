@@ -39,7 +39,6 @@ import com.baidu.hugegraph.util.E;
 
 public class GraphsAPI extends API {
 
-    private static final String CONFIRM_MESSAGE = "confirm_message";
     private static final String DELIMITER = "/";
     private static final String MODE = "mode";
     private static final String GRAPH_READ_MODE = "graph_read_mode";
@@ -83,9 +82,7 @@ public class GraphsAPI extends API {
     @SuppressWarnings("unchecked")
     public Map<String, String> clear(String name, String message) {
         RestResult result = this.client.put(this.path(), name,
-                                            ImmutableMap.of("action", "clear",
-                                                            CONFIRM_MESSAGE,
-                                                            message));
+                                            ImmutableMap.of("action", "clear"));
         Map<String, String> response = result.readObject(Map.class);
 
         E.checkState(response.size() == 1 && response.containsKey(name),
@@ -116,8 +113,7 @@ public class GraphsAPI extends API {
 
     public void delete(String graph, String message) {
         this.client.checkApiVersion("0.67", "dynamic graph delete");
-        this.client.delete(joinPath(this.path(), graph),
-                           ImmutableMap.of(CONFIRM_MESSAGE, message));
+        this.client.delete(this.path(), graph);
     }
 
     public Map<String, String> reload(String name) {
