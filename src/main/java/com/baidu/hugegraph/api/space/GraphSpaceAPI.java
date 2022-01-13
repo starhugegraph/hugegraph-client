@@ -38,10 +38,10 @@ public class GraphSpaceAPI extends API {
         return result.readObject(GraphSpace.class);
     }
 
-    public List<GraphSpace> list() {
+    public List<String> list() {
         RestResult result = this.client.get(this.path());
 
-        return result.readList(this.type(), GraphSpace.class);
+        return result.readList(this.type(), String.class);
     }
 
     public void delete(String name, String message) {

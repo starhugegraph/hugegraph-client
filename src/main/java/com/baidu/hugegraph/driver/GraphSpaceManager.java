@@ -14,7 +14,7 @@ public class GraphSpaceManager {
         this.graphSpaceAPI = new GraphSpaceAPI(client);
     }
 
-    public List<GraphSpace> listGraphSpace() {
+    public List<String> listGraphSpace() {
         return this.graphSpaceAPI.list();
     }
 
