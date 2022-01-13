@@ -113,7 +113,7 @@ public class GraphsAPI extends API {
 
     public void delete(String graph, String message) {
         this.client.checkApiVersion("0.67", "dynamic graph delete");
-        this.client.delete(this.path(), graph);
+        this.client.delete(joinPath(this.path(), graph), ImmutableMap.of());
     }
 
     public Map<String, String> reload(String name) {
