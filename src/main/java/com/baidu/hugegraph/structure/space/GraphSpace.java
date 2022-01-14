@@ -61,6 +61,8 @@ public class GraphSpace {
     private int graphNumberUsed;
     @JsonProperty("role_number_used")
     private int roleNumberUsed;
+    @JsonProperty("auth")
+    private boolean auth = false;
 
     @JsonProperty("configs")
     private Map<String, Object> configs = new HashMap<>();
@@ -205,6 +207,14 @@ public class GraphSpace {
     public GraphSpace setRoleNumberUsed(int roleNumberUsed) {
         this.roleNumberUsed = roleNumberUsed;
         return this;
+    }
+
+    public boolean isAuth() {
+        return auth;
+    }
+
+    public void setAuth(boolean auth) {
+        this.auth = auth;
     }
 
     public Map<String, Object> getConfigs() {
