@@ -41,9 +41,7 @@ public class SchemaTemplateAPI extends API {
     }
 
     public SchemaTemplate update(SchemaTemplate template) {
-        RestResult result = this.client.put(this.path(), template.name(),
-                                            template);
-
-        return result.readObject(SchemaTemplate.class);
+        delete(template.name());
+        return create(template);
     }
 }

@@ -267,7 +267,7 @@ public class MetaHugeClientFactory {
         OLTPService serviceConfig = getServiceConfig(cluster, graphSpace,
                                                      service);
 
-        LOG.info("create client with graphspace:{}, service:{}, service " +
+        LOG.debug("create client with graphspace:{}, service:{}, service " +
                          "config: {} ", graphSpace, service, serviceConfig);
 
         DefaultHugeClientFactory defaultFactory = new DefaultHugeClientFactory(
@@ -362,7 +362,7 @@ public class MetaHugeClientFactory {
             }
         }
 
-        LOG.info("create client with graphSpace:{}, serviceName:{}",
+        LOG.debug("create client with graphSpace:{}, serviceName:{}",
                  graphSpace, serviceName);
 
         HugeClient client = createClientWithService(cluster, graphSpace,
