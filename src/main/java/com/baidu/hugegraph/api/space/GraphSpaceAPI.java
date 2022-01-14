@@ -24,7 +24,7 @@ public class GraphSpaceAPI extends API {
     }
 
     public GraphSpace create(GraphSpace graphSpace) {
-        this.client.checkApiVersion("0.67", "dynamic graph add");
+        this.client.checkApiVersion("0.67", "dynamic graph space add");
         RestResult result = this.client.post(this.path(), graphSpace);
         return result.readObject(GraphSpace.class);
     }
