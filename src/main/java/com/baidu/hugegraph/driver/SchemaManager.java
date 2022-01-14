@@ -281,4 +281,8 @@ public class SchemaManager {
     public Map<String, List<SchemaElement>> getSchema() {
         return this.schemaAPI.list();
     }
+
+    public String getGroovySchema() {
+        return this.schemaAPI.listGroovy().getOrDefault("schema", "");
+    }
 }

@@ -17,34 +17,22 @@
  * under the License.
  */
 
-package com.baidu.hugegraph.structure.auth;
+package com.baidu.hugegraph.exception;
 
-import java.util.Date;
+import com.baidu.hugegraph.rest.ClientException;
 
-import com.baidu.hugegraph.structure.Element;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
+public class MetaException extends ClientException {
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public abstract class AuthElement extends Element {
-
-    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
-
-    @JsonProperty("id")
-    protected Object id;
-
-    @Override
-    public Object id() {
-        return this.id;
+    public MetaException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public void setId(Object id) {
-        this.id = id;
+    public MetaException(String message, Object... args) {
+        super(message, args);
     }
 
-    public abstract Date createTime();
-
-    public abstract Date updateTime();
-
-    public abstract String creator();
+    public MetaException(String message, Throwable cause,
+                         Object... args) {
+        super(message, cause, args);
+    }
 }

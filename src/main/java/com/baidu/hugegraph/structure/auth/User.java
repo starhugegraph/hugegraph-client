@@ -27,8 +27,10 @@ import java.util.Map;
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.baidu.hugegraph.util.JsonUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends AuthElement {
 
     @JsonProperty("user_name")

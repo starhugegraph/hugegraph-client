@@ -29,9 +29,6 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import com.baidu.hugegraph.rest.ClientException;
-import com.baidu.hugegraph.structure.space.OLTPService;
-import com.baidu.hugegraph.util.E;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.etcd.jetcd.ClientBuilder;
@@ -51,7 +48,9 @@ import io.etcd.jetcd.Client;
 import io.etcd.jetcd.KV;
 import io.etcd.jetcd.KeyValue;
 
-import com.baidu.hugegraph.exception.ServerException;
+import com.baidu.hugegraph.exception.MetaException;
+import com.baidu.hugegraph.structure.space.OLTPService;
+import com.baidu.hugegraph.util.E;
 import com.baidu.hugegraph.util.JsonUtil;
 import com.baidu.hugegraph.util.Log;
 import com.baidu.hugegraph.driver.HugeClient;
@@ -80,7 +79,7 @@ public class MetaHugeClientFactory {
                                                      clientKeyFile);
             }
         } else {
-            throw new RuntimeException("Only ETCD SUPPORT");
+            throw new MetaException("Only ETCD SUPPORT");
         }
     }
 
@@ -268,7 +267,7 @@ public class MetaHugeClientFactory {
         OLTPService serviceConfig = getServiceConfig(cluster, graphSpace,
                                                      service);
 
-        LOG.info("create client with graphspace:{}, service:{}, service " +
+        LOG.debug("create client with graphspace:{}, service:{}, service " +
                          "config: {} ", graphSpace, service, serviceConfig);
 
         DefaultHugeClientFactory defaultFactory = new DefaultHugeClientFactory(
@@ -339,12 +338,17 @@ public class MetaHugeClientFactory {
 
         if (!StringUtils.isEmpty(graphSpace)) {
             if (!StringUtils.isEmpty(graph)) {
-                Map<String, String> graphConfig = getGraphConfig(cluster,
-                                                                 graphSpace,
-                                                                 graph);
-                if (graphConfig != null && !StringUtils.isEmpty(
-                        graphConfig.get("service"))) {
-                    serviceName = graphConfig.get("service");
+                try {
+                    Map<String, String> graphConfig = getGraphConfig(cluster,
+                                                                     graphSpace,
+                                                                     graph);
+                    if (graphConfig != null && !StringUtils.isEmpty(
+                            graphConfig.get("service"))) {
+                        serviceName = graphConfig.get("service");
+                    }
+                } catch (RuntimeException e) {
+                    LOG.warn("Get {}/{}'s graphconfig error", graphSpace,
+                             graph, e);
                 }
             }
 
@@ -358,11 +362,15 @@ public class MetaHugeClientFactory {
             }
         }
 
-        LOG.info("create client with graphSpace:{}, serviceName:{}",
+        LOG.debug("create client with graphSpace:{}, serviceName:{}",
                  graphSpace, serviceName);
 
-        return createClientWithService(cluster, graphSpace, serviceName,
-                                       token, username, password, timeout);
+        HugeClient client = createClientWithService(cluster, graphSpace,
+                                                    serviceName,
+                                                    token, username, password,
+                                                    timeout);
+        client.assignGraph(graph);
+        return client;
     }
 
     public enum MetaDriverType {
@@ -440,7 +448,7 @@ public class MetaHugeClientFactory {
                                        .keyManager(keyCertChainFile, keyFile)
                                        .build();
             } catch (Exception e) {
-                throw new ClientException("Failed to open ssl context", e);
+                throw new MetaException("Failed to open ssl context", e);
             }
             return ssl;
         }
@@ -454,8 +462,8 @@ public class MetaHugeClientFactory {
                 keyValues = kvClient.get(ByteSequence.from(key.getBytes()))
                                     .get().getKvs();
             } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException(String.format("Failed to get key '%s'" +
-                        " from etcd, %s", key, e));
+                throw new MetaException(String.format("Failed to get key '%s'" +
+                        " from etcd", key), e);
             }
 
             if (keyValues.size() > 0) {
@@ -480,8 +488,8 @@ public class MetaHugeClientFactory {
                                                          getOption).get();
             } catch (InterruptedException | ExecutionException e) {
                 LOG.error("Failed to scan etcd with prefix: {}", prefix, e);
-                throw new ServerException("Failed to scan etcd with prefix: " +
-                                                prefix + " " + e);
+                throw new MetaException("Failed to scan etcd with prefix: %s",
+                                        e, prefix);
             }
             int size = (int) response.getCount();
             Map<String, String> keyValues = new HashMap<>(size);

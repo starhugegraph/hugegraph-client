@@ -19,10 +19,13 @@
 
 package com.baidu.hugegraph.structure.space;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GraphSpace {
 
     @JsonProperty("name")
@@ -37,9 +40,9 @@ public class GraphSpace {
     @JsonProperty("storage_limit")
     public int storageLimit; // GB
     @JsonProperty("max_graph_number")
-    private int maxGraphNumber;
+    private int maxGraphNumber = Integer.MAX_VALUE;
     @JsonProperty("max_role_number")
-    private int maxRoleNumber;
+    private int maxRoleNumber = Integer.MAX_VALUE;
 
     @JsonProperty("oltp_namespace")
     public String oltpNamespace;
@@ -48,17 +51,19 @@ public class GraphSpace {
     @JsonProperty("storage_namespace")
     private String storageNamespace;
 
-
     @JsonProperty("cpu_used")
     private int cpuUsed;
     @JsonProperty("memory_used")
-    private int memoryUsed;
+    private int memoryUsed; // GB
     @JsonProperty("storage_used")
-    private int storageUsed;
+    private int storageUsed; // GB
     @JsonProperty("graph_number_used")
     private int graphNumberUsed;
     @JsonProperty("role_number_used")
     private int roleNumberUsed;
+
+    @JsonProperty("configs")
+    private Map<String, Object> configs = new HashMap<>();
 
     public GraphSpace() {
     }
@@ -112,6 +117,24 @@ public class GraphSpace {
         return this;
     }
 
+    public int getMaxGraphNumber() {
+        return maxGraphNumber;
+    }
+
+    public GraphSpace setMaxGraphNumber(int maxGraphNumber) {
+        this.maxGraphNumber = maxGraphNumber;
+        return this;
+    }
+
+    public int getMaxRoleNumber() {
+        return maxRoleNumber;
+    }
+
+    public GraphSpace setMaxRoleNumber(int maxRoleNumber) {
+        this.maxRoleNumber = maxRoleNumber;
+        return this;
+    }
+
     public String getOltpNamespace() {
         return oltpNamespace;
     }
@@ -136,24 +159,6 @@ public class GraphSpace {
 
     public GraphSpace setStorageNamespace(String storageNamespace) {
         this.storageNamespace = storageNamespace;
-        return this;
-    }
-
-    public int getMaxGraphNumber() {
-        return maxGraphNumber;
-    }
-
-    public GraphSpace setMaxGraphNumber(int maxGraphNumber) {
-        this.maxGraphNumber = maxGraphNumber;
-        return this;
-    }
-
-    public int getMaxRoleNumber() {
-        return maxRoleNumber;
-    }
-
-    public GraphSpace setMaxRoleNumber(int maxRoleNumber) {
-        this.maxRoleNumber = maxRoleNumber;
         return this;
     }
 
@@ -200,5 +205,36 @@ public class GraphSpace {
     public GraphSpace setRoleNumberUsed(int roleNumberUsed) {
         this.roleNumberUsed = roleNumberUsed;
         return this;
+    }
+
+    public Map<String, Object> getConfigs() {
+        return configs;
+    }
+
+    public GraphSpace setConfigs(
+            Map<String, Object> configs) {
+        this.configs = configs;
+        return this;
+    }
+
+    public Object convertReq(){
+        return new GraphSpaceReq(this);
+    }
+
+    @JsonIgnoreProperties({"cpu_used", "memory_used", "storage_used",
+            "graph_number_used", "role_number_used"})
+    public static class GraphSpaceReq extends GraphSpace {
+        public GraphSpaceReq(GraphSpace graphSpace) {
+            this.setName(graphSpace.getName());
+            this.setDescription(graphSpace.getDescription());
+            this.setCpuLimit(graphSpace.getCpuLimit());
+            this.setMemoryLimit(graphSpace.getMemoryLimit());
+            this.setStorageLimit(graphSpace.getStorageLimit());
+            this.setMaxGraphNumber(graphSpace.getMaxGraphNumber());
+            this.setMaxRoleNumber(graphSpace.getMaxRoleNumber());
+            this.setOltpNamespace(graphSpace.getOltpNamespace());
+            this.setOlapNamespace(graphSpace.getOlapNamespace());
+            this.setStorageNamespace(graphSpace.getStorageNamespace());
+        }
     }
 }

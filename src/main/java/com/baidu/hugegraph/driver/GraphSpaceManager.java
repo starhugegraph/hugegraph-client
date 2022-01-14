@@ -14,7 +14,7 @@ public class GraphSpaceManager {
         this.graphSpaceAPI = new GraphSpaceAPI(client);
     }
 
-    public List<GraphSpace> listGraphSpace() {
+    public List<String> listGraphSpace() {
         return this.graphSpaceAPI.list();
     }
 
@@ -26,8 +26,8 @@ public class GraphSpaceManager {
         return this.graphSpaceAPI.create(graphSpace);
     }
 
-    public void deleteGraphSpace(String name) {
-        this.graphSpaceAPI.delete(name);
+    public void deleteGraphSpace(String name, String message) {
+        this.graphSpaceAPI.delete(name, message);
     }
 
     public GraphSpace updateGraphSpace(GraphSpace graphSpace) {
