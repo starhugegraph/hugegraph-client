@@ -20,6 +20,7 @@
 package com.baidu.hugegraph.api;
 
 import com.baidu.hugegraph.driver.HugeClient;
+import com.baidu.hugegraph.exception.ServerException;
 import com.baidu.hugegraph.structure.space.SchemaTemplate;
 import com.baidu.hugegraph.testutil.Assert;
 import org.junit.AfterClass;
@@ -64,6 +65,11 @@ public class SchemaTemplateApiTest extends BaseApiTest {
 
         // Test Delete
         client.schemaTemplateManager().deleteSchemaTemplate(SCHEMATEMPLATE);
-        client.schemaTemplateManager().getSchemaTemplate(SCHEMATEMPLATE);
+        Assert.assertThrows(ServerException.class, () -> {
+            client.schemaTemplateManager().getSchemaTemplate(SCHEMATEMPLATE);
+        }, (e) -> {
+            Assert.assertContains(String.format("'%s' does not exist",
+                                                SCHEMATEMPLATE), e.getMessage());
+        });
     }
 }

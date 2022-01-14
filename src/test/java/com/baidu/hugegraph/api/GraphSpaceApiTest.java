@@ -70,7 +70,7 @@ public class GraphSpaceApiTest extends BaseApiTest{
         client.graphSpace().createGraphSpace(graphSpaceInfo);
         Assert.assertNotNull(client.graphSpace().getGraphSpace(GRAPHSPACE));
 
-        /// Test Update
+        // Test Update
         int newCpuLimit = 100;
         graphSpaceInfo.setCpuLimit(newCpuLimit);
         client.graphSpace().updateGraphSpace(graphSpaceInfo);
@@ -82,7 +82,8 @@ public class GraphSpaceApiTest extends BaseApiTest{
         Assert.assertThrows(ServerException.class, () -> {
             client.graphSpace().getGraphSpace(GRAPHSPACE);
         }, (e) -> {
-            Assert.assertContains("'graphspace_2' does not exist", e.getMessage());
+            Assert.assertContains(String.format("'%s' does not exist", GRAPHSPACE),
+                                  e.getMessage());
         });
     }
 }
