@@ -59,6 +59,8 @@ public class GraphSpace {
     private int graphNumberUsed;
     @JsonProperty("role_number_used")
     private int roleNumberUsed;
+    @JsonProperty("auth")
+    private boolean auth;
 
     public GraphSpace() {
     }
@@ -200,5 +202,13 @@ public class GraphSpace {
     public GraphSpace setRoleNumberUsed(int roleNumberUsed) {
         this.roleNumberUsed = roleNumberUsed;
         return this;
+    }
+
+    public boolean isAuth() {
+        return auth;
+    }
+
+    public void setAuth(boolean auth) {
+        this.auth = auth;
     }
 }
