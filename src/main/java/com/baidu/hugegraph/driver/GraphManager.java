@@ -45,12 +45,14 @@ public class GraphManager {
     private final String graph;
     private final VertexAPI vertexAPI;
     private final EdgeAPI edgeAPI;
+    private final SchemaManager schemaManager;
 
     public GraphManager(RestClient client, String graphSpace, String graph) {
         this.graphSpace = graphSpace;
         this.graph = graph;
         this.vertexAPI = new VertexAPI(client, graphSpace, graph);
         this.edgeAPI = new EdgeAPI(client, graphSpace, graph);
+        this.schemaManager = new SchemaManager(client, graphSpace, graph);
     }
 
     public String graphSpace() {
@@ -491,5 +493,9 @@ public class GraphManager {
 
     private void attachManager(GraphElement element) {
         element.attachManager(this);
+    }
+
+    public SchemaManager schema() {
+        return this.schemaManager;
     }
 }
