@@ -26,8 +26,8 @@ public class GraphSpaceManager {
         return this.graphSpaceAPI.create(graphSpace);
     }
 
-    public void deleteGraphSpace(String name, String message) {
-        this.graphSpaceAPI.delete(name, message);
+    public void deleteGraphSpace(String name) {
+        this.graphSpaceAPI.delete(name);
     }
 
     public GraphSpace updateGraphSpace(GraphSpace graphSpace) {

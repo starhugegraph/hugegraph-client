@@ -112,7 +112,7 @@ public class GraphsApiTest extends BaseApiTest {
         Assert.assertEquals(initialGraphNumber + 1, graphsAPI.list().size());
 
         // Remove new created graph dynamically
-        graphsAPI.delete(GRAPH, "I'm sure to drop the graph");
+        graphsAPI.delete(GRAPH);
 
         // Wait for the delete operation to complete
         Thread.sleep(5000);

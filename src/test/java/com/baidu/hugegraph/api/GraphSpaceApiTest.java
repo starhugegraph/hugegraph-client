@@ -31,7 +31,6 @@ import com.baidu.hugegraph.testutil.Assert;
 
 public class GraphSpaceApiTest extends BaseApiTest{
     protected static final String GRAPHSPACE = "graphspace_2";
-    protected static final String CONFIRMMESSAGE = "I'm sure to drop the graph space";
     protected static HugeClient client;
 
 
@@ -49,7 +48,7 @@ public class GraphSpaceApiTest extends BaseApiTest{
     }
 
     public void delete(String graphSpace) {
-        client.graphSpace().deleteGraphSpace(graphSpace, CONFIRMMESSAGE);
+        client.graphSpace().deleteGraphSpace(graphSpace);
     }
 
     @After

@@ -44,9 +44,9 @@ public class GraphSpaceAPI extends API {
         return result.readList(this.type(), String.class);
     }
 
-    public void delete(String name, String message) {
+    public void delete(String name) {
         this.client.delete(joinPath(this.path(), name),
-                           ImmutableMap.of("confirm_message", message));
+                           ImmutableMap.of());
     }
 
     public GraphSpace update(GraphSpace graphSpace) {
