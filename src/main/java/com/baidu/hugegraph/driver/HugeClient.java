@@ -96,7 +96,8 @@ public class HugeClient implements Closeable {
     }
 
     public HugeClient assignGraph(String graph) {
-        this.initManagers(this.client, graphSpaceName, graphName);
+        this.initManagers(this.client, graphSpaceName, graph);
+        this.graphName = graph;
         return this;
     }
 
