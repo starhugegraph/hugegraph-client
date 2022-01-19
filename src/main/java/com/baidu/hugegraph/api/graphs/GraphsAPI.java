@@ -80,7 +80,7 @@ public class GraphsAPI extends API {
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, String> clear(String name, String message) {
+    public Map<String, String> clear(String name) {
         RestResult result = this.client.put(this.path(), name,
                                             ImmutableMap.of("action", "clear"));
         Map<String, String> response = result.readObject(Map.class);
@@ -111,7 +111,7 @@ public class GraphsAPI extends API {
         return response;
     }
 
-    public void delete(String graph, String message) {
+    public void delete(String graph) {
         this.client.checkApiVersion("0.67", "dynamic graph delete");
         this.client.delete(joinPath(this.path(), graph), ImmutableMap.of());
     }

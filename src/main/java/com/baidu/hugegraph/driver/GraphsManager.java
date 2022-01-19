@@ -63,16 +63,16 @@ public class GraphsManager {
         return this.graphsAPI.list();
     }
 
-    public void clear(String graph, String message) {
-        this.graphsAPI.clear(graph, message);
+    public void clear(String graph) {
+        this.graphsAPI.clear(graph);
     }
 
     public void clear(String graph, boolean clearSchema) {
         this.graphsAPI.clear(graph, clearSchema);
     }
 
-    public void remove(String graph, String message) {
-        this.graphsAPI.delete(graph, message);
+    public void remove(String graph) {
+        this.graphsAPI.delete(graph);
     }
 
     public void reload(String graph) {
