@@ -70,14 +70,12 @@ public class AuthManagerTest extends BaseFuncTest {
         Target gremlin = new Target();
         gremlin.name("gremlin");
         gremlin.graph("hugegraph");
-        gremlin.url("127.0.0.1:8080");
         gremlin.resources(new HugeResource(HugeResourceType.GREMLIN));
         gremlin = auth().createTarget(gremlin);
 
         Target task = new Target();
         task.name("task");
         task.graph("hugegraph");
-        task.url("127.0.0.1:8080");
         task.resources(new HugeResource(HugeResourceType.TASK));
         task = auth().createTarget(task);
 
