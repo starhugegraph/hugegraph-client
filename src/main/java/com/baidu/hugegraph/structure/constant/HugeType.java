@@ -38,6 +38,7 @@ public enum HugeType {
     LOGOUT(57, "logout"),
     TOKEN_VERIFY(58, "verify"),
     MANAGER(59, "managers"),
+    KG_LOGIN(60, "kglogin"),
 
     // Data
     VERTEX(101, "vertices"),
