@@ -24,6 +24,7 @@ import java.util.List;
 import com.baidu.hugegraph.api.auth.AccessAPI;
 import com.baidu.hugegraph.api.auth.BelongAPI;
 import com.baidu.hugegraph.api.auth.GroupAPI;
+import com.baidu.hugegraph.api.auth.KGLoginAPI;
 import com.baidu.hugegraph.api.auth.LoginAPI;
 import com.baidu.hugegraph.api.auth.LogoutAPI;
 import com.baidu.hugegraph.api.auth.TargetAPI;
@@ -33,6 +34,8 @@ import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.structure.auth.Access;
 import com.baidu.hugegraph.structure.auth.Belong;
 import com.baidu.hugegraph.structure.auth.Group;
+import com.baidu.hugegraph.structure.auth.KGLogin;
+import com.baidu.hugegraph.structure.auth.KGLoginResult;
 import com.baidu.hugegraph.structure.auth.Login;
 import com.baidu.hugegraph.structure.auth.LoginResult;
 import com.baidu.hugegraph.structure.auth.Target;
@@ -50,6 +53,7 @@ public class AuthManager {
     private final LoginAPI loginAPI;
     private final LogoutAPI logoutAPI;
     private final TokenAPI tokenAPI;
+    private final KGLoginAPI kgLoginAPI;
 
     public AuthManager(RestClient client, String graphSpace) {
         this.targetAPI = new TargetAPI(client, graphSpace);
@@ -60,6 +64,7 @@ public class AuthManager {
         this.loginAPI = new LoginAPI(client);
         this.logoutAPI = new LogoutAPI(client);
         this.tokenAPI = new TokenAPI(client);
+        this.kgLoginAPI = new KGLoginAPI(client);
     }
 
     public List<Target> listTargets() {
@@ -234,5 +239,9 @@ public class AuthManager {
 
     public TokenPayload verifyToken() {
         return this.tokenAPI.verifyToken();
+    }
+
+    public KGLoginResult kgLogin(KGLogin kgLogin) {
+        return this.kgLoginAPI.kgLogin(kgLogin);
     }
 }
