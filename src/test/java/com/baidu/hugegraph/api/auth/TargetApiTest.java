@@ -62,14 +62,12 @@ public class TargetApiTest extends AuthApiTest {
         Target target1 = new Target();
         target1.name("gremlin");
         target1.graph("hugegraph");
-        target1.url("127.0.0.1:8080");
         HugeResource gremlin = new HugeResource(HugeResourceType.GREMLIN);
         target1.resources(gremlin);
 
         Target target2 = new Target();
         target2.name("task");
         target2.graph("hugegraph2");
-        target2.url("127.0.0.1:8081");
         HugeResource task = new HugeResource(HugeResourceType.TASK);
         target2.resources(task);
 
@@ -78,12 +76,10 @@ public class TargetApiTest extends AuthApiTest {
 
         Assert.assertEquals("gremlin", result1.name());
         Assert.assertEquals("hugegraph", result1.graph());
-        Assert.assertEquals("127.0.0.1:8080", result1.url());
         Assert.assertEquals(Arrays.asList(gremlin), result1.resources());
 
         Assert.assertEquals("task", result2.name());
         Assert.assertEquals("hugegraph2", result2.graph());
-        Assert.assertEquals("127.0.0.1:8081", result2.url());
         Assert.assertEquals(Arrays.asList(task), result2.resources());
 
         Assert.assertThrows(ServerException.class, () -> {
@@ -240,7 +236,6 @@ public class TargetApiTest extends AuthApiTest {
         Target target = new Target();
         target.name(name);
         target.graph("hugegraph");
-        target.url("127.0.0.1:8080");
         target.resources(new HugeResource(res));
         return api.create(target);
     }

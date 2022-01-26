@@ -37,8 +37,6 @@ public class Target extends AuthElement {
     protected String graphSpace;
     @JsonProperty("target_graph")
     protected String graph;
-    @JsonProperty("target_url")
-    protected String url;
     @JsonProperty("target_resources")
     protected List<HugeResource> resources;
 
@@ -95,14 +93,6 @@ public class Target extends AuthElement {
         this.graph = graph;
     }
 
-    public String url() {
-        return this.url;
-    }
-
-    public void url(String url) {
-        this.url = url;
-    }
-
     public HugeResource resource() {
         if (this.resources == null || this.resources.size() != 1) {
             return null;
@@ -136,7 +126,6 @@ public class Target extends AuthElement {
             this.id = target.id();
             this.name = target.name();
             this.graph = target.graph();
-            this.url = target.url();
             this.resources = target.resources();
             this.create = target.createTime();
             this.update = target.updateTime();
