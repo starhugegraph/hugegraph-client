@@ -71,7 +71,13 @@ public enum HugeType {
     SERVICES(251, "services"),
 
     // SchemeTemplate
-    SCHEMATEMPLATES(252, "schema_templates");
+    SCHEMATEMPLATES(252, "schema_templates"),
+
+    // PD
+    PD(253, "pd"),
+
+    // HStore
+    HSTORE(254, "hstore");
 
     private int code;
     private String name = null;
