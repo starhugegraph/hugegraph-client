@@ -26,7 +26,7 @@ import java.util.List;
 public class HStoreNodeInfo {
     // Node id
     @JsonProperty("id")
-    private long id;
+    private String id;
     // 总空间大小
     @JsonProperty("capacity")
     private long capacity;
@@ -73,11 +73,11 @@ public class HStoreNodeInfo {
         }
     }
 
-    public long id() {
+    public String id() {
         return id;
     }
 
-    public void id(long id) {
+    public void id(String id) {
         this.id = id;
     }
 

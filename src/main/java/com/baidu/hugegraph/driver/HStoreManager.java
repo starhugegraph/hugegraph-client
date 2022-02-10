@@ -35,7 +35,7 @@ public class HStoreManager {
        return hStoreAPI.list();
     }
 
-    public HStoreNodeInfo get(long id) {
+    public HStoreNodeInfo get(String id) {
         return hStoreAPI.get(id);
     }
 }

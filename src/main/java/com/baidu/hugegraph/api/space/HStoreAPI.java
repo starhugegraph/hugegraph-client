@@ -45,8 +45,8 @@ public class HStoreAPI extends API {
         return result.readList("nodes", String.class);
     }
 
-    public HStoreNodeInfo get(long id) {
-        RestResult result = this.client.get(this.path(), String.valueOf(id));
+    public HStoreNodeInfo get(String id) {
+        RestResult result = this.client.get(this.path(), id);
         return result.readObject(HStoreNodeInfo.class);
     }
 }
