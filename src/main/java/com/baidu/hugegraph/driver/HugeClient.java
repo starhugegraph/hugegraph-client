@@ -53,6 +53,8 @@ public class HugeClient implements Closeable {
     private GraphSpaceManager graphSpace;
     private ServiceManager serviceManager;
     private SchemaTemplateManager schemaTemplageManager;
+    private PDManager pdManager;
+    private HStoreManager hStoreManager;
 
     public HugeClient(HugeClientBuilder builder) {
         this.graphSpaceName = builder.graphSpace();
@@ -128,6 +130,8 @@ public class HugeClient implements Closeable {
         this.graphSpace = new GraphSpaceManager(client);
         this.schemaTemplageManager = new SchemaTemplateManager(client, graphSpace);
         this.serviceManager = new ServiceManager(client, graphSpace);
+        this.pdManager = new PDManager(client);
+        this.hStoreManager = new HStoreManager(client);
     }
 
     private void checkServerApiVersion() {
@@ -200,6 +204,14 @@ public class HugeClient implements Closeable {
 
     public ServiceManager serviceManager() {
         return this.serviceManager;
+    }
+
+    public PDManager pdManager() {
+        return pdManager;
+    }
+
+    public HStoreManager hStoreManager() {
+        return hStoreManager;
     }
 
     public void setAuthContext(String auth) {
