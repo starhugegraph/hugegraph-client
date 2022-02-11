@@ -81,17 +81,7 @@ public class GraphsAPI extends API {
 
     @SuppressWarnings("unchecked")
     public Map<String, String> clear(String name) {
-        RestResult result = this.client.put(this.path(), name,
-                                            ImmutableMap.of("action", "clear"));
-        Map<String, String> response = result.readObject(Map.class);
-
-        E.checkState(response.size() == 1 && response.containsKey(name),
-                     "Response must be formatted to {\"%s\" : status}, " +
-                     "but got %s", name, response);
-        String status = response.get(name);
-        E.checkState(CLEARED.equals(status),
-                     "Graph %s status must be %s, but got '%s'", name, status);
-        return response;
+        return clear(name, true);
     }
 
     @SuppressWarnings("unchecked")
