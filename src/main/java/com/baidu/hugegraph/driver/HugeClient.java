@@ -97,9 +97,10 @@ public class HugeClient implements Closeable {
         return new HugeClientBuilder(url, graphSpace, graph);
     }
 
-    public HugeClient assignGraph(String graph) {
-        this.initManagers(this.client, graphSpaceName, graph);
+    public HugeClient assignGraph(String graphSpace, String graph) {
+        this.graphSpaceName = graphSpace;
         this.graphName = graph;
+        this.initManagers(this.client, this.graphSpaceName, this.graphName);
         return this;
     }
 
@@ -111,7 +112,6 @@ public class HugeClient implements Closeable {
     private void initManagers(RestClient client, String graphSpace,
                               String graph) {
         assert client != null;
-        assert graphSpace != null;
         // Check hugegraph-server api version
         this.version = new VersionManager(client);
         this.checkServerApiVersion();
