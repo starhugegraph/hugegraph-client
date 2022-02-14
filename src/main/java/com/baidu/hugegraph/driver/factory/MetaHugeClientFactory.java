@@ -40,7 +40,6 @@ import io.netty.handler.ssl.SslProvider;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
-
 import io.etcd.jetcd.kv.GetResponse;
 import io.etcd.jetcd.options.GetOption;
 import io.etcd.jetcd.ByteSequence;
@@ -66,6 +65,8 @@ public class MetaHugeClientFactory {
     public static final String META_PATH_GRAPHSPACE = "GRAPHSPACE";
     public static final String META_PATH_SERVICE_CONF = "SERVICE_CONF";
     public static final String META_PATH_GRAPH_CONF = "GRAPH_CONF";
+    public static final String DEFAULT_GRAPHSPACE = "DEFAULT";
+    private static final String DEFAULT_SERVICE = "DEFAULT";
 
     public MetaHugeClientFactory(MetaDriverType type, String[] endpoints,
                                  String trustFile, String clientCertFile,
@@ -322,54 +323,48 @@ public class MetaHugeClientFactory {
                                       String username, String password,
                                       int timeout) {
 
-        String serviceName = null;
-        if (StringUtils.isEmpty(graphSpace)) {
-            ImmutableSet<ImmutableList<String>> services
-                    = this.listExtendServices(cluster);
 
-            E.checkArgument(services.size() > 0, "No OLTP Service Exist " +
-                    "Under" + cluster);
+        // USE AS DEFAULT
+        String chosenGraphSpace = DEFAULT_GRAPHSPACE;
+        String chosenService = DEFAULT_SERVICE;
 
-            int r1 = (int) (Math.random() * services.size());
-            ImmutableList<String> rand = services.asList().get(r1);
-            graphSpace = rand.get(0);
-            serviceName = rand.get(1);
-        }
-
-        if (!StringUtils.isEmpty(graphSpace)) {
-            if (!StringUtils.isEmpty(graph)) {
+        if (StringUtils.isNotEmpty(graphSpace)) {
+            if (StringUtils.isNotEmpty(graph)) {
+                // Get service From graph config
                 try {
                     Map<String, String> graphConfig = getGraphConfig(cluster,
                                                                      graphSpace,
                                                                      graph);
                     if (graphConfig != null && !StringUtils.isEmpty(
                             graphConfig.get("service"))) {
-                        serviceName = graphConfig.get("service");
+                        chosenGraphSpace = graphSpace;
+                        chosenService = graphConfig.get("service");
                     }
                 } catch (RuntimeException e) {
                     LOG.warn("Get {}/{}'s graphconfig error", graphSpace,
                              graph, e);
                 }
-            }
-
-            if (StringUtils.isEmpty(serviceName)) {
-                ImmutableSet<String> serviceNames
-                        = listServices(cluster, graphSpace);
-                E.checkArgument(serviceNames.size() > 0, "No service under " +
-                        "cluster: %s", cluster);
-                int r2 = (int) (Math.random() * serviceNames.size());
-                serviceName = serviceNames.asList().get(r2);
+            } else {
+                // Random service from graphspace
+                ImmutableList<String> services
+                        = listServices(cluster, graphSpace).asList();
+                if (services.size() > 0) {
+                    int r = (int) Math.floor(Math.random() * services.size());
+                    chosenGraphSpace = graphSpace;
+                    chosenService = services.get(r);
+                }
             }
         }
 
         LOG.debug("create client with graphSpace:{}, serviceName:{}",
-                 graphSpace, serviceName);
+                 chosenGraphSpace, chosenService);
 
-        HugeClient client = createClientWithService(cluster, graphSpace,
-                                                    serviceName,
+        HugeClient client = createClientWithService(cluster, chosenGraphSpace,
+                                                    chosenService,
                                                     token, username, password,
                                                     timeout);
-        client.assignGraph(graph);
+        // assgign graph
+        client.assignGraph(graphSpace, graph);
         return client;
     }
 

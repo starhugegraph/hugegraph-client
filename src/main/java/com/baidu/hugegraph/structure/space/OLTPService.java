@@ -46,10 +46,13 @@ public class OLTPService {
     @JsonProperty("storage_limit")
     private int storageLimit = 1;
 
+    @JsonProperty("route_type")
+    private String routeType = null;
+
     @JsonProperty("urls")
     private Set<String> urls;
 
-    enum DepleymentType {
+    public enum DepleymentType {
         K8S,
         MANUAL;
     }
@@ -101,6 +104,22 @@ public class OLTPService {
 
     public void setMemoryLimit(int memoryLimit) {
         this.memoryLimit = memoryLimit;
+    }
+
+    public int getStorageLimit() {
+        return storageLimit;
+    }
+
+    public void setStorageLimit(int storageLimit) {
+        this.storageLimit = storageLimit;
+    }
+
+    public String getRouteType() {
+        return routeType;
+    }
+
+    public void setRouteType(String routeType) {
+        this.routeType = routeType;
     }
 
     public Set<String> getUrls() {
