@@ -19,11 +19,13 @@
 
 package com.baidu.hugegraph.structure.space;
 
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableMap;
 
-import java.util.Map;
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SchemaTemplate {
     @JsonProperty("name")
     private String name;

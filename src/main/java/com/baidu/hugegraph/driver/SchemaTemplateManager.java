@@ -1,6 +1,7 @@
 package com.baidu.hugegraph.driver;
 
 import java.util.List;
+import java.util.Map;
 
 import com.baidu.hugegraph.api.space.SchemaTemplateAPI;
 import com.baidu.hugegraph.client.RestClient;
@@ -17,15 +18,15 @@ public class SchemaTemplateManager {
         return this.schemaTemplateAPI.list();
     }
 
-    public SchemaTemplate getSchemaTemplate(String name) {
+    public Map getSchemaTemplate(String name) {
         return this.schemaTemplateAPI.get(name);
     }
 
-    public SchemaTemplate createSchemaTemplate(SchemaTemplate template) {
+    public Map createSchemaTemplate(SchemaTemplate template) {
         return this.schemaTemplateAPI.create(template);
     }
 
-    public SchemaTemplate updateSchemaTemplate(SchemaTemplate template) {
+    public Map updateSchemaTemplate(SchemaTemplate template) {
         return this.schemaTemplateAPI.update(template);
     }
 
