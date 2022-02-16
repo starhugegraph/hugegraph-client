@@ -22,6 +22,7 @@ package com.baidu.hugegraph.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.baidu.hugegraph.api.auth.ManagerAPI;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
@@ -61,6 +62,7 @@ public class BaseApiTest extends BaseClientTest {
     protected static VariablesAPI variablesAPI;
     protected static TaskAPI taskAPI;
     protected static RebuildAPI rebuildAPI;
+    protected static ManagerAPI managerAPI;
 
     protected static RestClient initClient() {
         client = new RestClient(BASE_URL, USERNAME, PASSWORD, TIMEOUT);
@@ -91,6 +93,8 @@ public class BaseApiTest extends BaseClientTest {
         variablesAPI = new VariablesAPI(client, GRAPHSPACE, GRAPH);
         taskAPI = new TaskAPI(client, GRAPHSPACE, GRAPH);
         rebuildAPI = new RebuildAPI(client, GRAPHSPACE, GRAPH);
+
+        managerAPI = new ManagerAPI(client);
     }
 
     @AfterClass

@@ -1,6 +1,7 @@
 package com.baidu.hugegraph.api.space;
 
 import java.util.List;
+import java.util.Map;
 
 import com.baidu.hugegraph.api.API;
 import com.baidu.hugegraph.client.RestClient;
@@ -21,9 +22,9 @@ public class SchemaTemplateAPI extends API {
         return HugeType.SCHEMATEMPLATES.string();
     }
 
-    public SchemaTemplate create(SchemaTemplate template) {
+    public Map create(SchemaTemplate template) {
         RestResult result = this.client.post(this.path(), template);
-        return result.readObject(SchemaTemplate.class);
+        return result.readObject(Map.class);
     }
 
     public List<String> list() {
@@ -31,16 +32,16 @@ public class SchemaTemplateAPI extends API {
         return result.readList(this.type(), String.class);
     }
 
-    public SchemaTemplate get(String name) {
+    public Map get(String name) {
         RestResult result = this.client.get(this.path(), name);
-        return result.readObject(SchemaTemplate.class);
+        return result.readObject(Map.class);
     }
 
     public void delete(String name) {
         this.client.delete(this.path(), name);
     }
 
-    public SchemaTemplate update(SchemaTemplate template) {
+    public Map update(SchemaTemplate template) {
         delete(template.name());
         return create(template);
     }

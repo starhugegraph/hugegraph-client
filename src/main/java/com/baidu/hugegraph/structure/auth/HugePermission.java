@@ -29,7 +29,7 @@ public enum HugePermission {
     EXECUTE(0x08),
 
     SPACE(0x1f),
-    OP(0x20),
+    ADMIN(0x7f),
 
     ANY(0x7f);
 

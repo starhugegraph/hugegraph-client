@@ -60,8 +60,9 @@ public class SchemaTemplateApiTest extends BaseApiTest {
         schemaTemplate.schema("update info");
         client.schemaTemplateManager().updateSchemaTemplate(schemaTemplate);
         Assert.assertContains("update info",
-                              client.schemaTemplateManager()
-                                    .getSchemaTemplate(SCHEMATEMPLATE).schema());
+                              (String) client.schemaTemplateManager()
+                                    .getSchemaTemplate(SCHEMATEMPLATE).get(
+                                            "schema"));
 
         // Test Delete
         client.schemaTemplateManager().deleteSchemaTemplate(SCHEMATEMPLATE);
