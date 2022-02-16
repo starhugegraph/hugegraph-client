@@ -12,4 +12,28 @@ public class UserManager {
     private HugePermission type;
     @JsonProperty("graphspace")
     private String graphSpace;
+
+    public String user() {
+        return user;
+    }
+
+    public void user(String user) {
+        this.user = user;
+    }
+
+    public HugePermission type() {
+        return type;
+    }
+
+    public void type(HugePermission type) {
+        this.type = type;
+    }
+
+    public String graphSpace() {
+        return graphSpace;
+    }
+
+    public void graphSpace(String graphSpace) {
+        this.graphSpace = graphSpace;
+    }
 }
