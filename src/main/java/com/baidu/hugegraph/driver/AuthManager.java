@@ -276,4 +276,12 @@ public class AuthManager {
     public void delSpaceAdmin(String user, String graphSpace) {
         this.managerAPI.delete(user, HugePermission.SPACE, graphSpace);
     }
+
+    public List<String> listSpaceAdmin(String graphSpace) {
+        return this.managerAPI.list(HugePermission.SPACE, graphSpace);
+    }
+
+    public List<String> listSuperAdmin() {
+        return this.managerAPI.list(HugePermission.ADMIN, null);
+    }
 }
