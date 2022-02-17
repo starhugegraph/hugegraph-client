@@ -8,6 +8,7 @@ import com.baidu.hugegraph.structure.auth.UserManager;
 import com.baidu.hugegraph.structure.constant.HugeType;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ManagerAPI extends AuthAPI {
@@ -27,6 +28,17 @@ public class ManagerAPI extends AuthAPI {
         params.put("type", type);
         params.put("graphspace", graphSpace);
         this.client.delete(this.path(), params);
+    }
+
+    public List<String> list(HugePermission type, String graphSpace) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", type);
+        params.put("graphspace", graphSpace);
+
+        RestResult result = this.client.get(this.path(), params);
+
+        return result.readList("admins", String.class);
     }
 
     @Override
