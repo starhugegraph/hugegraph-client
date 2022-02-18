@@ -22,7 +22,7 @@ package com.baidu.hugegraph.structure.space;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Set;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OLTPService {
@@ -37,20 +37,22 @@ public class OLTPService {
     private String type = "OLTP";
 
     @JsonProperty("count")
-    private int count; // 最大可运行节点
+    private int count = 1; // 最大可运行节点
 
     @JsonProperty("cpu_limit")
-    private int cpuLimit;
+    private int cpuLimit = 1;
     @JsonProperty("memory_limit")
-    private int memoryLimit; // GB
+    private int memoryLimit = 4; // GB
     @JsonProperty("storage_limit")
-    private int storageLimit = 1;
+    private int storageLimit = 100;
 
     @JsonProperty("route_type")
     private String routeType = null;
+    @JsonProperty("port")
+    private int port = 0;
 
     @JsonProperty("urls")
-    private Set<String> urls;
+    private List<String> urls;
 
     public enum DepleymentType {
         K8S,
@@ -122,11 +124,27 @@ public class OLTPService {
         this.routeType = routeType;
     }
 
-    public Set<String> getUrls() {
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public List<String> getUrls() {
         return urls;
     }
 
-    public void setUrls(Set<String> urls) {
+    public void setUrls(List<String> urls) {
         this.urls = urls;
     }
 }
