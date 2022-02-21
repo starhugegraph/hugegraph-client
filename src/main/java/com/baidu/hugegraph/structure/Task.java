@@ -73,6 +73,9 @@ public class Task {
     @JsonProperty(P.SERVER)
     private String server;
 
+    @JsonProperty(P.PRIORITY)
+    private String priority;
+
     public long id() {
         return this.id;
     }
@@ -129,6 +132,10 @@ public class Task {
         return this.server;
     }
 
+    public String priority() {
+        return this.priority;
+    }
+
     public boolean completed() {
         return ImmutableSet.of("success", "failed", "cancelled")
                            .contains(this.status);
@@ -177,6 +184,9 @@ public class Task {
         if (this.server != null) {
             map.put(P.SERVER, this.server);
         }
+        if (this.priority != null) {
+            map.put(P.PRIORITY, this.priority);   
+        }
 
         return map;
     }
@@ -202,5 +212,6 @@ public class Task {
         public static final String RESULT = "task_result";
         public static final String DEPENDENCIES = "task_dependencies";
         public static final String SERVER = "task_server";
+        public static final String PRIORITY = "task_priority";
     }
 }
