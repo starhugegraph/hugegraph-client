@@ -55,4 +55,8 @@ public class ComputerManager {
     public TasksWithPage list(String page, long limit) {
         return this.computerDisAPI.list(page, limit);
     }
+
+    public Task get(long id) {
+        return this.computerDisAPI.get(id);
+    }
 }
