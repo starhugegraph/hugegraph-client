@@ -21,6 +21,8 @@ package com.baidu.hugegraph.driver;
 
 import com.baidu.hugegraph.util.E;
 
+import java.util.Objects;
+
 public class HugeClientBuilder {
 
     private static final int CPUS = Runtime.getRuntime().availableProcessors();
@@ -189,5 +191,32 @@ public class HugeClientBuilder {
 
     public String trustStorePassword() {
         return this.trustStorePassword;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        HugeClientBuilder that = (HugeClientBuilder) o;
+        return timeout == that.timeout && maxConns == that.maxConns
+                && maxConnsPerRoute == that.maxConnsPerRoute
+                && idleTime == that.idleTime
+                && Objects.equals(url, that.url)
+                && Objects.equals(username, that.username)
+                && Objects.equals(password, that.password)
+                && Objects.equals(token, that.token)
+                && Objects.equals(trustStoreFile, that.trustStoreFile)
+                && Objects.equals(trustStorePassword, that.trustStorePassword);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(url, username, password, token, timeout, maxConns,
+                            maxConnsPerRoute, trustStoreFile, trustStorePassword,
+                            idleTime);
     }
 }
