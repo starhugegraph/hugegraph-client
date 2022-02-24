@@ -23,6 +23,7 @@ import java.io.Closeable;
 
 import javax.ws.rs.ProcessingException;
 
+import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 
 import com.baidu.hugegraph.client.RestClient;
@@ -117,14 +118,6 @@ public class HugeClient implements Closeable {
         this.checkServerApiVersion();
 
         this.graphs = new GraphsManager(client, graphSpace);
-        this.schema = new SchemaManager(client, graphSpace, graph);
-        this.graph = new GraphManager(client, graphSpace, graph);
-        this.gremlin = new GremlinManager(client, graphSpace, graph, this.graph);
-        this.traverser = new TraverserManager(client, this.graph);
-        this.variable = new VariablesManager(client, graphSpace, graph);
-        this.job = new JobManager(client, graphSpace, graph);
-        this.task = new TaskManager(client, graphSpace, graph);
-        this.computer = new ComputerManager(client, graphSpace, graph);
         this.auth = new AuthManager(client, graphSpace);
         this.metrics = new MetricsManager(client);
         this.graphSpace = new GraphSpaceManager(client);
@@ -132,6 +125,18 @@ public class HugeClient implements Closeable {
         this.serviceManager = new ServiceManager(client, graphSpace);
         this.pdManager = new PDManager(client);
         this.hStoreManager = new HStoreManager(client);
+
+        if (!Strings.isNullOrEmpty(graph)) {
+            this.schema = new SchemaManager(client, graphSpace, graph);
+            this.graph = new GraphManager(client, graphSpace, graph);
+            this.gremlin = new GremlinManager(client, graphSpace,
+                                              graph, this.graph);
+            this.traverser = new TraverserManager(client, this.graph);
+            this.variable = new VariablesManager(client, graphSpace, graph);
+            this.job = new JobManager(client, graphSpace, graph);
+            this.task = new TaskManager(client, graphSpace, graph);
+            this.computer = new ComputerManager(client, graphSpace, graph);
+        }
     }
 
     private void checkServerApiVersion() {
