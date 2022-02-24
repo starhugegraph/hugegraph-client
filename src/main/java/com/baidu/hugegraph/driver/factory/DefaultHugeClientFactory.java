@@ -19,13 +19,20 @@
 
 package com.baidu.hugegraph.driver.factory;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.baidu.hugegraph.driver.HugeClient;
 import com.baidu.hugegraph.util.E;
+import com.google.common.base.Strings;
 
 public class DefaultHugeClientFactory {
 
     private final String defaultHugeGraph = "hugegraph";
     private final String[] urls;
+
+    private static final ConcurrentHashMap<String, HugeClient> CLIENT_CACHES
+            = new ConcurrentHashMap();
+    private static final String CLIENT_KEY_PATTERN = "%s-%s-%s-%s-%s";
 
     public DefaultHugeClientFactory(String[] urls) {
         this.urls = urls;
@@ -56,11 +63,27 @@ public class DefaultHugeClientFactory {
 
         graph = graph == null ? defaultHugeGraph : graph;
 
-        HugeClient client = HugeClient.builder(url, graphSpace, graph)
-                                      .configToken(token)
-                                      .configUser(username, password)
-                                      .configTimeout(timeout)
-                                      .build();
+        String key = Strings.lenientFormat(CLIENT_KEY_PATTERN, url, token,
+                                           username, password, timeout);
+
+
+
+        HugeClient client = CLIENT_CACHES.get(key);
+
+        if (client == null) {
+            synchronized (CLIENT_CACHES) {
+                client = CLIENT_CACHES.get(key);
+                if (client == null) {
+                    client = HugeClient.builder(url, graphSpace, graph)
+                                       .configToken(token)
+                                       .configUser(username, password)
+                                       .configTimeout(timeout)
+                                       .build();
+
+                    CLIENT_CACHES.put(key, client);
+                }
+            }
+        }
 
         return client;
     }

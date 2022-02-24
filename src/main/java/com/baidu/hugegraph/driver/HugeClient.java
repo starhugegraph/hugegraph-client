@@ -20,7 +20,6 @@
 package com.baidu.hugegraph.driver;
 
 import java.io.Closeable;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.ws.rs.ProcessingException;
 
@@ -57,45 +56,33 @@ public class HugeClient implements Closeable {
     private PDManager pdManager;
     private HStoreManager hStoreManager;
 
-    protected static final ConcurrentHashMap<HugeClientBuilder, RestClient>
-            REST_CLIENT_CACHES = new ConcurrentHashMap();
-
     public HugeClient(HugeClientBuilder builder) {
         this.graphSpaceName = builder.graphSpace();
         this.graphName = builder.graph();
 
-        RestClient cacheClient = REST_CLIENT_CACHES.get(builder);
-        if (cacheClient == null) {
-            synchronized (REST_CLIENT_CACHES) {
-                try {
-                    if (StringUtils.isEmpty(builder.token())) {
-                        cacheClient = new RestClient(builder.url(),
-                                                     builder.username(),
-                                                     builder.password(),
-                                                     builder.timeout(),
-                                                     builder.maxConns(),
-                                                     builder.maxConnsPerRoute(),
-                                                     builder.trustStoreFile(),
-                                                     builder.trustStorePassword());
-                    } else {
-                        cacheClient = new RestClient(builder.url(),
-                                                     builder.token(),
-                                                     builder.timeout(),
-                                                     builder.maxConns(),
-                                                     builder.maxConnsPerRoute(),
-                                                     builder.trustStoreFile(),
-                                                     builder.trustStorePassword());
-                    }
-                } catch (ProcessingException e) {
-                    throw new ClientException("Failed to connect url '%s'",
-                                              builder.url());
-                }
-
-                REST_CLIENT_CACHES.put(builder, cacheClient);
+        try {
+            if (StringUtils.isEmpty(builder.token())) {
+                this.client = new RestClient(builder.url(),
+                                             builder.username(),
+                                             builder.password(),
+                                             builder.timeout(),
+                                             builder.maxConns(),
+                                             builder.maxConnsPerRoute(),
+                                             builder.trustStoreFile(),
+                                             builder.trustStorePassword());
+            } else {
+                this.client = new RestClient(builder.url(),
+                                             builder.token(),
+                                             builder.timeout(),
+                                             builder.maxConns(),
+                                             builder.maxConnsPerRoute(),
+                                             builder.trustStoreFile(),
+                                             builder.trustStorePassword());
             }
+        } catch (ProcessingException e) {
+            throw new ClientException("Failed to connect url '%s'",
+                                      builder.url());
         }
-        this.client = cacheClient;
-
         try {
             this.initManagers(this.client, builder.graphSpace(),
                               builder.graph());
