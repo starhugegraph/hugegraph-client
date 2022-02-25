@@ -219,6 +219,10 @@ public class HugeClient implements Closeable {
         return hStoreManager;
     }
 
+    public VersionManager versionManager() {
+        return version;
+    }
+
     public void setAuthContext(String auth) {
         this.client.setAuthContext(auth);
     }
