@@ -236,6 +236,7 @@ public class GraphSpace {
     public static class GraphSpaceReq extends GraphSpace {
         public GraphSpaceReq(GraphSpace graphSpace) {
             this.setName(graphSpace.getName());
+            this.setAuth(graphSpace.isAuth());
             this.setDescription(graphSpace.getDescription());
             this.setCpuLimit(graphSpace.getCpuLimit());
             this.setMemoryLimit(graphSpace.getMemoryLimit());
