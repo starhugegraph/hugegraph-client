@@ -26,11 +26,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.etcd.jetcd.ClientBuilder;
@@ -69,10 +67,6 @@ public class MetaHugeClientFactory {
     public static final String META_PATH_GRAPH_CONF = "GRAPH_CONF";
     public static final String DEFAULT_GRAPHSPACE = "DEFAULT";
     private static final String DEFAULT_SERVICE = "DEFAULT";
-
-    private static final ConcurrentHashMap<String, HugeClient> CLIENT_CACHES
-            = new ConcurrentHashMap();
-    private static final String CLIENT_KEY_PATTERN = "%s-%s-%s-%s-%s-%s-%s";
 
     public MetaHugeClientFactory(MetaDriverType type, String[] endpoints,
                                  String trustFile, String clientCertFile,
@@ -274,13 +268,11 @@ public class MetaHugeClientFactory {
         OLTPService serviceConfig = getServiceConfig(cluster, graphSpace,
                                                      service);
 
-
         LOG.debug("create client with graphspace:{}, service:{}, service " +
                          "config: {} ", graphSpace, service, serviceConfig);
 
-
-        DefaultHugeClientFactory defaultFactory
-                = new DefaultHugeClientFactory(serviceConfig.getUrls().toArray(new String[0]));
+        DefaultHugeClientFactory defaultFactory = new DefaultHugeClientFactory(
+                serviceConfig.getUrls().toArray(new String[0]));
 
         return defaultFactory.createClient(graphSpace, null, token, username,
                                            password, timeout);
@@ -332,6 +324,23 @@ public class MetaHugeClientFactory {
                                       int timeout) {
 
 
+        List<String> urls = getServerURL(cluster, graphSpace, graph);
+
+        DefaultHugeClientFactory defaultFactory =
+                new DefaultHugeClientFactory(urls.toArray(new String[0]));
+
+        int r = (int) Math.floor(Math.random() * urls.size());
+
+        HugeClient client = HugeClient.builder(urls.get(r), graphSpace, graph)
+                                      .configToken(token)
+                                      .configUser(username, password)
+                                      .configTimeout(timeout)
+                                      .build();
+        return client;
+    }
+
+    public List<String> getServerURL(String cluster, String graphSpace,
+                                      String graph) {
         // USE AS DEFAULT
         String chosenGraphSpace = DEFAULT_GRAPHSPACE;
         String chosenService = DEFAULT_SERVICE;
@@ -364,61 +373,13 @@ public class MetaHugeClientFactory {
             }
         }
 
-        LOG.debug("create client with chosenGraphSpace:{}, chosenService:{} " +
-                          "for {}/{} ",
-                 chosenGraphSpace, chosenService, graphSpace, graph);
+        LOG.debug("create client with graphSpace:{}, serviceName:{}",
+                  chosenGraphSpace, chosenService);
 
         OLTPService serviceConfig = getServiceConfig(cluster, chosenGraphSpace,
                                                      chosenService);
 
-        int r = (int) Math.floor(Math.random() * serviceConfig.getUrls().size());
-        String url = serviceConfig.getUrls().get(r);
-
-
-        HugeClient client = getOrCreate(url, graphSpace, graph, token,
-                                        username, password, timeout);
-
-        // client.assignGraph(graphSpace, graph);
-        return client;
-    }
-
-    protected HugeClient getOrCreate(String url, String graphSpace,
-                                     String graph, String token,
-                                     String username, String password,
-                                     int timeout) {
-
-        String key = Strings.lenientFormat(CLIENT_KEY_PATTERN, url,
-                                           graphSpace, graph, token,
-                                           username, password, timeout);
-
-        HugeClient client = null;
-
-        client = CLIENT_CACHES.get(key);
-        if (client == null) {
-            synchronized (CLIENT_CACHES) {
-                if (!CLIENT_CACHES.containsKey(key)) {
-                    client = HugeClient.builder(url, graphSpace, graph)
-                                       .configToken(token)
-                                       .configUser(username, password)
-                                       .configTimeout(timeout)
-                                       .build();
-
-                    CLIENT_CACHES.put(key, client);
-                } else {
-                    client = CLIENT_CACHES.get(key);
-                }
-            }
-        }
-
-        return client;
-    }
-
-    public static void destory() {
-        synchronized (CLIENT_CACHES) {
-            for(HugeClient c : CLIENT_CACHES.values()) {
-                c.close();
-            }
-        }
+        return serviceConfig.getUrls();
     }
 
     public enum MetaDriverType {
