@@ -342,8 +342,8 @@ public class MetaHugeClientFactory {
     public List<String> getServerURL(String cluster, String graphSpace,
                                       String graph) {
         // USE AS DEFAULT
-        String chosenGraphSpace = DEFAULT_GRAPHSPACE;
-        String chosenService = DEFAULT_SERVICE;
+        String chosenGraphSpace = null;
+        String chosenService = null;
 
         if (StringUtils.isNotEmpty(graphSpace)) {
             if (StringUtils.isNotEmpty(graph)) {
@@ -356,12 +356,16 @@ public class MetaHugeClientFactory {
                             graphConfig.get("service"))) {
                         chosenGraphSpace = graphSpace;
                         chosenService = graphConfig.get("service");
+                    } else {
+
                     }
                 } catch (RuntimeException e) {
                     LOG.warn("Get {}/{}'s graphconfig error", graphSpace,
                              graph, e);
                 }
-            } else {
+            }
+
+            if (StringUtils.isEmpty(chosenService)) {
                 // Random service from graphspace
                 ImmutableList<String> services
                         = listServices(cluster, graphSpace).asList();
@@ -371,6 +375,11 @@ public class MetaHugeClientFactory {
                     chosenService = services.get(r);
                 }
             }
+        }
+
+        if (StringUtils.isEmpty(chosenGraphSpace) || StringUtils.isEmpty(chosenService)) {
+            chosenGraphSpace = DEFAULT_GRAPHSPACE;
+            chosenService = DEFAULT_SERVICE;
         }
 
         LOG.debug("create client with graphSpace:{}, serviceName:{}",
