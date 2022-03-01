@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableSet;
 import io.etcd.jetcd.ClientBuilder;
@@ -146,9 +145,14 @@ public class MetaHugeClientFactory {
     public ImmutableSet<String> listClusters() {
         Map<String, String> scanData = this.metaDriver.scanWithPrefix(
                 this.clusterPrefixKey());
-        Set<String> clusters = scanData.keySet().stream()
-                                       .map(s -> s.split("/")[1])
-                                       .collect(Collectors.toSet());
+        Set<String> clusters = new HashSet<>();
+
+        for (Map.Entry<String, String> entry: scanData.entrySet()) {
+            String[] arr = entry.getKey().split(META_PATH_DELIMETER);
+            if (arr.length >= 2) {
+                clusters.add(arr[1]);
+            }
+        }
 
         return ImmutableSet.copyOf(clusters);
     }
@@ -161,8 +165,10 @@ public class MetaHugeClientFactory {
                 this.graphSpacePrefixKey(cluster));
 
         for (Map.Entry<String, String> entry: kvs.entrySet()) {
-            String spaceName = entry.getKey().split(META_PATH_DELIMETER)[4];
-            spaces.add(spaceName);
+            String[] arr = entry.getKey().split(META_PATH_DELIMETER);
+            if (arr.length >= 5) {
+                spaces.add(arr[4]);
+            }
         }
         return ImmutableSet.copyOf(spaces);
     }
@@ -174,8 +180,10 @@ public class MetaHugeClientFactory {
                 this.graphPrefixKey(cluster, graphSpace));
 
         for (Map.Entry<String, String> entry: kvs.entrySet()) {
-            String spaceName = entry.getKey().split(META_PATH_DELIMETER)[5];
-            graphs.add(spaceName);
+            String[] arr = entry.getKey().split(META_PATH_DELIMETER);
+            if (arr.length >= 6) {
+                graphs.add(arr[5]);
+            }
         }
         return ImmutableSet.copyOf(graphs);
     }
@@ -187,8 +195,10 @@ public class MetaHugeClientFactory {
                 this.graphServicePrefixKey(cluster, graphSpace));
 
         for (Map.Entry<String, String> entry: kvs.entrySet()) {
-            String serviceName = entry.getKey().split(META_PATH_DELIMETER)[5];
-            services.add(serviceName);
+            String[] arr = entry.getKey().split(META_PATH_DELIMETER);
+            if (arr.length >= 6) {
+                services.add(arr[5]);
+            }
         }
         return ImmutableSet.copyOf(services);
     }
