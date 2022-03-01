@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.etcd.jetcd.ClientBuilder;
 import io.netty.handler.ssl.ApplicationProtocolConfig;
@@ -37,6 +36,7 @@ import io.netty.handler.ssl.ApplicationProtocolNames;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.SslProvider;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -47,6 +47,7 @@ import io.etcd.jetcd.Client;
 import io.etcd.jetcd.KV;
 import io.etcd.jetcd.KeyValue;
 
+import com.baidu.hugegraph.util.CollectionUtil;
 import com.baidu.hugegraph.exception.MetaException;
 import com.baidu.hugegraph.structure.space.OLTPService;
 import com.baidu.hugegraph.util.E;
@@ -192,46 +193,6 @@ public class MetaHugeClientFactory {
         return ImmutableSet.copyOf(services);
     }
 
-    public ImmutableSet<ImmutableList<String>> listExtendServices(String cluster) {
-        // Get All OLTP Service
-        Set<ImmutableList<String>> services = new HashSet<>();
-
-        ImmutableSet<String> graphSpaces = this.listGraphSpaces(cluster);
-
-        for (String graphSpace: graphSpaces) {
-            Map<String, String> kvs = this.metaDriver.scanWithPrefix(
-                    this.graphServicePrefixKey(cluster, graphSpace));
-
-            for (Map.Entry<String, String> entry: kvs.entrySet()) {
-                String serviceName =
-                        entry.getKey().split(META_PATH_DELIMETER)[5];
-                OLTPService s
-                        = JsonUtil.fromJson(entry.getValue(),
-                                            OLTPService.class);
-
-                if (s.getUrls().size() > 0){
-                    services.add(ImmutableList.of(graphSpace, serviceName));
-                }
-            }
-        }
-        return ImmutableSet.copyOf(services);
-    }
-
-    public ImmutableSet<ImmutableList<String>> listExtendGraphs(String cluster) {
-
-        Set<ImmutableList<String>> graphs = new HashSet<>();
-
-        ImmutableSet<String> graphSpaces = this.listGraphSpaces(cluster);
-
-        for (String graphSpace: graphSpaces) {
-            this.listGraphs(cluster, graphSpace).forEach((g) -> {
-                graphs.add(ImmutableList.of(graphSpace, g));
-            });
-        }
-
-        return ImmutableSet.copyOf(graphs);
-    }
-
     public Map<String, String> getGraphConfig(String cluster,
                                                String graphspace,
                                               String graph) {
@@ -339,25 +300,35 @@ public class MetaHugeClientFactory {
         return client;
     }
 
+    protected List<String> getServiceURLUnderGraphSpace(String cluster,
+                                                        String graphSpace) {
+        E.checkArgument(StringUtils.isNotEmpty(graphSpace), "list all service" +
+                " error, graphspace must not null");
+
+        Set<String> urls = new HashSet<>();
+
+        listServices(cluster, graphSpace).stream().forEach(service -> {
+            urls.addAll(getServiceConfig(cluster, graphSpace, service).getUrls());
+        });
+
+        return CollectionUtil.toList(urls);
+    }
+
     public List<String> getServerURL(String cluster, String graphSpace,
                                       String graph) {
-        // USE AS DEFAULT
-        String chosenGraphSpace = null;
-        String chosenService = null;
-
+        List<String>  urls = null;
         if (StringUtils.isNotEmpty(graphSpace)) {
             if (StringUtils.isNotEmpty(graph)) {
-                // Get service From graph config
+                // Get urls From graph config
                 try {
                     Map<String, String> graphConfig = getGraphConfig(cluster,
                                                                      graphSpace,
                                                                      graph);
                     if (graphConfig != null && !StringUtils.isEmpty(
                             graphConfig.get("service"))) {
-                        chosenGraphSpace = graphSpace;
-                        chosenService = graphConfig.get("service");
-                    } else {
 
+                        urls = getServiceConfig(cluster, graphSpace, graph)
+                                .getUrls();
                     }
                 } catch (RuntimeException e) {
                     LOG.warn("Get {}/{}'s graphconfig error", graphSpace,
@@ -365,30 +336,24 @@ public class MetaHugeClientFactory {
                 }
             }
 
-            if (StringUtils.isEmpty(chosenService)) {
-                // Random service from graphspace
-                ImmutableList<String> services
-                        = listServices(cluster, graphSpace).asList();
-                if (services.size() > 0) {
-                    int r = (int) Math.floor(Math.random() * services.size());
-                    chosenGraphSpace = graphSpace;
-                    chosenService = services.get(r);
-                }
+            if (CollectionUtils.isNotEmpty(urls)) {
+                return urls;
+            }
+
+            // Get Url from graphspace
+            urls = getServiceURLUnderGraphSpace(cluster, graphSpace);
+            if (CollectionUtils.isNotEmpty(urls)) {
+                return urls;
             }
         }
 
-        if (StringUtils.isEmpty(chosenGraphSpace) || StringUtils.isEmpty(chosenService)) {
-            chosenGraphSpace = DEFAULT_GRAPHSPACE;
-            chosenService = DEFAULT_SERVICE;
-        }
+        LOG.debug("get default urls for graphSpace:{}, serviceName:{}",
+                  graphSpace, graph);
 
-        LOG.debug("create client with graphSpace:{}, serviceName:{}",
-                  chosenGraphSpace, chosenService);
+        urls = getServiceConfig(cluster, DEFAULT_GRAPHSPACE, DEFAULT_SERVICE)
+                .getUrls();
 
-        OLTPService serviceConfig = getServiceConfig(cluster, chosenGraphSpace,
-                                                     chosenService);
-
-        return serviceConfig.getUrls();
+        return urls;
     }
 
     public enum MetaDriverType {
