@@ -66,7 +66,8 @@ public class MetaHugeClientFactory {
     public static final String META_PATH_SERVICE_CONF = "SERVICE_CONF";
     public static final String META_PATH_GRAPH_CONF = "GRAPH_CONF";
     public static final String DEFAULT_GRAPHSPACE = "DEFAULT";
-    private static final String DEFAULT_SERVICE = "DEFAULT";
+    public static final String DEFAULT_GRAPH = "DEFAULT";
+    public static final String DEFAULT_SERVICE = "DEFAULT";
 
     public MetaHugeClientFactory(MetaDriverType type, String[] endpoints,
                                  String trustFile, String clientCertFile,
