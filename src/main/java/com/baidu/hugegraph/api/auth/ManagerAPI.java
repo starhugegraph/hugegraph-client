@@ -41,6 +41,18 @@ public class ManagerAPI extends AuthAPI {
         return result.readList("admins", String.class);
     }
 
+    public boolean checkPermission(HugePermission type, String graphSpace) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("type", type);
+        params.put("graphspace", graphSpace);
+
+        String path = this.path() + PATH_SPLITOR + "check";
+        RestResult result = this.client.get(path, params);
+        
+        return (boolean) result.readObject(Map.class).getOrDefault("check", false);
+    }
+
     @Override
     protected String type() {
         return HugeType.MANAGER.string();
