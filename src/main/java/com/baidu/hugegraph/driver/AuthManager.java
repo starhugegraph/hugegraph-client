@@ -284,4 +284,12 @@ public class AuthManager {
     public List<String> listSuperAdmin() {
         return this.managerAPI.list(HugePermission.ADMIN, null);
     }
+
+    public boolean isSuperAdmin() {
+        return this.managerAPI.checkPermission(HugePermission.ADMIN, null);
+    }
+
+    public boolean isSpaceAdmin(String graphSpace) {
+        return this.managerAPI.checkPermission(HugePermission.SPACE, graphSpace);
+    }
 }
