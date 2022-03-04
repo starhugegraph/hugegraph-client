@@ -23,11 +23,16 @@ public class SchemaTemplateManager {
     }
 
     public Map createSchemaTemplate(SchemaTemplate template) {
-        return this.schemaTemplateAPI.create(template);
+        SchemaTemplate.SchemaTemplateReq req
+                = SchemaTemplate.SchemaTemplateReq.fromBase(template);
+        return this.schemaTemplateAPI.create(req);
     }
 
     public Map updateSchemaTemplate(SchemaTemplate template) {
-        return this.schemaTemplateAPI.update(template);
+        SchemaTemplate.SchemaTemplateReq req
+                = SchemaTemplate.SchemaTemplateReq.fromBase(template);
+
+        return this.schemaTemplateAPI.update(req);
     }
 
     public void deleteSchemaTemplate(String name) {

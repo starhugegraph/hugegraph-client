@@ -42,7 +42,9 @@ public class SchemaTemplateAPI extends API {
     }
 
     public Map update(SchemaTemplate template) {
-        delete(template.name());
-        return create(template);
+        RestResult result = this.client.put(this.path(), template.name(),
+                                            template);
+
+        return result.readObject(Map.class);
     }
 }
