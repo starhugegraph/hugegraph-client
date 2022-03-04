@@ -32,8 +32,9 @@ public class ServiceAPI extends API {
         return result.readList(this.type(), String.class);
     }
 
-    public Object add(OLTPService service) {
-        RestResult result = this.client.post(this.path(), service);
+    public Object add(OLTPService.OLTPServiceReq req) {
+        RestResult result
+                = this.client.post(this.path(), req);
         return result.readObject(Map.class);
     }
 
@@ -42,10 +43,20 @@ public class ServiceAPI extends API {
                            ImmutableMap.of(CONFIRM_MESSAGE, message));
     }
 
-    public Object get(String serviceName) {
+    public OLTPService get(String serviceName) {
         RestResult result = this.client.get(this.path(), serviceName);
 
-        return result.readObject(Map.class);
+        return result.readObject(OLTPService.class);
+    }
+
+    public void startService(String serviceName) {
+        this.client.put(joinPath(this.path(), "start"), serviceName,
+                        ImmutableMap.of());
+    }
+
+    public void stopService(String serviceName) {
+        this.client.put(joinPath(this.path(), "stop"), serviceName,
+                        ImmutableMap.of());
     }
 
     private static String joinPath(String path, String id) {
