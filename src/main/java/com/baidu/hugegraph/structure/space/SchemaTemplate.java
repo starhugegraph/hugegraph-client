@@ -32,6 +32,15 @@ public class SchemaTemplate {
     @JsonProperty("schema")
     private String schema;
 
+    @JsonProperty("create_time")
+    private String createTime;
+
+    @JsonProperty("update_time")
+    private String updateTime;
+
+    @JsonProperty("creator")
+    private String creator;
+
     public SchemaTemplate() {
     }
 
@@ -56,11 +65,47 @@ public class SchemaTemplate {
         this.schema = schema;
     }
 
+    public String createTime() {
+        return createTime;
+    }
+
+    public void createTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String updateTime() {
+        return updateTime;
+    }
+
+    public void updateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String creator() {
+        return creator;
+    }
+
+    public void creator(String creator) {
+        this.creator = creator;
+    }
+
     public Map<String, String> asMap() {
         return ImmutableMap.of("name", this.name, "schema", this.schema);
     }
 
     public static SchemaTemplate fromMap(Map<String , String> map) {
         return new SchemaTemplate(map.get("name"), map.get("schema"));
+    }
+
+    @JsonIgnoreProperties({"create_time", "update_time", "creator"})
+    public static class SchemaTemplateReq extends SchemaTemplate {
+
+        public static SchemaTemplateReq fromBase(SchemaTemplate schemaTemplate) {
+            SchemaTemplateReq req = new SchemaTemplateReq();
+            req.name(schemaTemplate.name);
+            req.schema(schemaTemplate.schema);
+
+            return req;
+        }
     }
 }
