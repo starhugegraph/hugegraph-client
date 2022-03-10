@@ -38,4 +38,20 @@ public class HStoreManager {
     public HStoreNodeInfo get(String id) {
         return hStoreAPI.get(id);
     }
+
+    public String status() {
+        return hStoreAPI.status();
+    }
+
+    public void startSplit() {
+        hStoreAPI.startSplit();
+    }
+
+    public void nodeStartup(String id) {
+        hStoreAPI.nodeStartup(id);
+    }
+
+    public void nodeShutdown(String id) {
+        hStoreAPI.nodeShutdown(id);
+    }
 }
