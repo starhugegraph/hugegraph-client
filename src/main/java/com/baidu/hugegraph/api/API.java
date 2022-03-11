@@ -63,4 +63,8 @@ public abstract class API {
                         "%s must be > 0 or == %s, but got: %s",
                         name, NO_LIMIT, value);
     }
+
+    protected static String joinPath(String... paths) {
+        return String.join(PATH_SPLITOR, paths);
+    }
 }

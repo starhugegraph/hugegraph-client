@@ -26,6 +26,7 @@ import com.baidu.hugegraph.structure.constant.HugeType;
 import com.baidu.hugegraph.structure.space.HStoreNodeInfo;
 
 import java.util.List;
+import java.util.Map;
 
 public class HStoreAPI extends API {
     private static final String PATH = "hstore";
@@ -48,5 +49,24 @@ public class HStoreAPI extends API {
     public HStoreNodeInfo get(String id) {
         RestResult result = this.client.get(this.path(), id);
         return result.readObject(HStoreNodeInfo.class);
+    }
+
+    public String status() {
+        RestResult result = this.client.get(this.path(), "status");
+        return (String) result.readObject(Map.class).get("status");
+    }
+
+    public void startSplit() {
+        this.client.get(this.path(), "split");
+    }
+
+    public void nodeStartup(String id) {
+        String startupPath = joinPath(this.path(), id, "startup");
+        this.client.get(startupPath);
+    }
+
+    public void nodeShutdown(String id) {
+        String startupPath = joinPath(this.path(), id, "shutdown");
+        this.client.get(startupPath);
     }
 }
