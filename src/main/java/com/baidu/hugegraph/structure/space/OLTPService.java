@@ -198,8 +198,8 @@ public class OLTPService {
         return DepleymentType.K8S.equals(this.depleymentType);
     }
 
-    @JsonIgnoreProperties(value={"configs", "create_time", "update_time"},
-            ignoreUnknown = true)
+    @JsonIgnoreProperties(value={"configs", "create_time", "update_time",
+            "running"}, ignoreUnknown = true)
     public static class OLTPServiceReq extends OLTPService {
         public static OLTPServiceReq fromBase(OLTPService service) {
             OLTPServiceReq req = new OLTPServiceReq();
