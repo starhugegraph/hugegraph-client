@@ -22,7 +22,10 @@ package com.baidu.hugegraph.structure.space;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OLTPService {
@@ -38,6 +41,8 @@ public class OLTPService {
 
     @JsonProperty("count")
     private int count = 1; // 最大可运行节点
+    @JsonProperty("running")
+    private int running;
 
     @JsonProperty("cpu_limit")
     private int cpuLimit = 1;
@@ -51,8 +56,17 @@ public class OLTPService {
     @JsonProperty("port")
     private int port = 0;
 
+    @JsonProperty("create_time")
+    private String createTime;
+
+    @JsonProperty("update_time")
+    private String updateTime;
+
     @JsonProperty("urls")
-    private List<String> urls;
+    private List<String> urls = new ArrayList<>();
+
+    @JsonProperty("configs")
+    private Map<String, Object> configs = new HashMap();
 
     public enum DepleymentType {
         K8S,
@@ -90,6 +104,14 @@ public class OLTPService {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public int getRunning() {
+        return running;
+    }
+
+    public void setRunning(int running) {
+        this.running = running;
     }
 
     public int getCpuLimit() {
@@ -146,5 +168,55 @@ public class OLTPService {
 
     public void setUrls(List<String> urls) {
         this.urls = urls;
+    }
+
+    public Map<String, Object> getConfigs() {
+        return configs;
+    }
+
+    public void setConfigs(Map<String, Object> configs) {
+        this.configs = configs;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public boolean checkIsK8s() {
+        return DepleymentType.K8S.equals(this.depleymentType);
+    }
+
+    @JsonIgnoreProperties(value={"configs", "create_time", "update_time"},
+            ignoreUnknown = true)
+    public static class OLTPServiceReq extends OLTPService {
+        public static OLTPServiceReq fromBase(OLTPService service) {
+            OLTPServiceReq req = new OLTPServiceReq();
+
+            req.setName(service.name);
+            req.setDescription(service.description);
+            req.setDepleymentType(service.depleymentType);
+            req.setType(service.type);
+            req.setCount(service.count);
+            req.setCpuLimit(service.cpuLimit);
+            req.setMemoryLimit(service.memoryLimit);
+            req.setStorageLimit(service.storageLimit);
+            req.setRouteType(service.routeType);
+            req.setPort(service.port);
+            req.setUrls(service.urls);
+
+            return req;
+        }
     }
 }
