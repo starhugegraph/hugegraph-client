@@ -23,7 +23,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +41,8 @@ public class OLTPService {
 
     @JsonProperty("count")
     private int count = 1; // 最大可运行节点
+    @JsonProperty("running")
+    private int running;
 
     @JsonProperty("cpu_limit")
     private int cpuLimit = 1;
@@ -103,6 +104,14 @@ public class OLTPService {
 
     public void setCount(int count) {
         this.count = count;
+    }
+
+    public int getRunning() {
+        return running;
+    }
+
+    public void setRunning(int running) {
+        this.running = running;
     }
 
     public int getCpuLimit() {
