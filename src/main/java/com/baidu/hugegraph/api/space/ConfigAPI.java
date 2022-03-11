@@ -6,10 +6,11 @@ import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.HugeType;
 import com.google.common.collect.ImmutableMap;
 
+import java.util.List;
 import java.util.Map;
 
 public class ConfigAPI extends API {
-    private static final String PATH = "graphspaces/%s/configs";
+    private static final String PATH = "graphspaces/%s/configs/rest";
 
     public ConfigAPI(RestClient client, String graphSpace) {
         super(client);
@@ -19,6 +20,11 @@ public class ConfigAPI extends API {
     @Override
     protected String type() {
         return HugeType.CONFIGS.string();
+    }
+
+    public List<String> listConfigOptions() {
+        RestResult result = client.get(this.path(), "config-fields");
+        return result.readList("fields", String.class);
     }
 
     public Map<String, Object> get(String serviceName) {

@@ -67,9 +67,6 @@ public class OLTPService {
     @JsonProperty("configs")
     private Map<String, Object> configs = new HashMap();
 
-    @JsonProperty("config")
-    private Map<String, Object> config;
-
     public enum DepleymentType {
         K8S,
         MANUAL;
@@ -188,11 +185,12 @@ public class OLTPService {
         this.updateTime = updateTime;
     }
 
-    public boolean isK8s() {
+    public boolean checkIsK8s() {
         return DepleymentType.K8S.equals(this.depleymentType);
     }
 
-    @JsonIgnoreProperties(value={"configs"}, ignoreUnknown = true)
+    @JsonIgnoreProperties(value={"configs", "create_time", "update_time"},
+            ignoreUnknown = true)
     public static class OLTPServiceReq extends OLTPService {
         public static OLTPServiceReq fromBase(OLTPService service) {
             OLTPServiceReq req = new OLTPServiceReq();

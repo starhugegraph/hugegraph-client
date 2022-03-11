@@ -48,7 +48,7 @@ public class ServiceManager {
     }
 
     public OLTPService updateService(OLTPService service) {
-        if (service.isK8s()) {
+        if (service.checkIsK8s()) {
             if (!checkIfReloadK8sService(service)) {
                 // 只更新config即可
                 this.configAPI.update(service.getName(), service.getConfigs());
@@ -90,5 +90,9 @@ public class ServiceManager {
             return true;
         }
         return false;
+    }
+
+    public List<String> configOptinList() {
+        return this.configAPI.listConfigOptions();
     }
 }
