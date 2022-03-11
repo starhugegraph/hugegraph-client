@@ -53,6 +53,15 @@ public enum HugeType {
     // Job
     JOB(150, "jobs"),
 
+    // Services
+    SERVICES(190, "services"),
+
+    // Service configs
+    SERVICECONFIGS(192, "service_configs"),
+
+    // Service options
+    SERVICEOPTIONS(194, "service_options"),
+
     // Gremlin
     GREMLIN(201, "gremlin"),
 
@@ -64,11 +73,11 @@ public enum HugeType {
     // Metrics
     METRICS(240, "metrics"),
 
+    // Configs
+    CONFIGS(249, "configs"),
+
     // GraphSpaces
     GRAPHSPACES(250, "graphSpaces"),
-
-    // Services
-    SERVICES(251, "services"),
 
     // SchemeTemplate
     SCHEMATEMPLATES(252, "schema_templates"),
