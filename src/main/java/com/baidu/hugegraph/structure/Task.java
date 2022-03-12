@@ -23,10 +23,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import com.baidu.hugegraph.util.E;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableSet;
 
+import com.baidu.hugegraph.util.E;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Task {
 
     public static final long TASK_ID_NULL = 0L;
