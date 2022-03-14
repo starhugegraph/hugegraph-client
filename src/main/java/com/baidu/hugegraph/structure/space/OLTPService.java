@@ -68,9 +68,18 @@ public class OLTPService {
     @JsonProperty("configs")
     private Map<String, Object> configs = new HashMap();
 
+    @JsonProperty
+    private ServiceStatus status = ServiceStatus.Unknown;
+
     public enum DepleymentType {
         K8S,
         MANUAL;
+    }
+
+    public enum ServiceStatus {
+        Unknown, // 未知
+        Running, // 运行中
+        Stoped   // 停止
     }
 
     public String getName() {
@@ -178,6 +187,15 @@ public class OLTPService {
         this.configs = configs;
     }
 
+    public ServiceStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(
+            ServiceStatus status) {
+        this.status = status;
+    }
+
     public String getCreateTime() {
         return createTime;
     }
@@ -199,7 +217,7 @@ public class OLTPService {
     }
 
     @JsonIgnoreProperties(value={"configs", "create_time", "update_time",
-            "running"}, ignoreUnknown = true)
+            "running", "status"}, ignoreUnknown = true)
     public static class OLTPServiceReq extends OLTPService {
         public static OLTPServiceReq fromBase(OLTPService service) {
             OLTPServiceReq req = new OLTPServiceReq();
