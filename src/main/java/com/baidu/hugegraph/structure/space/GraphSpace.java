@@ -260,12 +260,13 @@ public class GraphSpace {
             this.setDescription(graphSpace.getDescription());
             this.setCpuLimit(graphSpace.getCpuLimit());
             this.setMemoryLimit(graphSpace.getMemoryLimit());
+            this.setComputeCpuLimit(graphSpace.getComputeCpuLimit());
+            this.setComputeMemoryLimit(graphSpace.getComputeMemoryLimit());
             this.setStorageLimit(graphSpace.getStorageLimit());
             this.setMaxGraphNumber(graphSpace.getMaxGraphNumber());
             this.setMaxRoleNumber(graphSpace.getMaxRoleNumber());
             this.setOltpNamespace(graphSpace.getOltpNamespace());
             this.setOlapNamespace(graphSpace.getOlapNamespace());
-            this.setStorageNamespace(graphSpace.getStorageNamespace());
         }
     }
 }
