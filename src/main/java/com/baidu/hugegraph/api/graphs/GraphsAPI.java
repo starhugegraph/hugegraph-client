@@ -70,8 +70,11 @@ public class GraphsAPI extends API {
 
     @SuppressWarnings("unchecked")
     public Map<String, String> get(String name) {
-        RestResult result = this.client.get(this.path(), name);
-        return result.readObject(Map.class);
+        String infoPath = joinPath(this.path(), name, "conf");
+        RestResult result = this.client.get(infoPath);
+        Map<String, String> info = result.readObject(Map.class);
+        info.put("name", name);
+        return info;
     }
 
     public List<String> list() {
@@ -185,9 +188,5 @@ public class GraphsAPI extends API {
             throw new InvalidResponseException(
                       "Invalid GraphReadMode value '%s'", value);
         }
-    }
-
-    private static String joinPath(String path, String id) {
-        return String.join(DELIMITER, path, id);
     }
 }
