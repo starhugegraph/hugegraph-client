@@ -37,12 +37,16 @@ public class GraphSpace {
     private int cpuLimit;
     @JsonProperty("memory_limit")
     private int memoryLimit; // GB
+    @JsonProperty("compute_cpu_limit")
+    private int computeCpuLimit;
+    @JsonProperty("compute_memory_limit")
+    private int computeMemoryLimit; // GB
     @JsonProperty("storage_limit")
     public int storageLimit; // GB
     @JsonProperty("max_graph_number")
-    private int maxGraphNumber = Integer.MAX_VALUE;
+    private int maxGraphNumber;
     @JsonProperty("max_role_number")
-    private int maxRoleNumber = Integer.MAX_VALUE;
+    private int maxRoleNumber;
 
     @JsonProperty("oltp_namespace")
     public String oltpNamespace;
@@ -180,6 +184,22 @@ public class GraphSpace {
     public GraphSpace setMemoryUsed(int memoryUsed) {
         this.memoryUsed = memoryUsed;
         return this;
+    }
+
+    public int getComputeCpuLimit() {
+        return computeCpuLimit;
+    }
+
+    public void setComputeCpuLimit(int computeCpuLimit) {
+        this.computeCpuLimit = computeCpuLimit;
+    }
+
+    public int getComputeMemoryLimit() {
+        return computeMemoryLimit;
+    }
+
+    public void setComputeMemoryLimit(int computeMemoryLimit) {
+        this.computeMemoryLimit = computeMemoryLimit;
     }
 
     public int getStorageUsed() {
