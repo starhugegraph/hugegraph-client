@@ -47,11 +47,16 @@ public class GraphSpace {
     private int maxGraphNumber;
     @JsonProperty("max_role_number")
     private int maxRoleNumber;
+    @JsonProperty("operator_image_path")
+    private String operatorImagePath; //
+    @JsonProperty("internal_algorithm_image_url")
+    private String internalAlgorithmImageUrl;
 
     @JsonProperty("oltp_namespace")
     public String oltpNamespace;
     @JsonProperty("olap_namespace")
     private String olapNamespace;
+    @Deprecated
     @JsonProperty("storage_namespace")
     private String storageNamespace;
 
@@ -159,6 +164,22 @@ public class GraphSpace {
         return this;
     }
 
+    public String getOperatorImagePath() {
+        return operatorImagePath;
+    }
+
+    public void setOperatorImagePath(String operatorImagePath) {
+        this.operatorImagePath = operatorImagePath;
+    }
+
+    public String getInternalAlgorithmImageUrl() {
+        return internalAlgorithmImageUrl;
+    }
+
+    public void setInternalAlgorithmImageUrl(String internalAlgorithmImageUrl) {
+        this.internalAlgorithmImageUrl = internalAlgorithmImageUrl;
+    }
+
     public String getStorageNamespace() {
         return storageNamespace;
     }
@@ -262,6 +283,8 @@ public class GraphSpace {
             this.setMemoryLimit(graphSpace.getMemoryLimit());
             this.setComputeCpuLimit(graphSpace.getComputeCpuLimit());
             this.setComputeMemoryLimit(graphSpace.getComputeMemoryLimit());
+            this.setOperatorImagePath(graphSpace.getOperatorImagePath());
+            this.setInternalAlgorithmImageUrl(graphSpace.getInternalAlgorithmImageUrl());
             this.setStorageLimit(graphSpace.getStorageLimit());
             this.setMaxGraphNumber(graphSpace.getMaxGraphNumber());
             this.setMaxRoleNumber(graphSpace.getMaxRoleNumber());
