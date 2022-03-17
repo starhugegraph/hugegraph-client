@@ -76,4 +76,8 @@ public enum DataType {
     public boolean isBoolean() {
         return this == BOOLEAN;
     }
+
+    public boolean isText() {
+        return this == DataType.TEXT;
+    }
 }
