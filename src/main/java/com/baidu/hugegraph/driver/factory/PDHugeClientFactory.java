@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.baidu.hugegraph.driver.HugeClient;
 import com.google.common.collect.ImmutableMap;
+import lombok.SneakyThrows;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ public class PDHugeClientFactory {
         this(pdAddrs, null);
     }
 
+    @SneakyThrows
     public PDHugeClientFactory(String pdAddrs, String type) {
         this.pdAddrs = pdAddrs;
         this.type = type != null ? RouteType.valueOf(type) : RouteType.BOTH;
