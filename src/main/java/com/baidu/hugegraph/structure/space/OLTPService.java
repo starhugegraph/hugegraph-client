@@ -80,7 +80,7 @@ public class OLTPService {
         UNKNOWN,  // 未知
         STARTING, // 启动中
         RUNNING,  // 运行中
-        STOPED   // 停止
+        STOPPED   // 停止
     }
 
     public String getName() {
