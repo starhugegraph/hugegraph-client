@@ -69,7 +69,7 @@ public class OLTPService {
     private Map<String, Object> configs = new HashMap();
 
     @JsonProperty
-    private ServiceStatus status = ServiceStatus.Unknown;
+    private ServiceStatus status = ServiceStatus.UNKNOWN;
 
     public enum DepleymentType {
         K8S,
@@ -77,9 +77,10 @@ public class OLTPService {
     }
 
     public enum ServiceStatus {
-        Unknown, // 未知
-        Running, // 运行中
-        Stoped   // 停止
+        UNKNOWN,  // 未知
+        STARTING, // 启动中
+        RUNNING,  // 运行中
+        STOPED   // 停止
     }
 
     public String getName() {
