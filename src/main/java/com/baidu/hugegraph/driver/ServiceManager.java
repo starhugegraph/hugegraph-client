@@ -57,13 +57,13 @@ public class ServiceManager {
             } else {
                 // 删除服务，重建
                 this.delService(service.getName(),
-                                "I'm sure to delete the service.");
+                                "I'm sure to delete the service");
                 return addService(service);
             }
         } else {
             // 手动创建的服务
             this.delService(service.getName(),
-                            "I'm sure to delete the service.");
+                            "I'm sure to delete the service");
             return addService(service);
         }
     }
