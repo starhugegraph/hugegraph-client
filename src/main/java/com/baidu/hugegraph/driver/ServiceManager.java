@@ -49,17 +49,12 @@ public class ServiceManager {
 
     public OLTPService updateService(OLTPService service) {
         if (service.checkIsK8s()) {
-            if (!checkIfReloadK8sService(service)) {
                 // 只更新config即可
-                this.configAPI.update(service.getName(), service.getConfigs());
-
-                return getService(service.getName());
-            } else {
-                // 删除服务，重建
-                this.delService(service.getName(),
-                                "I'm sure to delete the service");
-                return addService(service);
-            }
+            this.configAPI.update(service.getName(), service.getConfigs());
+            // 删除服务，重建
+            this.delService(service.getName(),
+                            "I'm sure to delete the service");
+            return addService(service);
         } else {
             // 手动创建的服务
             this.delService(service.getName(),
