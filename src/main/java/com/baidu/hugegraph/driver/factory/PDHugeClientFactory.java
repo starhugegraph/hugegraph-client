@@ -155,7 +155,6 @@ public class PDHugeClientFactory {
         }
 
         Query query = Query.newBuilder().setAppName(cluster)
-                           .setVersion(SERVICE_VERSION)
                            .putAllLabels(configs)
                            .build();
 
