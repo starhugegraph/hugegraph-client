@@ -32,8 +32,7 @@ import java.util.Map;
 
 public class ComputerDisAPI extends API {
 
-    private static final String PATH = "graphspaces/%s/graphs/%s/jobs" +
-            "/computerdis";
+    private static final String PATH = "graphspaces/%s/graphs/%s/jobs/computerdis";
     private String graphSpace;
     private String graph;
     public static final String TASKS = "tasks";
@@ -41,14 +40,14 @@ public class ComputerDisAPI extends API {
 
     public ComputerDisAPI(RestClient client, String graphSpace, String graph) {
         super(client);
-        this.path(String.format(PATH, graphSpace, graph));
         this.graphSpace = graphSpace;
         this.graph = graph;
+        this.path(String.format(PATH, this.graphSpace, this.graph));
     }
 
     @Override
     protected String type() {
-        return null;
+        return "computerdis";
     }
 
     public long create(String algorithm, long worker,

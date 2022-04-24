@@ -29,11 +29,11 @@ import com.baidu.hugegraph.structure.constant.Direction;
 import com.baidu.hugegraph.structure.traverser.SingleSourceJaccardSimilarityRequest;
 import com.baidu.hugegraph.util.E;
 
-public class ResouceAllocationAPI extends TraversersAPI {
+public class ResourceAllocationAPI extends TraversersAPI {
 
     private static final String AA = "adamic_adar";
 
-    public ResouceAllocationAPI(RestClient client, String graphSpace, String graph) {
+    public ResourceAllocationAPI(RestClient client, String graphSpace, String graph) {
         super(client, graphSpace, graph);
     }
 

@@ -23,12 +23,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.baidu.hugegraph.api.traverser.AdamicAdarAPI;
 import com.baidu.hugegraph.api.traverser.AllShortestPathsAPI;
 import com.baidu.hugegraph.api.traverser.CountAPI;
 import com.baidu.hugegraph.api.traverser.CrosspointsAPI;
 import com.baidu.hugegraph.api.traverser.CustomizedCrosspointsAPI;
 import com.baidu.hugegraph.api.traverser.CustomizedPathsAPI;
 import com.baidu.hugegraph.api.traverser.EdgesAPI;
+import com.baidu.hugegraph.api.traverser.EgonetAPI;
 import com.baidu.hugegraph.api.traverser.FusiformSimilarityAPI;
 import com.baidu.hugegraph.api.traverser.JaccardSimilarityAPI;
 import com.baidu.hugegraph.api.traverser.KneighborAPI;
@@ -38,8 +40,10 @@ import com.baidu.hugegraph.api.traverser.NeighborRankAPI;
 import com.baidu.hugegraph.api.traverser.PathsAPI;
 import com.baidu.hugegraph.api.traverser.PersonalRankAPI;
 import com.baidu.hugegraph.api.traverser.RaysAPI;
+import com.baidu.hugegraph.api.traverser.ResourceAllocationAPI;
 import com.baidu.hugegraph.api.traverser.RingsAPI;
 import com.baidu.hugegraph.api.traverser.SameNeighborsAPI;
+import com.baidu.hugegraph.api.traverser.SameNeighborsBatchAPI;
 import com.baidu.hugegraph.api.traverser.ShortestPathAPI;
 import com.baidu.hugegraph.api.traverser.SingleSourceShortestPathAPI;
 import com.baidu.hugegraph.api.traverser.TemplatePathsAPI;
@@ -57,10 +61,14 @@ import com.baidu.hugegraph.structure.graph.Vertices;
 import com.baidu.hugegraph.structure.traverser.CountRequest;
 import com.baidu.hugegraph.structure.traverser.CrosspointsRequest;
 import com.baidu.hugegraph.structure.traverser.CustomizedCrosspoints;
+import com.baidu.hugegraph.structure.traverser.Egonet;
+import com.baidu.hugegraph.structure.traverser.EgonetRequest;
 import com.baidu.hugegraph.structure.traverser.MultiNodeShortestPathRequest;
 import com.baidu.hugegraph.structure.traverser.PathsWithVertices;
 import com.baidu.hugegraph.structure.traverser.FusiformSimilarity;
 import com.baidu.hugegraph.structure.traverser.FusiformSimilarityRequest;
+import com.baidu.hugegraph.structure.traverser.SameNeighbors;
+import com.baidu.hugegraph.structure.traverser.SameNeighborsBatchRequest;
 import com.baidu.hugegraph.structure.traverser.SingleSourceJaccardSimilarityRequest;
 import com.baidu.hugegraph.structure.traverser.Kneighbor;
 import com.baidu.hugegraph.structure.traverser.KneighborRequest;
@@ -101,6 +109,10 @@ public class TraverserManager {
     private CustomizedCrosspointsAPI customizedCrosspointsAPI;
     private TemplatePathsAPI templatePathsAPI;
     private FusiformSimilarityAPI fusiformSimilarityAPI;
+    private AdamicAdarAPI adamicAdarAPI;
+    private ResourceAllocationAPI resourceAllocationAPI;
+    private SameNeighborsBatchAPI sameNeighborsBatchAPI;
+    private EgonetAPI egonetAPI;
     private NeighborRankAPI neighborRankAPI;
     private PersonalRankAPI personalRankAPI;
     private VerticesAPI verticesAPI;
@@ -132,6 +144,10 @@ public class TraverserManager {
                                             client, graphSpace, graph);
         this.templatePathsAPI = new TemplatePathsAPI(client, graphSpace, graph);
         this.fusiformSimilarityAPI = new FusiformSimilarityAPI(client, graphSpace, graph);
+        this.adamicAdarAPI = new AdamicAdarAPI(client, graphSpace, graph);
+        this.resourceAllocationAPI = new ResourceAllocationAPI(client, graphSpace, graph);
+        this.sameNeighborsBatchAPI = new SameNeighborsBatchAPI(client, graphSpace, graph);
+        this.egonetAPI = new EgonetAPI(client, graphSpace, graph);
         this.neighborRankAPI = new NeighborRankAPI(client, graphSpace, graph);
         this.personalRankAPI = new PersonalRankAPI(client, graphSpace, graph);
         this.verticesAPI = new VerticesAPI(client, graphSpace, graph);
@@ -466,6 +482,27 @@ public class TraverserManager {
     public FusiformSimilarity fusiformSimilarity(
                               FusiformSimilarityRequest request) {
         return this.fusiformSimilarityAPI.post(request);
+    }
+
+    public double adamicadar(Object vertexId, Object otherId,
+                             Direction direction, String label, long degree) {
+        return this.adamicAdarAPI.get(vertexId, otherId, direction,
+                                      label, degree);
+    }
+
+    public double resourceAllocation(Object vertexId, Object otherId,
+                                     Direction direction, String label,
+                                     long degree) {
+        return this.resourceAllocationAPI.get(vertexId, otherId, direction,
+                                              label, degree);
+    }
+
+    public SameNeighbors sameNeighbors(SameNeighborsBatchRequest request) {
+        return this.sameNeighborsBatchAPI.post(request);
+    }
+
+    public Egonet egonet(EgonetRequest request) {
+        return this.egonetAPI.post(request);
     }
 
     public List<Ranks> neighborRank(NeighborRankAPI.Request request) {
