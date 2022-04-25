@@ -26,7 +26,6 @@ import com.baidu.hugegraph.api.graph.GraphAPI;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.Direction;
-import com.baidu.hugegraph.structure.traverser.SingleSourceJaccardSimilarityRequest;
 import com.baidu.hugegraph.util.E;
 
 public class AdamicAdarAPI extends TraversersAPI {
@@ -60,13 +59,5 @@ public class AdamicAdarAPI extends TraversersAPI {
         E.checkState(aa.containsKey(AA),
                      "The result doesn't have key '%s'", AA);
         return aa.get(AA);
-    }
-
-    @SuppressWarnings("unchecked")
-    public Map<Object, Double> post(SingleSourceJaccardSimilarityRequest
-                                    request) {
-        this.client.checkApiVersion("0.67", AA);
-        RestResult result = this.client.post(this.path(), request);
-        return result.readObject(Map.class);
     }
 }

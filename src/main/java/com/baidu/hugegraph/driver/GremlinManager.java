@@ -19,6 +19,8 @@
 
 package com.baidu.hugegraph.driver;
 
+import java.util.Map;
+
 import com.baidu.hugegraph.api.gremlin.GremlinAPI;
 import com.baidu.hugegraph.api.gremlin.GremlinRequest;
 import com.baidu.hugegraph.api.job.GremlinJobAPI;
@@ -62,5 +64,27 @@ public class GremlinManager {
 
     public GremlinRequest.Builder gremlin(String gremlin) {
         return new GremlinRequest.Builder(gremlin, this);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, Long> vertexLabelCount() {
+        ResultSet result =
+                  this.gremlin("g.V().groupCount().by(label);").execute();
+        return  (Map<String, Long>) result.data().get(0);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, Long> edgeLabelCount() {
+        ResultSet result =
+                  this.gremlin("g.E().groupCount().by(label);").execute();
+        return  (Map<String, Long>) result.data().get(0);
+    }
+
+    public long vertexLabelCountAsTask() {
+        return this.gremlin("g.V().groupCount().by(label);").executeAsTask();
+    }
+
+    public long edgeLabelCountAsTask() {
+        return this.gremlin("g.E().groupCount().by(label);").executeAsTask();
     }
 }

@@ -26,20 +26,19 @@ import com.baidu.hugegraph.api.graph.GraphAPI;
 import com.baidu.hugegraph.client.RestClient;
 import com.baidu.hugegraph.rest.RestResult;
 import com.baidu.hugegraph.structure.constant.Direction;
-import com.baidu.hugegraph.structure.traverser.SingleSourceJaccardSimilarityRequest;
 import com.baidu.hugegraph.util.E;
 
-public class ResouceAllocationAPI extends TraversersAPI {
+public class ResourceAllocationAPI extends TraversersAPI {
 
-    private static final String AA = "adamic_adar";
+    private static final String AA = "resource_allocation";
 
-    public ResouceAllocationAPI(RestClient client, String graphSpace, String graph) {
+    public ResourceAllocationAPI(RestClient client, String graphSpace, String graph) {
         super(client, graphSpace, graph);
     }
 
     @Override
     protected String type() {
-        return "adamicadar";
+        return "resourceallocation";
     }
 
     public double get(Object vertexId, Object otherId, Direction direction,
@@ -60,13 +59,5 @@ public class ResouceAllocationAPI extends TraversersAPI {
         E.checkState(aa.containsKey(AA),
                      "The result doesn't have key '%s'", AA);
         return aa.get(AA);
-    }
-
-    @SuppressWarnings("unchecked")
-    public Map<Object, Double> post(SingleSourceJaccardSimilarityRequest
-                                    request) {
-        this.client.checkApiVersion("0.67", AA);
-        RestResult result = this.client.post(this.path(), request);
-        return result.readObject(Map.class);
     }
 }
