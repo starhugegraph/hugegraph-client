@@ -30,9 +30,11 @@ import com.baidu.hugegraph.util.E;
 
 public class ResourceAllocationAPI extends TraversersAPI {
 
-    private static final String AA = "resource_allocation";
+    private static final String RESOURCE_ALLOCATION = "resource_allocation";
 
-    public ResourceAllocationAPI(RestClient client, String graphSpace, String graph) {
+    public ResourceAllocationAPI(RestClient client,
+                                 String graphSpace,
+                                 String graph) {
         super(client, graphSpace, graph);
     }
 
@@ -43,7 +45,7 @@ public class ResourceAllocationAPI extends TraversersAPI {
 
     public double get(Object vertexId, Object otherId, Direction direction,
                       String label, long degree) {
-        this.client.checkApiVersion("0.67", AA);
+        this.client.checkApiVersion("0.67", RESOURCE_ALLOCATION);
         String vertex = GraphAPI.formatVertexId(vertexId, false);
         String other = GraphAPI.formatVertexId(otherId, false);
         checkDegree(degree);
@@ -55,9 +57,9 @@ public class ResourceAllocationAPI extends TraversersAPI {
         params.put("max_degree", degree);
         RestResult result = this.client.get(this.path(), params);
         @SuppressWarnings("unchecked")
-        Map<String, Double> aa = result.readObject(Map.class);
-        E.checkState(aa.containsKey(AA),
-                     "The result doesn't have key '%s'", AA);
-        return aa.get(AA);
+        Map<String, Double> resourceAllocation = result.readObject(Map.class);
+        E.checkState(resourceAllocation.containsKey(RESOURCE_ALLOCATION),
+                     "The result doesn't have key '%s'", RESOURCE_ALLOCATION);
+        return resourceAllocation.get(RESOURCE_ALLOCATION);
     }
 }
