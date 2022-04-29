@@ -107,6 +107,11 @@ public class SchemaManager {
         return this.propertyKeyAPI.eliminate(propertyKey).propertyKey();
     }
 
+    public PropertyKey updatePropertyKey(String oldPk,
+                                         PropertyKey newPk) {
+        return this.propertyKeyAPI.update(oldPk, newPk);
+    }
+
     public PropertyKey clearPropertyKey(PropertyKey propertyKey) {
         return this.clearPropertyKey(propertyKey, TASK_TIMEOUT);
     }
