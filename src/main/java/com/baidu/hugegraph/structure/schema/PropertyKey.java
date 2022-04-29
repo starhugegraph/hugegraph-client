@@ -136,12 +136,17 @@ public class PropertyKey extends SchemaElement {
         Builder userdata(String key, Object val);
 
         Builder ifNotExist();
+
+        Builder newName(String newName);
+
+        PropertyKey update();
     }
 
     public static class BuilderImpl implements Builder {
 
         private PropertyKey propertyKey;
         private SchemaManager manager;
+        private String oldName;
 
         public BuilderImpl(String name, SchemaManager manager) {
             this.propertyKey = new PropertyKey(name);
@@ -169,6 +174,12 @@ public class PropertyKey extends SchemaElement {
         }
 
         @Override
+        public PropertyKey update() {
+            return this.manager.updatePropertyKey(this.oldName,
+                                                  this.propertyKey);
+        }
+
+        @Override
         public void remove() {
             this.manager.removePropertyKey(this.propertyKey.name);
         }
@@ -176,6 +187,13 @@ public class PropertyKey extends SchemaElement {
         @Override
         public Builder dataType(DataType dataType) {
             this.propertyKey.dataType = dataType;
+            return this;
+        }
+
+        @Override
+        public Builder newName(String name) {
+            this.oldName = this.propertyKey.name;
+            this.propertyKey.name = name;
             return this;
         }
 
