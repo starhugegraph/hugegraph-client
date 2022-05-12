@@ -47,10 +47,10 @@ public class User extends AuthElement {
     private String description;
 
     @JsonProperty("user_create")
-    @JsonFormat(pattern = DATE_FORMAT)
+    @JsonFormat(pattern = DATE_FORMAT, timezone="GMT+8")
     protected Date create;
     @JsonProperty("user_update")
-    @JsonFormat(pattern = DATE_FORMAT)
+    @JsonFormat(pattern = DATE_FORMAT, timezone="GMT+8")
     protected Date update;
     @JsonProperty("user_creator")
     protected String creator;
